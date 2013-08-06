@@ -5,3 +5,7 @@ struct mntinfo {
 };
 
 int grabmntinfo(struct mntinfo **minfo);
+
+/* syslog.c */
+int syslog_size(void);
+int syslog_read(void *buf, size_t n);

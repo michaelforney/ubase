@@ -6,11 +6,13 @@ include config.mk
 HDR = util.h arg.h ubase.h
 LIB = \
 	$(OS)/grabmntinfo.o \
+	$(OS)/syslog.o      \
 	util/eprintf.o      \
 	util/estrtol.o
 
 SRC = \
-	df.c
+	df.c                \
+	dmesg.c
 
 OBJ = $(SRC:.c=.o) $(LIB)
 BIN = $(SRC:.c=)

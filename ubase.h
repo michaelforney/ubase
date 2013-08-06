@@ -1,4 +1,6 @@
 /* See LICENSE file for copyright and license details. */
+
+/* grabmntinfo.c */
 struct mntinfo {
 	const char *fsname;
 	const char *mntdir;

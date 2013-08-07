@@ -7,12 +7,14 @@ HDR = util.h arg.h ubase.h
 LIB = \
 	$(OS)/grabmntinfo.o \
 	$(OS)/syslog.o      \
+	$(OS)/umount.o      \
 	util/eprintf.o      \
 	util/estrtol.o
 
 SRC = \
 	df.c                \
-	dmesg.c
+	dmesg.c             \
+	umount.c
 
 OBJ = $(SRC:.c=.o) $(LIB)
 BIN = $(SRC:.c=)

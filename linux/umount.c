@@ -10,5 +10,7 @@ do_umount(const char *target, int opts)
 
 	if (opts & UBASE_MNT_FORCE)
 		flags |= MNT_FORCE;
+	if (opts & UBASE_MNT_DETACH)
+		flags |= MNT_DETACH;
 	return umount2(target, flags);
 }

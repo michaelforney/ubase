@@ -5,18 +5,21 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s [-f] target\n", argv0);
+	eprintf("usage: %s [-lf] target\n", argv0);
 }
 
 int
 main(int argc, char *argv[]) {
 	int i;
-	int fflag = 0;
+	int flags = 0;
 	int ret = 0;
 
 	ARGBEGIN {
 	case 'f':
-		fflag = UBASE_MNT_FORCE;
+		flags |= UBASE_MNT_FORCE;
+		break;
+	case 'l':
+		flags |= UBASE_MNT_DETACH;
 		break;
 	default:
 		usage();
@@ -24,7 +27,7 @@ main(int argc, char *argv[]) {
 	if (argc < 1)
 		usage();
 	for (i = 0; i < argc; i++) {
-		if (do_umount(argv[i], fflag) < 0)
+		if (do_umount(argv[i], flags) < 0)
 			eprintf("do_umount:");
 		ret = 1;
 	}

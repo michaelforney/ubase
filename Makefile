@@ -16,6 +16,11 @@ SRC = \
 	dmesg.c             \
 	umount.c
 
+ifeq ($(OS),linux)
+SRC += \
+	insmod.c
+endif
+
 OBJ = $(SRC:.c=.o) $(LIB)
 BIN = $(SRC:.c=)
 MAN = $(SRC:.c=.1)

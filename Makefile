@@ -25,7 +25,14 @@ OBJ = $(SRC:.c=.o) $(LIB)
 BIN = $(SRC:.c=)
 MAN = $(SRC:.c=.1)
 
-all: binlib
+all: options binlib
+
+options:
+	@echo ubase build options:
+	@echo "OS       = $(OS)"
+	@echo "CFLAGS   = $(CFLAGS)"
+	@echo "LDFLAGS  = $(LDFLAGS)"
+	@echo "CC       = $(CC)"
 
 binlib: util.a
 	$(MAKE) bin

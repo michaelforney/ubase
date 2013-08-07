@@ -1,3 +1,4 @@
+/* See LICENSE file for copyright and license details. */
 #include <sys/param.h>
 #include <sys/sysctl.h>
 #include <sys/msgbuf.h>

@@ -1,3 +1,4 @@
+/* See LICENSE file for copyright and license details. */
 #include <sys/param.h>
 #include <sys/mount.h>
 #include <errno.h>

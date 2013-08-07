@@ -1,3 +1,4 @@
+/* See LICENSE file for copyright and license details. */
 #include <sys/mount.h>
 #include <stdio.h>
 #include "../ubase.h"

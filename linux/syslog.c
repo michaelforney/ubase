@@ -1,3 +1,4 @@
+/* See LICENSE file for copyright and license details. */
 #include <sys/klog.h>
 #include <stdio.h>
 

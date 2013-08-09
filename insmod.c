@@ -61,7 +61,7 @@ main(int argc, char *argv[])
 		}
 	}
 
-	if (syscall(__NR_init_module, buf, blen, opts) < 0)
+	if (syscall(__NR_init_module, buf, blen, !opts ? "" : opts) < 0)
 		eprintf("init_module:");
 
 	free(opts);

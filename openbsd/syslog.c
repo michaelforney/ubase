@@ -38,3 +38,9 @@ syslog_read(void *buf, size_t n)
 	memmove(buf, ((struct msgbuf *)buf)->msg_bufc, n);
 	return n;
 }
+
+int
+syslog_show(int fd, const void *buf, size_t n)
+{
+	return write(fd, buf, n);
+}

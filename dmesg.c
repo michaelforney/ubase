@@ -31,8 +31,9 @@ main(int argc, char *argv[])
 	n = syslog_read(buf, n);
 	if (n < 0)
 		eprintf("syslog_read:");
-	if (write(STDOUT_FILENO, buf, n) != n)
-		eprintf("write:");
+	n = syslog_show(STDOUT_FILENO, buf, n);
+	if (n < 0)
+		eprintf("syslog_show:");
 	free(buf);
 	return 0;
 }

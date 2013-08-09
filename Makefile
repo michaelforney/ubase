@@ -24,7 +24,8 @@ SRC += \
 	mkswap.c            \
 	reboot.c            \
 	rmmod.c             \
-	swapoff.c
+	swapoff.c           \
+	swapon.c
 endif
 
 OBJ = $(SRC:.c=.o) $(LIB)

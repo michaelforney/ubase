@@ -19,6 +19,7 @@ SRC = \
 ifeq ($(OS),linux)
 SRC += \
 	insmod.c            \
+	lsmod.c             \
 	rmmod.c
 endif
 

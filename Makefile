@@ -18,6 +18,7 @@ SRC = \
 
 ifeq ($(OS),linux)
 SRC += \
+	halt.c              \
 	insmod.c            \
 	lsmod.c             \
 	mkswap.c            \

@@ -18,7 +18,8 @@ SRC = \
 
 ifeq ($(OS),linux)
 SRC += \
-	insmod.c
+	insmod.c            \
+	rmmod.c
 endif
 
 OBJ = $(SRC:.c=.o) $(LIB)

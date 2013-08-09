@@ -33,8 +33,6 @@ enprintf(int status, const char *fmt, ...)
 void
 venprintf(int status, const char *fmt, va_list ap)
 {
-	/*fprintf(stderr, "%s: ", argv0);*/
-
 	vfprintf(stderr, fmt, ap);
 
 	if(fmt[0] && fmt[strlen(fmt)-1] == ':') {

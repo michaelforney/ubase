@@ -23,7 +23,8 @@ SRC += \
 	lsmod.c             \
 	mkswap.c            \
 	reboot.c            \
-	rmmod.c
+	rmmod.c             \
+	swapoff.c
 endif
 
 OBJ = $(SRC:.c=.o) $(LIB)

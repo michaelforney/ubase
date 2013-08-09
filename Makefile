@@ -20,6 +20,7 @@ ifeq ($(OS),linux)
 SRC += \
 	insmod.c            \
 	lsmod.c             \
+	mkswap.c            \
 	rmmod.c
 endif
 

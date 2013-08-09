@@ -21,6 +21,7 @@ SRC += \
 	insmod.c            \
 	lsmod.c             \
 	mkswap.c            \
+	reboot.c            \
 	rmmod.c
 endif
 

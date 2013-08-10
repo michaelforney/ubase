@@ -25,8 +25,10 @@ main(int argc, char *argv[]) {
 	default:
 		usage();
 	} ARGEND;
+
 	if (argc < 1)
 		usage();
+
 	for (i = 0; i < argc; i++) {
 		if (do_umount(argv[i], flags) < 0)
 			eprintf("do_umount:");

@@ -38,5 +38,8 @@ dmesg_show(int fd, const void *buf, size_t n)
 		}
 		last = p[i++];
 	}
+	if (last != '\n')
+		if (write(fd, "\n", 1) != 1)
+			return -1;
 	return 0;
 }

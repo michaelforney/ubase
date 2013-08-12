@@ -2,6 +2,7 @@
 #include <sys/klog.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <string.h>
 
 enum {
 	SYSLOG_ACTION_READ_ALL = 3,
@@ -24,20 +25,23 @@ int
 dmesg_show(int fd, const void *buf, size_t n)
 {
 	int last = '\n';
+	char newbuf[n], *q = newbuf;
 	const char *p = buf;
 	size_t i;
 
+	memset(newbuf, 0, n);
 	for (i = 0; i < n; ) {
 		if (last == '\n' && p[i] == '<') {
 			i += 2;
 			if (i + 1 < n && p[i + 1] == '>')
 				i++;
 		} else {
-			if (write(fd, &p[i], 1) != 1)
-				return -1;
+			*q++ = p[i];
 		}
 		last = p[i++];
 	}
+	if (write(fd, newbuf, n) != n)
+		return -1;
 	if (last != '\n')
 		if (write(fd, "\n", 1) != 1)
 			return -1;

@@ -23,6 +23,7 @@ SRC += \
 	insmod.c            \
 	lsmod.c             \
 	mkswap.c            \
+	mount.c             \
 	reboot.c            \
 	rmmod.c             \
 	swapoff.c           \

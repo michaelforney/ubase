@@ -14,7 +14,8 @@ LIB = \
 SRC = \
 	df.c                \
 	dmesg.c             \
-	umount.c
+	umount.c            \
+	stat.c
 
 ifeq ($(OS),linux)
 SRC += \

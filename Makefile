@@ -26,7 +26,8 @@ SRC += \
 	reboot.c            \
 	rmmod.c             \
 	swapoff.c           \
-	swapon.c
+	swapon.c            \
+	unshare.c
 endif
 
 OBJ = $(SRC:.c=.o) $(LIB)

@@ -8,7 +8,7 @@
 #include <string.h>
 
 int
-syslog_size(void)
+dmesg_size(void)
 {
 	int mib[2], msgbufsize;
 	size_t len;
@@ -25,7 +25,7 @@ syslog_size(void)
 }
 
 int
-syslog_read(void *buf, size_t n)
+dmesg_read(void *buf, size_t n)
 {
 	int mib[2];
 	int ret;
@@ -41,7 +41,7 @@ syslog_read(void *buf, size_t n)
 }
 
 int
-syslog_show(int fd, const void *buf, size_t n)
+dmesg_show(int fd, const void *buf, size_t n)
 {
 	return write(fd, buf, n);
 }

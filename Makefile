@@ -5,8 +5,8 @@ include config.mk
 
 HDR = util.h arg.h ubase.h
 LIB = \
+	$(OS)/dmesg.o       \
 	$(OS)/grabmntinfo.o \
-	$(OS)/syslog.o      \
 	$(OS)/umount.o      \
 	util/eprintf.o      \
 	util/estrtol.o

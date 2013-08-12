@@ -9,19 +9,19 @@ enum {
 };
 
 int
-syslog_size(void)
+dmesg_size(void)
 {
 	return klogctl(SYSLOG_ACTION_SIZE_BUFFER, NULL, 0);
 }
 
 int
-syslog_read(void *buf, size_t n)
+dmesg_read(void *buf, size_t n)
 {
 	return klogctl(SYSLOG_ACTION_READ_ALL, buf, n);
 }
 
 int
-syslog_show(int fd, const void *buf, size_t n)
+dmesg_show(int fd, const void *buf, size_t n)
 {
 	int last = '\n';
 	const char *p = buf;

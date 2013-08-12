@@ -22,18 +22,18 @@ main(int argc, char *argv[])
 		usage();
 	} ARGEND;
 
-	n = syslog_size();
+	n = dmesg_size();
 	if (n < 0)
-		eprintf("syslog_size:");
+		eprintf("dmesg_size:");
 	buf = malloc(n);
 	if (!buf)
 		eprintf("malloc:");
-	n = syslog_read(buf, n);
+	n = dmesg_read(buf, n);
 	if (n < 0)
-		eprintf("syslog_read:");
-	n = syslog_show(STDOUT_FILENO, buf, n);
+		eprintf("dmesg_read:");
+	n = dmesg_show(STDOUT_FILENO, buf, n);
 	if (n < 0)
-		eprintf("syslog_show:");
+		eprintf("dmesg_show:");
 	free(buf);
 	return 0;
 }

@@ -8,10 +8,10 @@ struct mntinfo {
 
 int grabmntinfo(struct mntinfo **minfo);
 
-/* syslog.c */
-int syslog_size(void);
-int syslog_read(void *buf, size_t n);
-int syslog_show(int fd, const void *buf, size_t n);
+/* dmesg.c */
+int dmesg_size(void);
+int dmesg_read(void *buf, size_t n);
+int dmesg_show(int fd, const void *buf, size_t n);
 
 /* umount.c */
 enum {

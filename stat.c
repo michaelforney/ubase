@@ -13,7 +13,7 @@ static void show_stat(const char *file, struct stat *st);
 static void
 usage(void)
 {
-	eprintf("usage: %s filename...\n", argv0);
+	eprintf("usage: %s [-L] filename...\n", argv0);
 }
 
 int
@@ -21,8 +21,13 @@ main(int argc, char *argv[])
 {
 	struct stat st;
 	int i, ret = 0;
+	int Lflag = 0;
+	int (*fn)(const char *, struct stat *);
 
 	ARGBEGIN {
+	case 'L':
+		Lflag = 1;
+		break;
 	default:
 		usage();
 	} ARGEND;
@@ -34,8 +39,10 @@ main(int argc, char *argv[])
 	}
 
 	for (i = 0; i < argc; i++) {
-		if (stat(argv[i], &st) == -1) {
-			fprintf(stderr, "stat %s: ", argv[i]);
+		fn = Lflag ? stat : lstat;
+		if (fn(argv[i], &st) == -1) {
+			fprintf(stderr, "%s %s: ", Lflag ? "stat" : "lstat",
+				argv[i]);
 			perror(NULL);
 			ret = 1;
 			continue;

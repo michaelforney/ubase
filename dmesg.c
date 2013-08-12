@@ -25,15 +25,19 @@ main(int argc, char *argv[])
 	n = dmesg_size();
 	if (n < 0)
 		eprintf("dmesg_size:");
+
 	buf = malloc(n);
 	if (!buf)
 		eprintf("malloc:");
+
 	n = dmesg_read(buf, n);
 	if (n < 0)
 		eprintf("dmesg_read:");
+
 	n = dmesg_show(STDOUT_FILENO, buf, n);
 	if (n < 0)
 		eprintf("dmesg_show:");
+
 	free(buf);
 	return 0;
 }

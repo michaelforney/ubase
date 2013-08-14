@@ -3,22 +3,15 @@ include config.mk
 .POSIX:
 .SUFFIXES: .c .o
 
-HDR = util.h arg.h ubase.h
+HDR = arg.h ubase.h util.h
 LIB = \
-	$(OS)/dmesg.o       \
-	$(OS)/grabmntinfo.o \
-	$(OS)/umount.o      \
 	util/eprintf.o      \
-	util/estrtol.o
+	util/estrtol.o      \
+	util/grabmntinfo.o
 
 SRC = \
 	df.c                \
 	dmesg.c             \
-	umount.c            \
-	stat.c
-
-ifeq ($(OS),linux)
-SRC += \
 	halt.c              \
 	insmod.c            \
 	lsmod.c             \
@@ -26,10 +19,11 @@ SRC += \
 	mount.c             \
 	reboot.c            \
 	rmmod.c             \
+	stat.c              \
 	swapoff.c           \
 	swapon.c            \
+	umount.c            \
 	unshare.c
-endif
 
 OBJ = $(SRC:.c=.o) $(LIB)
 BIN = $(SRC:.c=)
@@ -39,7 +33,6 @@ all: options binlib
 
 options:
 	@echo ubase build options:
-	@echo "OS       = $(OS)"
 	@echo "CFLAGS   = $(CFLAGS)"
 	@echo "LDFLAGS  = $(LDFLAGS)"
 	@echo "CC       = $(CC)"

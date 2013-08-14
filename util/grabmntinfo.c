@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <mntent.h>
-#include "../ubase.h"
+#include "../grabmntinfo.h"
 #include "../util.h"
 
 int

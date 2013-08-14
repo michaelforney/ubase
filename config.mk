@@ -5,10 +5,6 @@ VERSION = 0.0
 PREFIX = /usr/local
 MANPREFIX = $(PREFIX)/share/man
 
-# OS to build against
-OS = linux
-#OS = openbsd
-
 #CC = gcc
 #CC = musl-gcc
 LD = $(CC)

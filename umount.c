@@ -1,6 +1,6 @@
 /* See LICENSE file for copyright and license details. */
+#include <sys/mount.h>
 #include <stdio.h>
-#include "ubase.h"
 #include "util.h"
 
 static void
@@ -17,10 +17,10 @@ main(int argc, char *argv[]) {
 
 	ARGBEGIN {
 	case 'f':
-		flags |= UBASE_MNT_FORCE;
+		flags |= MNT_FORCE;
 		break;
 	case 'l':
-		flags |= UBASE_MNT_DETACH;
+		flags |= MNT_DETACH;
 		break;
 	default:
 		usage();
@@ -30,8 +30,8 @@ main(int argc, char *argv[]) {
 		usage();
 
 	for (i = 0; i < argc; i++) {
-		if (do_umount(argv[i], flags) < 0)
-			eprintf("do_umount:");
+		if (umount2(argv[i], flags) < 0)
+			eprintf("umount2:");
 		ret = 1;
 	}
 	return ret;

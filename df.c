@@ -2,7 +2,7 @@
 #include <sys/statvfs.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "ubase.h"
+#include "grabmntinfo.h"
 #include "util.h"
 
 static void mnt_show(const char *fsname, const char *dir);

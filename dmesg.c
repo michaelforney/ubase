@@ -11,13 +11,14 @@ static int dmesg_show(int fd, const void *buf, size_t n);
 
 enum {
 	SYSLOG_ACTION_READ_ALL = 3,
+	SYSLOG_ACTION_CLEAR = 5,
 	SYSLOG_ACTION_SIZE_BUFFER = 10
 };
 
 static void
 usage(void)
 {
-	eprintf("usage: %s\n", argv0);
+	eprintf("usage: [-C] %s\n", argv0);
 }
 
 int
@@ -27,6 +28,10 @@ main(int argc, char *argv[])
 	char *buf;
 
 	ARGBEGIN {
+	case 'C':
+		if (klogctl(SYSLOG_ACTION_CLEAR, NULL, 0) < 0)
+			eprintf("klogctl:");
+		return 0;
 	default:
 		usage();
 	} ARGEND;

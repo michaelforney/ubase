@@ -11,7 +11,7 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s filename [args]\n", argv0);
+	eprintf("usage: %s module [args]\n", argv0);
 }
 
 int

@@ -13,7 +13,7 @@ static void show_stat(const char *file, struct stat *st);
 static void
 usage(void)
 {
-	eprintf("usage: %s [-L] filename...\n", argv0);
+	eprintf("usage: %s [-L] file...\n", argv0);
 }
 
 int

@@ -10,7 +10,7 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s [-fw] modulename...\n", argv0);
+	eprintf("usage: %s [-fw] module...\n", argv0);
 }
 
 int

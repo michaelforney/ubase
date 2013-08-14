@@ -29,7 +29,7 @@ struct {
 static void
 usage(void)
 {
-	eprintf("usage: %s [-BMRd] [-t fstype] [-o options] device dir\n",
+	eprintf("usage: %s [-BMRd] [-t fstype] [-o options] source target\n",
 		argv0);
 }
 

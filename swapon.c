@@ -8,7 +8,7 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s [-d] swapfile\n", argv0);
+	eprintf("usage: %s [-d] device\n", argv0);
 }
 
 int

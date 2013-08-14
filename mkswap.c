@@ -24,7 +24,7 @@ struct swap_hdr {
 static void
 usage(void)
 {
-	eprintf("usage: %s swapfile\n", argv0);
+	eprintf("usage: %s device\n", argv0);
 }
 
 int

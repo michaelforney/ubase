@@ -17,6 +17,7 @@ SRC = \
 	lsmod.c             \
 	mkswap.c            \
 	mount.c             \
+	pivot_root.c        \
 	reboot.c            \
 	rmmod.c             \
 	stat.c              \

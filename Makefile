@@ -3,11 +3,16 @@ include config.mk
 .POSIX:
 .SUFFIXES: .c .o
 
-HDR = arg.h ubase.h util.h
+HDR = arg.h grabmntinfo.h proc.h util.h
 LIB = \
+	util/agetcwd.o      \
+	util/apathmax.o     \
 	util/eprintf.o      \
 	util/estrtol.o      \
-	util/grabmntinfo.o
+	util/grabmntinfo.o  \
+	util/proc.o         \
+	util/recurse.o      \
+	util/tty.o
 
 SRC = \
 	df.c                \
@@ -18,6 +23,7 @@ SRC = \
 	mkswap.c            \
 	mount.c             \
 	pivot_root.c        \
+	ps.c                \
 	reboot.c            \
 	rmmod.c             \
 	stat.c              \

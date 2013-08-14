@@ -6,6 +6,11 @@
 
 extern char *argv0;
 
-void eprintf(const char *, ...);
+char *agetcwd(void);
+void apathmax(char **, long *);
+void devtotty(int dev, int *tty_maj, int *tty_min);
 void enprintf(int, const char *, ...);
+void eprintf(const char *, ...);
 long estrtol(const char *, int);
+void recurse(const char *, void (*)(const char *));
+char *ttytostr(int tty_maj, int tty_min);

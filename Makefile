@@ -18,6 +18,7 @@ SRC = \
 	chvt.c              \
 	df.c                \
 	dmesg.c             \
+	free.c              \
 	halt.c              \
 	insmod.c            \
 	lsmod.c             \

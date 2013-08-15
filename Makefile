@@ -15,6 +15,7 @@ LIB = \
 	util/tty.o
 
 SRC = \
+	chvt.c              \
 	df.c                \
 	dmesg.c             \
 	halt.c              \

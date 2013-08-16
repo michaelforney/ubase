@@ -24,7 +24,8 @@ main(int argc, char *argv[])
 {
 	struct sysinfo info;
 
-	sysinfo(&info);
+	if (sysinfo(&info) < 0)
+		eprintf("sysinfo:");
 	mem_unit = info.mem_unit ? info.mem_unit : 1;
 
 	ARGBEGIN {

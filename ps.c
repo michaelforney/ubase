@@ -122,7 +122,8 @@ psout(struct procstat *ps)
 		if (errno || !pw)
 			eprintf("getpwuid %d:", puid);
 
-		sysinfo(&info);
+		if (sysinfo(&info) < 0)
+			eprintf("sysinfo:");
 		start = time(NULL) - info.uptime;
 		start += (ps->starttime / sysconf(_SC_CLK_TCK));
 		tm = localtime(&start);

@@ -29,7 +29,8 @@ main(int argc, char *argv[])
 		usage();
 	} ARGEND;
 
-	sysinfo(&info);
+	if (sysinfo(&info) < 0)
+		eprintf("sysinfo:");
 	time(&tmptime);
 	now = localtime(&tmptime);
 	printf(" %02d:%02d:%02d up ", now->tm_hour, now->tm_min, now->tm_sec);

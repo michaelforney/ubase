@@ -1,4 +1,6 @@
 /* See LICENSE file for copyright and license details. */
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
 #include <stdio.h>
@@ -30,6 +32,56 @@ proceuid(pid_t pid, uid_t *euid)
 	}
 	fclose(fp);
 	return -1;
+}
+
+int
+procuid(pid_t pid, uid_t *uid)
+{
+	FILE *fp;
+	char buf[BUFSIZ], *p;
+	char path[PATH_MAX];
+	uid_t procuid;
+
+	snprintf(path, sizeof(path), "/proc/%d/status", pid);
+	if (!(fp = fopen(path, "r")))
+		eprintf("%s fopen:", path);
+	while (fgets(buf, sizeof(buf), fp)) {
+		if (!strncmp(buf, "Uid:", 4)) {
+			p = buf + strlen("Uid:");
+			sscanf(p, "%u", &procuid);
+			*uid = procuid;
+			fclose(fp);
+			return 0;
+		}
+	}
+	fclose(fp);
+	return -1;
+}
+
+int
+parsecmdline(pid_t pid, char *buf, size_t siz)
+{
+	int fd;
+	char path[PATH_MAX];
+	ssize_t n, i;
+
+	snprintf(path, sizeof(path), "/proc/%d/cmdline", pid);
+	fd = open(path, O_RDONLY);
+	if (fd < 0)
+		eprintf("open %s:", path);
+	n = read(fd, buf, siz - 1);
+	if (n < 0)
+		eprintf("read %s:", path);
+	if (!n) {
+		close(fd);
+		return -1;
+	}
+	buf[n] = '\0';
+	for (i = 0; i < n; i++)
+		if (buf[i] == '\0')
+			buf[i] = ' ';
+	close(fd);
+	return 0;
 }
 
 int

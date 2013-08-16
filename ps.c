@@ -1,10 +1,13 @@
 /* See LICENSE file for copyright and license details. */
+#include <sys/sysinfo.h>
 #include <errno.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
+#include <time.h>
+#include <pwd.h>
 #include "proc.h"
 #include "util.h"
 
@@ -15,7 +18,8 @@ static void psr(const char *path);
 enum {
 	PS_aflag = 1 << 0,
 	PS_Aflag = 1 << 1,
-	PS_dflag = 1 << 2
+	PS_dflag = 1 << 2,
+	PS_fflag = 1 << 3
 };
 
 static int flags;
@@ -37,14 +41,17 @@ main(int argc, char *argv[])
 		flags |= PS_Aflag;
 		break;
 	case 'f':
-		eprintf("not implemented\n");
+		flags |= PS_fflag;
+		break;
 	default:
 		usage();
 	} ARGEND;
 
-	printf("  PID TTY          TIME CMD\n");
+	if (!(flags & PS_fflag))
+		printf("  PID TTY          TIME CMD\n");
+	else
+		printf("UID        PID  PPID  C STIME TTY          TIME CMD\n");
 	recurse("/proc", psr);
-
 	return 0;
 }
 
@@ -57,10 +64,16 @@ usage(void)
 static void
 psout(struct procstat *ps)
 {
+	char cmdline[BUFSIZ], *cmd;
+	char stimestr[6];
 	char *ttystr, *myttystr;
 	int tty_maj, tty_min;
-	uid_t myeuid, peuid;
+	uid_t myeuid, peuid, puid;
 	unsigned sut;
+	struct sysinfo info;
+	struct tm *tm;
+	time_t start;
+	struct passwd *pw;
 
 	/* Ignore session leaders */
 	if (flags & PS_dflag)
@@ -72,13 +85,15 @@ psout(struct procstat *ps)
 	devtotty(ps->tty_nr, &tty_maj, &tty_min);
 	ttystr = ttytostr(tty_maj, tty_min);
 	/* Only print processes that are associated with
-	 * a terminal */
-	if (ttystr[0] == '?' && (flags & PS_aflag)) {
-		free(ttystr);
-		return;
+	 * a terminal and they are not session leaders */
+	if (flags & PS_aflag) {
+		if (ps->pid == ps->sid || ttystr[0] == '?') {
+			free(ttystr);
+			return;
+		}
 	}
 
-	if (!flags) {
+	if (!(flags & (PS_aflag | PS_Aflag | PS_dflag))) {
 		myttystr = ttyname(STDIN_FILENO);
 		if (myttystr) {
 			if (strcmp(myttystr + strlen("/dev/"), ttystr)) {
@@ -97,8 +112,33 @@ psout(struct procstat *ps)
 		}
 	}
 
-	printf("%5d %-6s   %02u:%02u:%02u %s\n", ps->pid, ttystr,
-	       sut / 3600, (sut % 3600) / 60, sut % 60, ps->comm);
+	procuid(ps->pid, &puid);
+	errno = 0;
+	pw = getpwuid(puid);
+	if (errno || !pw)
+		eprintf("getpwuid %d:", puid);
+
+	sysinfo(&info);
+	start = time(NULL) - (info.uptime - (ps->starttime / 100));
+	tm = localtime(&start);
+	strftime(stimestr, sizeof(stimestr),
+		 "%H:%M", tm);
+	if (parsecmdline(ps->pid, cmdline, sizeof(cmdline)) < 0)
+		cmd = ps->comm;
+	else
+		cmd = cmdline;
+
+	if (!(flags & PS_fflag))
+		printf("%5d %-6s   %02u:%02u:%02u %s\n", ps->pid, ttystr,
+		       sut / 3600, (sut % 3600) / 60, sut % 60, ps->comm);
+	else {
+		printf("%-8s %5d %5d  ? %5s %-5s    %02u:%02u:%02u %s%s%s\n",
+		       pw->pw_name, ps->pid,
+		       ps->ppid, stimestr, ttystr,
+		       sut / 3600, (sut % 3600) / 60, sut % 60,
+		       (cmd == ps->comm) ? "[" : "", cmd,
+		       (cmd == ps->comm) ? "]" : "");
+	}
 	free(ttystr);
 }
 

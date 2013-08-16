@@ -27,6 +27,8 @@ struct procstat {
 	long rsslim;
 };
 
+int parsecmdline(pid_t pid, char *buf, size_t siz);
 int parsestat(pid_t pid, struct procstat *ps);
 int proceuid(pid_t pid, uid_t *euid);
+int procuid(pid_t pid, uid_t *euid);
 int validps(const char *path);

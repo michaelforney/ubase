@@ -30,6 +30,7 @@ ttytostr(int tty_maj, int tty_min)
 		break;
 	case 4:
 		snprintf(ttystr, len, "%s%d", tty, tty_min);
+		break;
 	default:
 		ttystr[0] = '?';
 		ttystr[1] = '\0';

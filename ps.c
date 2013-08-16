@@ -112,26 +112,27 @@ psout(struct procstat *ps)
 		}
 	}
 
-	procuid(ps->pid, &puid);
-	errno = 0;
-	pw = getpwuid(puid);
-	if (errno || !pw)
-		eprintf("getpwuid %d:", puid);
-
-	sysinfo(&info);
-	start = time(NULL) - (info.uptime - (ps->starttime / 100));
-	tm = localtime(&start);
-	strftime(stimestr, sizeof(stimestr),
-		 "%H:%M", tm);
-	if (parsecmdline(ps->pid, cmdline, sizeof(cmdline)) < 0)
-		cmd = ps->comm;
-	else
-		cmd = cmdline;
-
-	if (!(flags & PS_fflag))
+	if (!(flags & PS_fflag)) {
 		printf("%5d %-6s   %02u:%02u:%02u %s\n", ps->pid, ttystr,
 		       sut / 3600, (sut % 3600) / 60, sut % 60, ps->comm);
-	else {
+	} else {
+		procuid(ps->pid, &puid);
+		errno = 0;
+		pw = getpwuid(puid);
+		if (errno || !pw)
+			eprintf("getpwuid %d:", puid);
+
+		sysinfo(&info);
+		start = time(NULL) - (info.uptime - (ps->starttime / 100));
+		tm = localtime(&start);
+		strftime(stimestr, sizeof(stimestr),
+			 "%H:%M", tm);
+
+		if (parsecmdline(ps->pid, cmdline, sizeof(cmdline)) < 0)
+			cmd = ps->comm;
+		else
+			cmd = cmdline;
+
 		printf("%-8s %5d %5d  ? %5s %-5s    %02u:%02u:%02u %s%s%s\n",
 		       pw->pw_name, ps->pid,
 		       ps->ppid, stimestr, ttystr,

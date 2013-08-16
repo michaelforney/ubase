@@ -24,6 +24,7 @@ SRC = \
 	lsmod.c             \
 	mkswap.c            \
 	mount.c             \
+	mountpoint.c        \
 	pivot_root.c        \
 	ps.c                \
 	reboot.c            \

@@ -69,7 +69,7 @@ psout(struct procstat *ps)
 	char *ttystr, *myttystr;
 	int tty_maj, tty_min;
 	uid_t myeuid, peuid, puid;
-	unsigned sut;
+	unsigned sutime;
 	time_t start;
 	struct sysinfo info;
 	struct passwd *pw;
@@ -79,10 +79,9 @@ psout(struct procstat *ps)
 		if (ps->pid == ps->sid)
 			return;
 
-	sut = (ps->stime + ps->utime) / sysconf(_SC_CLK_TCK);
-
 	devtotty(ps->tty_nr, &tty_maj, &tty_min);
 	ttystr = ttytostr(tty_maj, tty_min);
+
 	/* Only print processes that are associated with
 	 * a terminal and they are not session leaders */
 	if (flags & PS_aflag) {
@@ -92,6 +91,9 @@ psout(struct procstat *ps)
 		}
 	}
 
+	/* This is the default case, only print processes that have
+	 * the same controlling terminal as the invoker and the same
+	 * euid as the current user */
 	if (!(flags & (PS_aflag | PS_Aflag | PS_dflag))) {
 		myttystr = ttyname(STDIN_FILENO);
 		if (myttystr) {
@@ -100,6 +102,8 @@ psout(struct procstat *ps)
 				return;
 			}
 		} else {
+			/* The invoker has no controlling terminal - just
+			 * go ahead and print the processes anyway */
 			ttystr[0] = '?';
 			ttystr[1] = '\0';
 		}
@@ -111,9 +115,12 @@ psout(struct procstat *ps)
 		}
 	}
 
+	sutime = (ps->stime + ps->utime) / sysconf(_SC_CLK_TCK);
+
 	if (!(flags & PS_fflag)) {
 		printf("%5d %-6s   %02u:%02u:%02u %s\n", ps->pid, ttystr,
-		       sut / 3600, (sut % 3600) / 60, sut % 60, ps->comm);
+		       sutime / 3600, (sutime % 3600) / 60, sutime % 60,
+		       ps->comm);
 	} else {
 		procuid(ps->pid, &puid);
 		errno = 0;
@@ -123,11 +130,14 @@ psout(struct procstat *ps)
 
 		if (sysinfo(&info) < 0)
 			eprintf("sysinfo:");
+
 		start = time(NULL) - info.uptime;
 		start += (ps->starttime / sysconf(_SC_CLK_TCK));
 		strftime(stimestr, sizeof(stimestr),
 			 "%H:%M", localtime(&start));
 
+		/* For kthreads/zombies /proc/<pid>/cmdline will be
+		 * empty so use ps->comm in that case */
 		if (parsecmdline(ps->pid, cmdline, sizeof(cmdline)) < 0)
 			cmd = ps->comm;
 		else
@@ -136,7 +146,7 @@ psout(struct procstat *ps)
 		printf("%-8s %5d %5d  ? %5s %-5s    %02u:%02u:%02u %s%s%s\n",
 		       pw->pw_name, ps->pid,
 		       ps->ppid, stimestr, ttystr,
-		       sut / 3600, (sut % 3600) / 60, sut % 60,
+		       sutime / 3600, (sutime % 3600) / 60, sutime % 60,
 		       (cmd == ps->comm) ? "[" : "", cmd,
 		       (cmd == ps->comm) ? "]" : "");
 	}

@@ -95,12 +95,12 @@ parsestatus(pid_t pid, struct procstatus *pstatus)
 }
 
 int
-validps(const char *path)
+pidfile(const char *file)
 {
 	char *end;
 
 	errno = 0;
-	strtol(path, &end, 10);
+	strtol(file, &end, 10);
 	if (*end != '\0')
 		return 0;
 	if (errno != 0)

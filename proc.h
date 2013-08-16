@@ -39,4 +39,4 @@ int parsestat(pid_t pid, struct procstat *ps);
 int parsestatus(pid_t pid, struct procstatus *pstatus);
 int proceuid(pid_t pid, uid_t *euid);
 int procuid(pid_t pid, uid_t *euid);
-int validps(const char *path);
+int pidfile(const char *file);

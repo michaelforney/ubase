@@ -13,7 +13,7 @@
 
 static void usage(void);
 static void psout(struct procstat *ps);
-static void psr(const char *path);
+static void psr(const char *file);
 
 enum {
 	PS_aflag = 1 << 0,
@@ -155,14 +155,14 @@ psout(struct procstat *ps)
 }
 
 static void
-psr(const char *path)
+psr(const char *file)
 {
 	struct procstat ps;
 	pid_t pid;
 
-	if (!validps(path))
+	if (!pidfile(file))
 		return;
-	pid = estrtol(path, 10);
+	pid = estrtol(file, 10);
 	parsestat(pid, &ps);
 	psout(&ps);
 }

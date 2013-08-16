@@ -10,6 +10,7 @@
 #include "../proc.h"
 #include "../util.h"
 
+/* TODO: Unify proc{euid,uid}() into parsestatus() */
 int
 proceuid(pid_t pid, uid_t *euid)
 {

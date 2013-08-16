@@ -5,6 +5,7 @@ Tools
  * Better ps(1) support
  * swaplabel(8)
  * last(1)
+ * losetup(8)
 
 Other
 =====

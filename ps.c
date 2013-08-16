@@ -80,7 +80,7 @@ psout(struct procstat *ps)
 		if (ps->pid == ps->sid)
 			return;
 
-	sut = (ps->stime + ps->utime) / 100;
+	sut = (ps->stime + ps->utime) / sysconf(_SC_CLK_TCK);
 
 	devtotty(ps->tty_nr, &tty_maj, &tty_min);
 	ttystr = ttytostr(tty_maj, tty_min);
@@ -123,7 +123,8 @@ psout(struct procstat *ps)
 			eprintf("getpwuid %d:", puid);
 
 		sysinfo(&info);
-		start = time(NULL) - (info.uptime - (ps->starttime / 100));
+		start = time(NULL) - info.uptime;
+		start += (ps->starttime / sysconf(_SC_CLK_TCK));
 		tm = localtime(&start);
 		strftime(stimestr, sizeof(stimestr),
 			 "%H:%M", tm);

@@ -56,7 +56,7 @@ main(int argc, char *argv[])
 	return 0;
 }
 
-int
+static int
 dmesg_show(int fd, const void *buf, size_t n)
 {
 	int last = '\n';

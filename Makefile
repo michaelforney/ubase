@@ -36,7 +36,8 @@ SRC = \
 	swapon.c            \
 	truncate.c          \
 	umount.c            \
-	unshare.c
+	unshare.c           \
+	uptime.c
 
 OBJ = $(SRC:.c=.o) $(LIB)
 BIN = $(SRC:.c=)

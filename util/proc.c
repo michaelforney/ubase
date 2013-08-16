@@ -10,55 +10,6 @@
 #include "../proc.h"
 #include "../util.h"
 
-/* TODO: Unify proc{euid,uid}() into parsestatus() */
-int
-proceuid(pid_t pid, uid_t *euid)
-{
-	FILE *fp;
-	char buf[BUFSIZ], *p;
-	char path[PATH_MAX];
-	uid_t procuid, proceuid;
-
-	snprintf(path, sizeof(path), "/proc/%d/status", pid);
-	if (!(fp = fopen(path, "r")))
-		eprintf("%s fopen:", path);
-	while (fgets(buf, sizeof(buf), fp)) {
-		if (!strncmp(buf, "Uid:", 4)) {
-			p = buf + strlen("Uid:");
-			sscanf(p, "%u %u", &procuid, &proceuid);
-			*euid = proceuid;
-			fclose(fp);
-			return 0;
-		}
-	}
-	fclose(fp);
-	return -1;
-}
-
-int
-procuid(pid_t pid, uid_t *uid)
-{
-	FILE *fp;
-	char buf[BUFSIZ], *p;
-	char path[PATH_MAX];
-	uid_t procuid;
-
-	snprintf(path, sizeof(path), "/proc/%d/status", pid);
-	if (!(fp = fopen(path, "r")))
-		eprintf("%s fopen:", path);
-	while (fgets(buf, sizeof(buf), fp)) {
-		if (!strncmp(buf, "Uid:", 4)) {
-			p = buf + strlen("Uid:");
-			sscanf(p, "%u", &procuid);
-			*uid = procuid;
-			fclose(fp);
-			return 0;
-		}
-	}
-	fclose(fp);
-	return -1;
-}
-
 int
 parsecmdline(pid_t pid, char *buf, size_t siz)
 {
@@ -108,6 +59,38 @@ parsestat(pid_t pid, struct procstat *ps)
 	ps->comm[strlen(ps->comm) - 1] = '\0';
 	memmove(ps->comm, ps->comm + 1, strlen(ps->comm));
 	fclose(fp);
+	return 0;
+}
+
+int
+parsestatus(pid_t pid, struct procstatus *pstatus)
+{
+	char path[PATH_MAX];
+	char buf[BUFSIZ], *off;
+	int fd;
+	ssize_t n;
+
+	snprintf(path, sizeof(path), "/proc/%d/status", pid);
+	fd = open(path, O_RDONLY);
+	if (fd < 0)
+		eprintf("open %s:", path);
+	n = read(fd, buf, sizeof(buf) - 1);
+	if (n < 0)
+		eprintf("%s: read error:", path);
+	if (!n) {
+		close(fd);
+		return -1;
+	}
+	buf[n] = '\0';
+	close(fd);
+	off = strstr(buf, "Uid:");
+	if (!off)
+		return -1;
+	sscanf(off, "Uid: %u %u", &pstatus->uid, &pstatus->euid);
+	off = strstr(buf, "Gid:");
+	if (!off)
+		return -1;
+	sscanf(off, "Gid: %u %u", &pstatus->gid, &pstatus->egid);
 	return 0;
 }
 

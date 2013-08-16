@@ -64,11 +64,12 @@ usage(void)
 static void
 psout(struct procstat *ps)
 {
+	struct procstatus pstatus;
 	char cmdline[BUFSIZ], *cmd;
 	char stimestr[6];
 	char *ttystr, *myttystr;
 	int tty_maj, tty_min;
-	uid_t myeuid, peuid, puid;
+	uid_t myeuid;
 	unsigned sutime;
 	time_t start;
 	struct sysinfo info;
@@ -91,6 +92,8 @@ psout(struct procstat *ps)
 		}
 	}
 
+	parsestatus(ps->pid, &pstatus);
+
 	/* This is the default case, only print processes that have
 	 * the same controlling terminal as the invoker and the same
 	 * euid as the current user */
@@ -107,9 +110,8 @@ psout(struct procstat *ps)
 			ttystr[0] = '?';
 			ttystr[1] = '\0';
 		}
-		proceuid(ps->pid, &peuid);
 		myeuid = geteuid();
-		if (myeuid != peuid) {
+		if (myeuid != pstatus.euid) {
 			free(ttystr);
 			return;
 		}
@@ -122,11 +124,10 @@ psout(struct procstat *ps)
 		       sutime / 3600, (sutime % 3600) / 60, sutime % 60,
 		       ps->comm);
 	} else {
-		procuid(ps->pid, &puid);
 		errno = 0;
-		pw = getpwuid(puid);
+		pw = getpwuid(pstatus.uid);
 		if (errno || !pw)
-			eprintf("getpwuid %d:", puid);
+			eprintf("getpwuid %d:", pstatus.uid);
 
 		if (sysinfo(&info) < 0)
 			eprintf("sysinfo:");

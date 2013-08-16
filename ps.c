@@ -70,9 +70,8 @@ psout(struct procstat *ps)
 	int tty_maj, tty_min;
 	uid_t myeuid, peuid, puid;
 	unsigned sut;
-	struct sysinfo info;
-	struct tm *tm;
 	time_t start;
+	struct sysinfo info;
 	struct passwd *pw;
 
 	/* Ignore session leaders */
@@ -126,9 +125,8 @@ psout(struct procstat *ps)
 			eprintf("sysinfo:");
 		start = time(NULL) - info.uptime;
 		start += (ps->starttime / sysconf(_SC_CLK_TCK));
-		tm = localtime(&start);
 		strftime(stimestr, sizeof(stimestr),
-			 "%H:%M", tm);
+			 "%H:%M", localtime(&start));
 
 		if (parsecmdline(ps->pid, cmdline, sizeof(cmdline)) < 0)
 			cmd = ps->comm;

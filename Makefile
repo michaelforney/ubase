@@ -16,6 +16,7 @@ LIB = \
 
 SRC = \
 	chvt.c              \
+	clear.c             \
 	df.c                \
 	dmesg.c             \
 	free.c              \

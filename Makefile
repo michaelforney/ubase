@@ -85,7 +85,7 @@ uninstall:
 dist: clean
 	@echo creating dist tarball
 	@mkdir -p ubase-$(VERSION)
-	@cp -r LICENSE Makefile config.mk $(SRC) $(MAN) util $(HDR) ubase-$(VERSION)
+	@cp -r LICENSE Makefile config.mk TODO $(SRC) $(MAN) util $(HDR) ubase-$(VERSION)
 	@tar -cf ubase-$(VERSION).tar ubase-$(VERSION)
 	@gzip ubase-$(VERSION).tar
 	@rm -rf ubase-$(VERSION)

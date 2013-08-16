@@ -19,6 +19,7 @@ SRC = \
 	clear.c             \
 	df.c                \
 	dmesg.c             \
+	fallocate.c         \
 	free.c              \
 	halt.c              \
 	insmod.c            \

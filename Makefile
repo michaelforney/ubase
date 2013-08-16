@@ -34,6 +34,7 @@ SRC = \
 	stat.c              \
 	swapoff.c           \
 	swapon.c            \
+	truncate.c          \
 	umount.c            \
 	unshare.c
 

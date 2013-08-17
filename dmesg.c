@@ -18,7 +18,7 @@ enum {
 static void
 usage(void)
 {
-	eprintf("usage: [-Cc] %s\n", argv0);
+	eprintf("usage: [-Ccr] %s\n", argv0);
 }
 
 int
@@ -27,6 +27,7 @@ main(int argc, char *argv[])
 	int n;
 	char *buf;
 	int cflag = 0;
+	int rflag = 0;
 
 	ARGBEGIN {
 	case 'C':
@@ -35,6 +36,9 @@ main(int argc, char *argv[])
 		return 0;
 	case 'c':
 		cflag = 1;
+		break;
+	case 'r':
+		rflag = 1;
 		break;
 	default:
 		usage();
@@ -52,9 +56,14 @@ main(int argc, char *argv[])
 	if (n < 0)
 		eprintf("klogctl:");
 
-	n = dmesg_show(STDOUT_FILENO, buf, n);
-	if (n < 0)
-		eprintf("dmesg_show:");
+	if (rflag) {
+		if (write(STDOUT_FILENO, buf, n) != n)
+			eprintf("write:");
+	} else {
+		n = dmesg_show(STDOUT_FILENO, buf, n);
+		if (n < 0)
+			eprintf("dmesg_show:");
+	}
 
 	if (cflag && klogctl(SYSLOG_ACTION_CLEAR, NULL, 0) < 0)
 		eprintf("klogctl:");

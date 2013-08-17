@@ -66,12 +66,12 @@ psout(struct procstat *ps)
 {
 	struct procstatus pstatus;
 	char cmdline[BUFSIZ], *cmd;
-	char stimestr[6];
 	char *ttystr, *myttystr;
 	int tty_maj, tty_min;
 	uid_t myeuid;
 	unsigned sutime;
 	time_t start;
+	char stimestr[sizeof("%H:%M")];
 	struct sysinfo info;
 	struct passwd *pw;
 

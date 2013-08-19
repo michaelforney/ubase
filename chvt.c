@@ -1,5 +1,3 @@
-#include <linux/vt.h>
-#include <linux/kd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,6 +6,11 @@
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include "util.h"
+
+#define KDGKBTYPE	0x4B33	/* get keyboard type */
+
+#define VT_ACTIVATE	0x5606	/* make vt active */
+#define VT_WAITACTIVE	0x5607	/* wait for vt active */
 
 char *vts[] = {
 	"/proc/self/fd/0",

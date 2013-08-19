@@ -1,8 +1,8 @@
 /* See LICENSE file for copyright and license details. */
-#include <linux/reboot.h>
 #include <sys/syscall.h>
 #include <unistd.h>
 #include <stdio.h>
+#include "reboot.h"
 #include "util.h"
 
 static void

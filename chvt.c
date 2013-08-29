@@ -12,7 +12,7 @@
 #define VT_ACTIVATE	0x5606	/* make vt active */
 #define VT_WAITACTIVE	0x5607	/* wait for vt active */
 
-char *vts[] = {
+static char *vts[] = {
 	"/proc/self/fd/0",
 	"/dev/console",
 	"/dev/tty",
@@ -55,4 +55,3 @@ VTfound:
 
 	return 0;
 }
-

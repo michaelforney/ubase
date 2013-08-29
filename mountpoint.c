@@ -22,7 +22,7 @@ main(int argc, char *argv[])
 	struct mntinfo *minfo = NULL;
 	int siz;
 	int ret = 0;
-	struct stat st;
+	struct stat st1, st2;
 
 	ARGBEGIN {
 	case 'q':
@@ -35,18 +35,22 @@ main(int argc, char *argv[])
 	if (argc < 1)
 		usage();
 
-	if (stat(argv[0], &st) < 0)
+	if (stat(argv[0], &st1) < 0)
 		eprintf("stat %s:", argv[0]);
 
-	if (!S_ISDIR(st.st_mode))
+	if (!S_ISDIR(st1.st_mode))
 		eprintf("lstat %s: not a directory\n", argv[0]);
 
 	siz = grabmntinfo(&minfo);
 	if (!siz)
 		eprintf("grabmntinfo:");
-	for (i = 0; i < siz; i++)
-		if (!strcmp(minfo[i].mntdir, argv[0]))
+	for (i = 0; i < siz; i++) {
+		if (stat(minfo[i].mntdir, &st2) < 0)
+			eprintf("stat %s:", minfo[i].mntdir);
+		if (st1.st_dev == st2.st_dev &&
+		    st1.st_ino == st2.st_ino)
 			break;
+	}
 	free(minfo);
 
 	if (i == siz)

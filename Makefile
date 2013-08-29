@@ -11,6 +11,7 @@ LIB = \
 	util/estrtol.o      \
 	util/grabmntinfo.o  \
 	util/proc.o         \
+	util/putword.o      \
 	util/recurse.o      \
 	util/tty.o
 
@@ -27,6 +28,7 @@ SRC = \
 	mkswap.c            \
 	mount.c             \
 	mountpoint.c        \
+	pidof.c             \
 	pivot_root.c        \
 	ps.c                \
 	reboot.c            \

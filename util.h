@@ -12,5 +12,6 @@ void devtotty(int dev, int *tty_maj, int *tty_min);
 void enprintf(int, const char *, ...);
 void eprintf(const char *, ...);
 long estrtol(const char *, int);
+void putword(const char *);
 void recurse(const char *, void (*)(const char *));
 char *ttytostr(int tty_maj, int tty_min);

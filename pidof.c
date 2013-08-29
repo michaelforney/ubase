@@ -20,7 +20,7 @@ main(int argc, char *argv[])
 	struct dirent *entry;
 	pid_t pid;
 	struct procstat ps;
-	char cmdline[PATH_MAX], *cmd, *p;
+	char cmdline[BUFSIZ], *cmd, *p;
 	int i, found = 0;
 
 	ARGBEGIN {

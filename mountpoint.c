@@ -8,18 +8,22 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s target\n", argv0);
+	eprintf("usage: %s [-q] target\n", argv0);
 }
 
 int
 main(int argc, char *argv[])
 {
 	int i;
+	int qflag = 0;
 	struct mntinfo *minfo = NULL;
 	int siz;
 	int ret = 0;
 
 	ARGBEGIN {
+	case 'q':
+		qflag = 1;
+		break;
 	default:
 		usage();
 	} ARGEND;
@@ -37,6 +41,10 @@ main(int argc, char *argv[])
 
 	if (i == siz)
 		ret = 1;
+
+	if (!qflag)
+		printf("%s %s a mountpoint\n", argv[0],
+		       !ret ? "is" : "is not");
 
 	return ret;
 }

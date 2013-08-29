@@ -1,4 +1,7 @@
 /* See LICENSE file for copyright and license details. */
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,6 +22,7 @@ main(int argc, char *argv[])
 	struct mntinfo *minfo = NULL;
 	int siz;
 	int ret = 0;
+	struct stat st;
 
 	ARGBEGIN {
 	case 'q':
@@ -30,6 +34,12 @@ main(int argc, char *argv[])
 
 	if (argc < 1)
 		usage();
+
+	if (stat(argv[0], &st) < 0)
+		eprintf("stat %s:", argv[0]);
+
+	if (!S_ISDIR(st.st_mode))
+		eprintf("lstat %s: not a directory\n", argv[0]);
 
 	siz = grabmntinfo(&minfo);
 	if (!siz)

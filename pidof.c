@@ -10,7 +10,7 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s [program...]\n", argv0);
+	eprintf("usage: %s [-s] [program...]\n", argv0);
 }
 
 int
@@ -22,8 +22,12 @@ main(int argc, char *argv[])
 	struct procstat ps;
 	char cmdline[BUFSIZ], *cmd, *p;
 	int i, found = 0;
+	int sflag = 0;
 
 	ARGBEGIN {
+	case 's':
+		sflag = 1;
+		break;
 	default:
 		usage();
 	} ARGEND;
@@ -51,10 +55,13 @@ main(int argc, char *argv[])
 			if (strcmp(cmd, argv[i]) == 0) {
 				putword(entry->d_name);
 				found++;
+				if (sflag)
+					goto out;
 			}
 		}
 	}
 
+out:
 	if (found)
 		putchar('\n');
 

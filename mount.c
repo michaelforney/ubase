@@ -1,5 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 #include <sys/mount.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,6 +43,7 @@ main(int argc, char *argv[])
 	char *types = NULL, *opt = NULL, *p;
 	const char *source;
 	const char *target;
+	struct stat st1, st2;
 	int validopt;
 	void *data = NULL;
 	struct mntinfo *minfo = NULL;
@@ -103,12 +106,20 @@ main(int argc, char *argv[])
 	if (!target) {
 		target = source;
 		source = NULL;
+		if (stat(target, &st1) < 0)
+			eprintf("stat %s:", target);
 		siz = grabmntinfo(&minfo);
 		if (!siz)
 			eprintf("grabmntinfo:");
-		for (i = 0; i < siz; i++)
-			if (!strcmp(minfo[i].mntdir, target))
+		for (i = 0; i < siz; i++) {
+			if (stat(minfo[i].mntdir, &st2) < 0)
+				eprintf("stat %s:", minfo[i].mntdir);
+			if (st1.st_dev == st2.st_dev &&
+			    st1.st_ino == st2.st_ino) {
 				source = minfo[i].fsname;
+				break;
+			}
+		}
 		if (!source)
 			enprintf(1, "can't find %s mountpoint\n",
 				 target);

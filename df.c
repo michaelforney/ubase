@@ -10,7 +10,7 @@ static void mnt_show(const char *fsname, const char *dir);
 static void
 usage(void)
 {
-	eprintf("usage: %s\n", argv0);
+	eprintf("usage: %s [-a]\n", argv0);
 }
 
 int

@@ -51,6 +51,8 @@ main(int argc, char *argv[])
 			if (!*usr.ut_name || !*usr.ut_line ||
 			    usr.ut_line[0] == '~')
 				continue;
+			if (strcmp(usr.ut_name, "LOGIN") == 0)
+				continue;
 			nusers++;
 		}
 		fclose(ufp);

@@ -11,14 +11,14 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s [-q] target\n", argv0);
+	eprintf("usage: %s [-dq] target\n", argv0);
 }
 
 int
 main(int argc, char *argv[])
 {
 	int i;
-	int qflag = 0;
+	int qflag = 0, dflag = 0;
 	struct mntinfo *minfo = NULL;
 	int siz;
 	int ret = 0;
@@ -27,6 +27,9 @@ main(int argc, char *argv[])
 	ARGBEGIN {
 	case 'q':
 		qflag = 1;
+		break;
+	case 'd':
+		dflag = 1;
 		break;
 	default:
 		usage();
@@ -40,6 +43,12 @@ main(int argc, char *argv[])
 
 	if (!S_ISDIR(st1.st_mode))
 		eprintf("lstat %s: not a directory\n", argv[0]);
+
+	if (dflag) {
+		printf("%u:%u\n", major(st1.st_dev),
+		       minor(st1.st_dev));
+		return 0;
+	}
 
 	siz = grabmntinfo(&minfo);
 	if (!siz)

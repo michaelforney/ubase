@@ -9,18 +9,21 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s -l length file\n", argv0);
+	eprintf("usage: %s [-o offset] -l length file\n", argv0);
 }
 
 int
 main(int argc, char *argv[])
 {
 	int fd;
-	long size;
+	off_t size = 0, offset = 0;
 
 	ARGBEGIN {
 	case 'l':
 		size = estrtol(EARGF(usage()), 10);
+		break;
+	case 'o':
+		offset = estrtol(EARGF(usage()), 10);
 		break;
 	default:
 		usage();
@@ -33,7 +36,7 @@ main(int argc, char *argv[])
 	if (fd < 0)
 		eprintf("open %s:", argv[0]);
 
-	if (posix_fallocate(fd, 0, size) < 0)
+	if (posix_fallocate(fd, offset, size) < 0)
 		eprintf("posix_fallocate:");
 
 	close(fd);

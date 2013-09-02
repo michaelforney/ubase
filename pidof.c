@@ -27,7 +27,7 @@ main(int argc, char *argv[])
 	struct dirent *entry;
 	pid_t pid;
 	struct procstat ps;
-	char cmdline[BUFSIZ], *cmd, *p, *arg;
+	char cmdline[BUFSIZ], *cmd, *p, *arg = NULL;
 	int i, found = 0;
 	int sflag = 0, oflag = 0;
 	struct omit *onode, *tmp;

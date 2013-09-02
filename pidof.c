@@ -82,6 +82,8 @@ main(int argc, char *argv[])
 				*p = '\0';
 			cmd = basename(cmdline);
 		}
+		if (cmd[0] == '-')
+			cmd++;
 		for (i = 0; i < argc; i++) {
 			if (strcmp(cmd, argv[i]) == 0) {
 				putword(entry->d_name);

@@ -12,7 +12,7 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s [-os] [program...]\n", argv0);
+	eprintf("usage: %s [-o pid1,pid2,...pidN] [-s] [program...]\n", argv0);
 }
 
 static struct omit {

@@ -1,8 +1,10 @@
 /* See LICENSE file for copyright and license details. */
 #include <sys/types.h>
+#include <unistd.h>
 #include <dirent.h>
 #include <libgen.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "proc.h"
 #include "util.h"
@@ -10,8 +12,13 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s [-s] [program...]\n", argv0);
+	eprintf("usage: %s [-os] [program...]\n", argv0);
 }
+
+static struct omit {
+	pid_t pid;
+	struct omit *next;
+} *omithead;
 
 int
 main(int argc, char *argv[])
@@ -20,13 +27,18 @@ main(int argc, char *argv[])
 	struct dirent *entry;
 	pid_t pid;
 	struct procstat ps;
-	char cmdline[BUFSIZ], *cmd, *p;
+	char cmdline[BUFSIZ], *cmd, *p, *arg;
 	int i, found = 0;
-	int sflag = 0;
+	int sflag = 0, oflag = 0;
+	struct omit *onode, *tmp;
 
 	ARGBEGIN {
 	case 's':
 		sflag = 1;
+		break;
+	case 'o':
+		oflag = 1;
+		arg = EARGF(usage());
 		break;
 	default:
 		usage();
@@ -35,23 +47,42 @@ main(int argc, char *argv[])
 	if (!argc)
 		return 1;
 
+	for (p = strtok(arg, ","); p; p = strtok(NULL, ",")) {
+		onode = malloc(sizeof(*onode));
+		if (!onode)
+			eprintf("malloc:");
+		if (strcmp(p, "%PPID") == 0)
+			onode->pid = getppid();
+		else
+			onode->pid = estrtol(p, 10);
+		onode->next = omithead;
+		omithead = onode;
+	}
+
 	if (!(dp = opendir("/proc")))
 		eprintf("opendir /proc:");
 
 	while ((entry = readdir(dp))) {
 		if (!pidfile(entry->d_name))
 			continue;
+		pid = estrtol(entry->d_name, 10);
+		if (oflag) {
+			for (onode = omithead; onode; onode = onode->next)
+				if (onode->pid == pid)
+					break;
+			if (onode)
+				continue;
+		}
+		parsestat(pid, &ps);
+		if (parsecmdline(ps.pid, cmdline,
+				 sizeof(cmdline)) < 0) {
+			cmd = ps.comm;
+		} else {
+			if ((p = strchr(cmdline, ' ')))
+				*p = '\0';
+			cmd = basename(cmdline);
+		}
 		for (i = 0; i < argc; i++) {
-			pid = estrtol(entry->d_name, 10);
-			parsestat(pid, &ps);
-			if (parsecmdline(ps.pid, cmdline,
-					 sizeof(cmdline)) < 0) {
-				cmd = ps.comm;
-			} else {
-				if ((p = strchr(cmdline, ' ')))
-					*p = '\0';
-				cmd = basename(cmdline);
-			}
 			if (strcmp(cmd, argv[i]) == 0) {
 				putword(entry->d_name);
 				found++;
@@ -66,6 +97,13 @@ out:
 		putchar('\n');
 
 	closedir(dp);
+
+	onode = omithead;
+	while (onode) {
+		tmp = onode->next;
+		free(onode);
+		onode = tmp;
+	}
 
 	return 0;
 }

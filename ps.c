@@ -1,5 +1,6 @@
 /* See LICENSE file for copyright and license details. */
 #include <sys/sysinfo.h>
+#include <sys/ioctl.h>
 #include <errno.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -66,6 +67,7 @@ psout(struct procstat *ps)
 {
 	struct procstatus pstatus;
 	char cmdline[BUFSIZ], *cmd;
+	char buf[BUFSIZ];
 	char *ttystr, *myttystr;
 	int tty_maj, tty_min;
 	uid_t myeuid;
@@ -74,6 +76,7 @@ psout(struct procstat *ps)
 	char stimestr[sizeof("%H:%M")];
 	struct sysinfo info;
 	struct passwd *pw;
+	struct winsize w;
 
 	/* Ignore session leaders */
 	if (flags & PS_dflag)
@@ -119,10 +122,12 @@ psout(struct procstat *ps)
 
 	sutime = (ps->stime + ps->utime) / sysconf(_SC_CLK_TCK);
 
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 	if (!(flags & PS_fflag)) {
-		printf("%5d %-6s   %02u:%02u:%02u %s\n", ps->pid, ttystr,
-		       sutime / 3600, (sutime % 3600) / 60, sutime % 60,
-		       ps->comm);
+		snprintf(buf, sizeof(buf), "%5d %-6s   %02u:%02u:%02u %s", ps->pid, ttystr,
+			 sutime / 3600, (sutime % 3600) / 60, sutime % 60,
+			 ps->comm);
+		printf("%.*s\n", w.ws_col, buf);
 	} else {
 		errno = 0;
 		pw = getpwuid(pstatus.uid);
@@ -144,12 +149,13 @@ psout(struct procstat *ps)
 		else
 			cmd = cmdline;
 
-		printf("%-8s %5d %5d  ? %5s %-5s    %02u:%02u:%02u %s%s%s\n",
-		       pw->pw_name, ps->pid,
-		       ps->ppid, stimestr, ttystr,
-		       sutime / 3600, (sutime % 3600) / 60, sutime % 60,
-		       (cmd == ps->comm) ? "[" : "", cmd,
-		       (cmd == ps->comm) ? "]" : "");
+		snprintf(buf, sizeof(buf), "%-8s %5d %5d  ? %5s %-5s    %02u:%02u:%02u %s%s%s",
+			 pw->pw_name, ps->pid,
+			 ps->ppid, stimestr, ttystr,
+			 sutime / 3600, (sutime % 3600) / 60, sutime % 60,
+			 (cmd == ps->comm) ? "[" : "", cmd,
+			 (cmd == ps->comm) ? "]" : "");
+		printf("%.*s\n", w.ws_col, buf);
 	}
 	free(ttystr);
 }

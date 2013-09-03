@@ -28,6 +28,11 @@ struct {
 	{ NULL,		NULL,		0 }
 };
 
+static struct option {
+	char *name;
+	struct option *next;
+} *opthead;
+
 static void
 usage(void)
 {
@@ -40,14 +45,16 @@ main(int argc, char *argv[])
 {
 	int i;
 	unsigned long flags = 0;
-	char *types = NULL, *opt = NULL, *p;
+	char *types = NULL, *arg = NULL, *p;
 	const char *source;
 	const char *target;
 	struct stat st1, st2;
 	int validopt;
 	void *data = NULL;
 	struct mntinfo *minfo = NULL;
+	struct option *opt, *tmp;
 	int siz;
+	int oflag = 0;
 
 	ARGBEGIN {
 	case 'B':
@@ -63,32 +70,18 @@ main(int argc, char *argv[])
 		data = EARGF(usage());
 		break;
 	case 'o':
-		opt = EARGF(usage());
-		p = strtok(opt, ",");
-		while (p) {
-			validopt = 0;
-			for (i = 0; optnames[i].v; i++) {
-				if (optnames[i].opt) {
-					if (!strcmp(p, optnames[i].opt)) {
-						flags |= optnames[i].v;
-						validopt = 1;
-						break;
-					}
-				}
-				if (optnames[i].notopt) {
-					if (!strcmp(p, optnames[i].notopt)) {
-						flags &= ~optnames[i].v;
-						validopt = 1;
-						break;
-					}
-				}
-			}
-			if (!validopt)
-				break;
-			p = strtok(NULL, ",");
+		oflag = 1;
+		arg = EARGF(usage());
+		for (p = strtok(arg, ","); p; p = strtok(NULL, ",")) {
+			opt = malloc(sizeof(*opt));
+			if (!opt)
+				eprintf("malloc:");
+			opt->name = strdup(p);
+			if (!opt->name)
+				eprintf("strdup:");
+			opt->next = opthead;
+			opthead = opt;
 		}
-		if (!validopt)
-			enprintf(1, "unknown option: %s\n", p);
 		break;
 	case 't':
 		types = EARGF(usage());
@@ -99,6 +92,32 @@ main(int argc, char *argv[])
 
 	if (argc < 1)
 		usage();
+
+	for (opt = opthead; opt; opt = opt->next) {
+		validopt = 0;
+		for (i = 0; optnames[i].v; i++) {
+			if (optnames[i].opt) {
+				if (!strcmp(opt->name,
+					    optnames[i].opt)) {
+					flags |= optnames[i].v;
+					validopt = 1;
+					break;
+				}
+			}
+			if (optnames[i].notopt) {
+				if (!strcmp(opt->name,
+					    optnames[i].notopt)) {
+					flags &= ~optnames[i].v;
+					validopt = 1;
+					break;
+				}
+			}
+		}
+		if (!validopt)
+			break;
+	}
+	if (oflag && !validopt)
+		enprintf(1, "unknown option: %s\n", opt->name);
 
 	source = argv[0];
 	target = argv[1];
@@ -129,6 +148,14 @@ main(int argc, char *argv[])
 		eprintf("mount:");
 
 	free(minfo);
+
+	opt = opthead;
+	while (opt) {
+		tmp = opt->next;
+		free(opt->name);
+		free(opt);
+		opt = tmp;
+	}
 
 	return 0;
 }

@@ -104,7 +104,7 @@ main(int argc, char *argv[])
 	target = argv[1];
 
 	if (!target) {
-		target = source;
+		target = argv[0];
 		source = NULL;
 		if (stat(target, &st1) < 0)
 			eprintf("stat %s:", target);

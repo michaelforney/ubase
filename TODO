@@ -9,7 +9,9 @@ Tools
  * swapon [-a]
  * swapoff [-a]
  * mount [-an]
+ * umount [-a]
  * sysctl
+ * lspci
 
 Other
 =====

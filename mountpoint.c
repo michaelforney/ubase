@@ -11,14 +11,14 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s [-dq] target\n", argv0);
+	eprintf("usage: %s [-dqx] target\n", argv0);
 }
 
 int
 main(int argc, char *argv[])
 {
 	int i;
-	int qflag = 0, dflag = 0;
+	int qflag = 0, dflag = 0, xflag = 0;
 	struct mntinfo *minfo = NULL;
 	int siz;
 	int ret = 0;
@@ -31,6 +31,9 @@ main(int argc, char *argv[])
 	case 'd':
 		dflag = 1;
 		break;
+	case 'x':
+		xflag = 1;
+		break;
 	default:
 		usage();
 	} ARGEND;
@@ -41,8 +44,17 @@ main(int argc, char *argv[])
 	if (stat(argv[0], &st1) < 0)
 		eprintf("stat %s:", argv[0]);
 
+	if (xflag) {
+		if (!S_ISBLK(st1.st_mode))
+			eprintf("stat: %s: not a block device\n",
+				argv[0]);
+		printf("%u:%u\n", major(st1.st_rdev),
+		       minor(st1.st_rdev));
+		return 0;
+	}
+
 	if (!S_ISDIR(st1.st_mode))
-		eprintf("lstat %s: not a directory\n", argv[0]);
+		eprintf("stat %s: not a directory\n", argv[0]);
 
 	if (dflag) {
 		printf("%u:%u\n", major(st1.st_dev),

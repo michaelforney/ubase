@@ -6,7 +6,7 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s [-lf] target\n", argv0);
+	eprintf("usage: %s [-lfn] target\n", argv0);
 }
 
 int

@@ -36,7 +36,7 @@ static struct option {
 static void
 usage(void)
 {
-	eprintf("usage: %s [-BMRd] [-t fstype] [-o options] source target\n",
+	eprintf("usage: %s [-BMRdn] [-t fstype] [-o options] source target\n",
 		argv0);
 }
 

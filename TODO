@@ -12,6 +12,8 @@ Tools
  * umount [-a]
  * sysctl
  * lspci
+ * su
+ * eject
 
 Other
 =====

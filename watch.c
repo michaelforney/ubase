@@ -38,6 +38,7 @@ main(int argc, char *argv[])
 	}
 
 	for (;;) {
+		printf("\e[2J\e[H");
 		fflush(NULL);
 		system(cmd);
 		sleep(interval);

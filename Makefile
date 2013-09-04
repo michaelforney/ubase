@@ -13,6 +13,8 @@ LIB = \
 	util/proc.o         \
 	util/putword.o      \
 	util/recurse.o      \
+	util/strlcat.o      \
+	util/strlcpy.o      \
 	util/tty.o
 
 SRC = \
@@ -40,7 +42,8 @@ SRC = \
 	truncate.c          \
 	umount.c            \
 	unshare.c           \
-	uptime.c
+	uptime.c            \
+	watch.c
 
 OBJ = $(SRC:.c=.o) $(LIB)
 BIN = $(SRC:.c=)

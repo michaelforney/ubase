@@ -14,4 +14,6 @@ void eprintf(const char *, ...);
 long estrtol(const char *, int);
 void putword(const char *);
 void recurse(const char *, void (*)(const char *));
+size_t strlcat(char *, const char *, size_t);
+size_t strlcpy(char *, const char *, size_t);
 char *ttytostr(int, int);

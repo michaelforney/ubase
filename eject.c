@@ -15,14 +15,14 @@ enum {
 static void
 usage(void)
 {
-	eprintf("usage: %s [-t]\n", argv0);
+	eprintf("usage: %s [-t] [devname]\n", argv0);
 }
 
 int
 main(int argc, char *argv[])
 {
 	int fd, out;
-	const char *cdrom = "/dev/sr0";
+	char *cdrom = "/dev/sr0";
 	int tflag = 0;
 
 	ARGBEGIN {
@@ -32,6 +32,11 @@ main(int argc, char *argv[])
 	default:
 		usage();
 	} ARGEND;
+
+	if (argc > 1)
+		usage();
+	else if (argc == 1)
+		cdrom = argv[0];
 
 	fd = open(cdrom, O_RDONLY | O_NONBLOCK);
 	if (fd < 0)

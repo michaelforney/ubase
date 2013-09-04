@@ -33,8 +33,8 @@ main(int argc, char *argv[])
 	if (pflag)
 		cmd = LINUX_REBOOT_CMD_POWER_OFF;
 
-	if (syscall(__NR_reboot, 0xfee1dead, 672274793,
-		    cmd, NULL) < 0)
+	if (syscall(__NR_reboot, LINUX_REBOOT_MAGIC1,
+		    LINUX_REBOOT_MAGIC2, cmd, NULL) < 0)
 		eprintf("reboot:");
 	return 0;
 }

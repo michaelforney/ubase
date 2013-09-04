@@ -24,7 +24,8 @@ main(int argc, char *argv[])
 
 	sync();
 
-	if (syscall(__NR_reboot, 0xfee1dead, 672274793,
+	if (syscall(__NR_reboot, LINUX_REBOOT_MAGIC1,
+		    LINUX_REBOOT_MAGIC2,
 		    LINUX_REBOOT_CMD_RESTART, NULL) < 0)
 		eprintf("reboot:");
 	return 0;

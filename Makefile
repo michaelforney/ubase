@@ -22,6 +22,7 @@ SRC = \
 	clear.c             \
 	df.c                \
 	dmesg.c             \
+	eject.c             \
 	fallocate.c         \
 	free.c              \
 	halt.c              \

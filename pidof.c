@@ -83,6 +83,7 @@ main(int argc, char *argv[])
 				*p = '\0';
 			cmd = basename(cmdline);
 		}
+		/* Workaround for login shells */
 		if (cmd[0] == '-')
 			cmd++;
 		for (i = 0; i < argc; i++) {

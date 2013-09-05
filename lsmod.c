@@ -45,6 +45,8 @@ main(int argc, char *argv[])
 		printf("%-20s%8s%3s %s\n", name, size, refcount,
 		       users);
 	}
+	if (ferror(fp))
+		eprintf("%s: read error:", modfile);
 	fclose(fp);
 	return 0;
 }

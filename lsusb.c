@@ -50,6 +50,8 @@ lsusb(const char *file)
 			break;
 		}
 	}
+	if (ferror(fp))
+		eprintf("%s: read error:", path);
 	fclose(fp);
 }
 

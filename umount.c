@@ -23,6 +23,8 @@ main(int argc, char *argv[])
 	case 'l':
 		flags |= MNT_DETACH;
 		break;
+	case 'n':
+		break;
 	default:
 		usage();
 	} ARGEND;

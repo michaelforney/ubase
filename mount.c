@@ -86,6 +86,8 @@ main(int argc, char *argv[])
 	case 't':
 		types = EARGF(usage());
 		break;
+	case 'n':
+		break;
 	default:
 		usage();
 	} ARGEND;

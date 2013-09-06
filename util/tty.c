@@ -15,7 +15,7 @@ char *
 ttytostr(int tty_maj, int tty_min)
 {
 	const char *pts = "pts/";
-	const char *tty = "tty/";
+	const char *tty = "tty";
 	char *ttystr;
 	size_t len;
 

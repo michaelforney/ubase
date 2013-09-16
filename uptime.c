@@ -46,7 +46,7 @@ main(int argc, char *argv[])
 	else
 		printf("%d min, ", minutes);
 
-	if ((ufp = fopen(_PATH_UTMP, "r"))) {
+	if ((ufp = fopen("/var/run/utmp", "r"))) {
 		while(fread(&usr, sizeof(usr), 1, ufp) == 1) {
 			if (!*usr.ut_name || !*usr.ut_line ||
 			    usr.ut_line[0] == '~')

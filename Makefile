@@ -35,7 +35,6 @@ SRC = \
 	pidof.c             \
 	pivot_root.c        \
 	ps.c                \
-	reboot.c            \
 	rmmod.c             \
 	stat.c              \
 	swapoff.c           \

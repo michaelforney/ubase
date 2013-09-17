@@ -8,18 +8,21 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s [-p]\n", argv0);
+	eprintf("usage: %s [-pr]\n", argv0);
 }
 
 int
 main(int argc, char *argv[])
 {
-	int pflag = 0;
+	int pflag = 0, rflag = 0;
 	int cmd = LINUX_REBOOT_CMD_HALT;
 
 	ARGBEGIN {
 	case 'p':
 		pflag = 1;
+		break;
+	case 'r':
+		rflag = 1;
 		break;
 	default:
 		usage();
@@ -30,11 +33,16 @@ main(int argc, char *argv[])
 
 	sync();
 
+	if (pflag && rflag)
+		usage();
+
 	if (pflag)
 		cmd = LINUX_REBOOT_CMD_POWER_OFF;
+	if (rflag)
+		cmd = LINUX_REBOOT_CMD_RESTART;
 
 	if (syscall(__NR_reboot, LINUX_REBOOT_MAGIC1,
 		    LINUX_REBOOT_MAGIC2, cmd, NULL) < 0)
-		eprintf("reboot:");
+		eprintf("halt:");
 	return 0;
 }

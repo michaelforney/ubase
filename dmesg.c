@@ -12,6 +12,7 @@ static int dmesg_show(int fd, const void *buf, size_t n);
 enum {
 	SYSLOG_ACTION_READ_ALL = 3,
 	SYSLOG_ACTION_CLEAR = 5,
+	SYSLOG_ACTION_CONSOLE_LEVEL = 8,
 	SYSLOG_ACTION_SIZE_BUFFER = 10
 };
 
@@ -28,6 +29,7 @@ main(int argc, char *argv[])
 	char *buf;
 	int cflag = 0;
 	int rflag = 0;
+	long level;
 
 	ARGBEGIN {
 	case 'C':
@@ -40,6 +42,11 @@ main(int argc, char *argv[])
 	case 'r':
 		rflag = 1;
 		break;
+	case 'n':
+		level = estrtol(EARGF(usage()), 10);
+		if (klogctl(SYSLOG_ACTION_CONSOLE_LEVEL, NULL, level) < 0)
+			eprintf("klogctl:");
+		return 0;
 	default:
 		usage();
 	} ARGEND;

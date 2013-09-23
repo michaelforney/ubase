@@ -15,6 +15,7 @@ Tools
  * su
  * eject
  * mkswap [-L]
+ * dmesg -n
 
 Other
 =====

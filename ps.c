@@ -127,7 +127,10 @@ psout(struct procstat *ps)
 		snprintf(buf, sizeof(buf), "%5d %-6s   %02u:%02u:%02u %s", ps->pid, ttystr,
 			 sutime / 3600, (sutime % 3600) / 60, sutime % 60,
 			 ps->comm);
-		printf("%.*s\n", w.ws_col, buf);
+		if (w.ws_col)
+			printf("%.*s\n", w.ws_col, buf);
+		else
+			printf("%s\n", buf);
 	} else {
 		errno = 0;
 		pw = getpwuid(pstatus.uid);
@@ -155,7 +158,10 @@ psout(struct procstat *ps)
 			 sutime / 3600, (sutime % 3600) / 60, sutime % 60,
 			 (cmd == ps->comm) ? "[" : "", cmd,
 			 (cmd == ps->comm) ? "]" : "");
-		printf("%.*s\n", w.ws_col, buf);
+		if (w.ws_col)
+			printf("%.*s\n", w.ws_col, buf);
+		else
+			printf("%s\n", buf);
 	}
 	free(ttystr);
 }

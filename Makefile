@@ -36,7 +36,6 @@ SRC = \
 	pivot_root.c        \
 	ps.c                \
 	rmmod.c             \
-	stat.c              \
 	swapoff.c           \
 	swapon.c            \
 	truncate.c          \

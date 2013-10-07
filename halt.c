@@ -2,6 +2,7 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "reboot.h"
 #include "util.h"
 
@@ -44,5 +45,5 @@ main(int argc, char *argv[])
 	if (syscall(__NR_reboot, LINUX_REBOOT_MAGIC1,
 		    LINUX_REBOOT_MAGIC2, cmd, NULL) < 0)
 		eprintf("reboot:");
-	return 0;
+	return EXIT_SUCCESS;
 }

@@ -21,7 +21,7 @@ main(int argc, char *argv[])
 	} ARGEND;
 
 	recurse("/sys/bus/usb/devices", lsusb);
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 static void

@@ -2,6 +2,7 @@
 #include <sys/swap.h>
 #include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "util.h"
 
@@ -15,7 +16,7 @@ int
 main(int argc, char *argv[])
 {
 	int i;
-	int ret = 0;
+	int ret = EXIT_SUCCESS;
 	int flags = 0;
 
 	ARGBEGIN {
@@ -34,7 +35,7 @@ main(int argc, char *argv[])
 		if (ret < 0) {
 			fprintf(stderr, "swapon %s: %s\n",
 				argv[i], strerror(errno));
-			ret = 1;
+			ret = EXIT_FAILURE;
 		}
 	}
 	return ret;

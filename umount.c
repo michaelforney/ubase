@@ -1,6 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 #include <sys/mount.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "util.h"
 
 static void
@@ -14,7 +15,7 @@ main(int argc, char *argv[])
 {
 	int i;
 	int flags = 0;
-	int ret = 0;
+	int ret = EXIT_SUCCESS;
 
 	ARGBEGIN {
 	case 'f':
@@ -35,7 +36,7 @@ main(int argc, char *argv[])
 	for (i = 0; i < argc; i++) {
 		if (umount2(argv[i], flags) < 0)
 			eprintf("umount2:");
-		ret = 1;
+		ret = EXIT_FAILURE;
 	}
 	return ret;
 }

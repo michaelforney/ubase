@@ -2,6 +2,7 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "util.h"
 
 static void
@@ -24,5 +25,5 @@ main(int argc, char *argv[])
 	if (syscall(SYS_pivot_root, argv[0], argv[1]) < 0)
 		eprintf("pivot_root:");
 
-	return 0;
+	return EXIT_SUCCESS;
 }

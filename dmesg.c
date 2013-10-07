@@ -76,7 +76,7 @@ main(int argc, char *argv[])
 		eprintf("klogctl:");
 
 	free(buf);
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 static int

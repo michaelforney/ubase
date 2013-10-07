@@ -43,5 +43,5 @@ main(int argc, char *argv[])
 		system(cmd);
 		sleep(interval);
 	}
-	return 0;
+	return EXIT_SUCCESS;
 }

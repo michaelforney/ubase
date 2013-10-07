@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "util.h"
 
 enum {
@@ -49,5 +50,5 @@ main(int argc, char *argv[])
 			eprintf("ioctl:");
 	}
 	close(fd);
-	return 0;
+	return EXIT_SUCCESS;
 }

@@ -119,7 +119,7 @@ main(int argc, char *argv[])
 			break;
 	}
 	if (oflag && !validopt)
-		enprintf(1, "unknown option: %s\n", opt->name);
+		enprintf(EXIT_FAILURE, "unknown option: %s\n", opt->name);
 
 	source = argv[0];
 	target = argv[1];
@@ -142,7 +142,7 @@ main(int argc, char *argv[])
 			}
 		}
 		if (!source)
-			enprintf(1, "can't find %s mountpoint\n",
+			enprintf(EXIT_FAILURE, "can't find %s mountpoint\n",
 				 target);
 	}
 
@@ -159,5 +159,5 @@ main(int argc, char *argv[])
 		opt = tmp;
 	}
 
-	return 0;
+	return EXIT_SUCCESS;
 }

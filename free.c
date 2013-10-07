@@ -66,5 +66,5 @@ main(int argc, char *argv[])
 	       scale(info.totalswap),
 	       scale(info.totalswap - info.freeswap),
 	       scale(info.freeswap));
-	return 0;
+	return EXIT_SUCCESS;
 }

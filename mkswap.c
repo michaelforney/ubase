@@ -59,7 +59,7 @@ main(int argc, char *argv[])
 
 	pages = sb.st_size / pagesize;
 	if (pages < SWAP_MIN_PAGES)
-		enprintf(1, "swap space needs to be at least %ldKiB\n",
+		enprintf(EXIT_FAILURE, "swap space needs to be at least %ldKiB\n",
 			 SWAP_MIN_PAGES * pagesize / 1024);
 
 	/* Fill up the swap header */
@@ -73,11 +73,11 @@ main(int argc, char *argv[])
 
 	/* Write out the signature page */
 	if (write(fd, buf, pagesize) != pagesize)
-		enprintf(1, "unable to write signature page\n");
+		enprintf(EXIT_FAILURE, "unable to write signature page\n");
 
 	fsync(fd);
 	close(fd);
 	free(buf);
 
-	return 0;
+	return EXIT_SUCCESS;
 }

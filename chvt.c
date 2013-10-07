@@ -53,5 +53,5 @@ VTfound:
 		eprintf("chvt: VT_WAITACTIVE '%d':", n);
 	close(fd);
 
-	return 0;
+	return EXIT_SUCCESS;
 }

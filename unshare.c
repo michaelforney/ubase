@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "util.h"
 
@@ -49,5 +50,5 @@ main(int argc, char *argv[])
 	if (execvp(argv[0], argv) < 0)
 		eprintf("execvp:");
 
-	return 0;
+	return EXIT_SUCCESS;
 }

@@ -66,5 +66,5 @@ main(int argc, char *argv[])
 
 	free(opts);
 	free(buf);
-	return 0;
+	return EXIT_SUCCESS;
 }

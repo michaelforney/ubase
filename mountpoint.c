@@ -50,7 +50,7 @@ main(int argc, char *argv[])
 				argv[0]);
 		printf("%u:%u\n", major(st1.st_rdev),
 		       minor(st1.st_rdev));
-		return 0;
+		return EXIT_SUCCESS;
 	}
 
 	if (!S_ISDIR(st1.st_mode))
@@ -59,7 +59,7 @@ main(int argc, char *argv[])
 	if (dflag) {
 		printf("%u:%u\n", major(st1.st_dev),
 		       minor(st1.st_dev));
-		return 0;
+		return EXIT_SUCCESS;
 	}
 
 	siz = grabmntinfo(&minfo);

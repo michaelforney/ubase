@@ -53,7 +53,7 @@ main(int argc, char *argv[])
 	else
 		printf("UID        PID  PPID  C STIME TTY          TIME CMD\n");
 	recurse("/proc", psr);
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 static void

@@ -42,5 +42,5 @@ main(int argc, char *argv[])
 			eprintf("ftruncate: %s:", argv[i]);
 		close(fd);
 	}
-	return 0;
+	return EXIT_SUCCESS;
 }

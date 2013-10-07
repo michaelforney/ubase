@@ -39,7 +39,7 @@ main(int argc, char *argv[])
 		mnt_show(minfo[i].fsname, minfo[i].mntdir);
 	free(minfo);
 
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 static void

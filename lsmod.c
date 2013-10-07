@@ -48,7 +48,7 @@ main(int argc, char *argv[])
 	if (ferror(fp))
 		eprintf("%s: read error:", modfile);
 	fclose(fp);
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 static void

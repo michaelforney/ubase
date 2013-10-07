@@ -35,7 +35,7 @@ main(int argc, char *argv[])
 	case 'C':
 		if (klogctl(SYSLOG_ACTION_CLEAR, NULL, 0) < 0)
 			eprintf("klogctl:");
-		return 0;
+		return EXIT_SUCCESS;
 	case 'c':
 		cflag = 1;
 		break;
@@ -46,7 +46,7 @@ main(int argc, char *argv[])
 		level = estrtol(EARGF(usage()), 10);
 		if (klogctl(SYSLOG_ACTION_CONSOLE_LEVEL, NULL, level) < 0)
 			eprintf("klogctl:");
-		return 0;
+		return EXIT_SUCCESS;
 	default:
 		usage();
 	} ARGEND;

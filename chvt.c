@@ -26,7 +26,7 @@ usage(void)
 }
 
 int
-main(int argc, char **argv)
+main(int argc, char *argv[])
 {
 	int n, i, fd;
 	char c;

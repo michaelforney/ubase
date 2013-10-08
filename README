@@ -2,6 +2,6 @@ ubase is a set of tools similar to util-linux to complement sbase[1].
 
 To build a statically linked version with musl:
 
-  make CC=musl-gcc LDFLAGS+="-static" ubase-box
+  make CC=musl-gcc LDFLAGS=-static ubase-box
 
 [1] http://git.suckless.org/sbase

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <utmp.h>
+#include <utmpx.h>
 #include "util.h"
 
 static void
@@ -16,13 +16,14 @@ usage(void)
 int
 main(int argc, char *argv[])
 {
-	struct utmp usr;
+	struct utmpx utx;
 	FILE *ufp;
 	struct sysinfo info;
 	time_t tmptime;
 	struct tm *now;
 	unsigned int days, hours, minutes;
 	int nusers = 0;
+	size_t n;
 
 	ARGBEGIN {
 	default:
@@ -47,14 +48,15 @@ main(int argc, char *argv[])
 		printf("%d min, ", minutes);
 
 	if ((ufp = fopen("/var/run/utmp", "r"))) {
-		while(fread(&usr, sizeof(usr), 1, ufp) == 1) {
-			if (!*usr.ut_name || !*usr.ut_line ||
-			    usr.ut_line[0] == '~')
+		while ((n = fread(&utx, sizeof(utx), 1, ufp)) > 0) {
+			if (!utx.ut_user[0])
 				continue;
-			if (strcmp(usr.ut_name, "LOGIN") == 0)
+			if (utx.ut_type != USER_PROCESS)
 				continue;
 			nusers++;
 		}
+		if (ferror(ufp))
+			eprintf("/var/run/utmp: read error:");
 		fclose(ufp);
 		printf(" %d user%s, ", nusers, nusers > 1 ? "s" : "");
 	}

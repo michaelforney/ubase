@@ -44,9 +44,19 @@ SRC = \
 	uptime.c            \
 	watch.c
 
+MAN1 = \
+	chvt.1              \
+	clear.1             \
+	df.1                \
+	eject.1
+
+MAN8 = \
+	halt.8              \
+	lsmod.8             \
+	lsusb.8
+
 OBJ = $(SRC:.c=.o) $(LIB)
 BIN = $(SRC:.c=)
-MAN = $(SRC:.c=.1)
 
 all: options binlib
 
@@ -83,8 +93,12 @@ install: all
 	@cd $(DESTDIR)$(PREFIX)/bin && chmod 755 $(BIN)
 	@echo installing manual pages to $(DESTDIR)$(MANPREFIX)/man1
 	@mkdir -p $(DESTDIR)$(MANPREFIX)/man1
-	@for m in $(MAN); do sed "s/VERSION/$(VERSION)/g" < "$$m" > $(DESTDIR)$(MANPREFIX)/man1/"$$m"; done
-	@cd $(DESTDIR)$(MANPREFIX)/man1 && chmod 644 $(MAN)
+	@for m in $(MAN1); do sed "s/VERSION/$(VERSION)/g" < "$$m" > $(DESTDIR)$(MANPREFIX)/man1/"$$m"; done
+	@echo installing manual pages to $(DESTDIR)$(MANPREFIX)/man8
+	@mkdir -p $(DESTDIR)$(MANPREFIX)/man8
+	@for m in $(MAN8); do sed "s/VERSION/$(VERSION)/g" < "$$m" > $(DESTDIR)$(MANPREFIX)/man8/"$$m"; done
+	@chmod 644 $(DESTDIR)$(MANPREFIX)/man1/$(MAN1)
+	@chmod 644 $(DESTDIR)$(MANPREFIX)/man8/$(MAN8)
 
 uninstall:
 	@echo removing executables from $(DESTDIR)$(PREFIX)/bin

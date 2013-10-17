@@ -1,19 +1,16 @@
-.Dd October 17, 2013
-.Dt HALT 8 1
-.Os Linux
-.Sh NAME
-.Nm halt
-.Nd Halt, power-off or reboot the machine
-.Sh SYNOPSIS
-.Nm halt
-.Op Fl pr
-.Sh DESCRIPTION
+.TH HALT 8 ubase\-VERSION
+.OS Linux
+.SH NAME
+halt \- Halt, power-off or reboot the machine
+.SH SYNOPSIS
+.B halt
+.RB [ \-pr ]
+.SH DESCRIPTION
 halt can be used to halt, power-off or reboot the machine.
-.Pp
-The options are as follows:
-.Bl -tag -width Ds
-.It Fl p
+.SH OPTIONS
+.TP
+.BI \-p
 power-off the machine.
-.It Fl r
+.TP
+.BI \-r
 reboot the machine.
-.El

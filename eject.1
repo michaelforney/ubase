@@ -1,21 +1,14 @@
-.Dd October 16, 2013
-.Dt EJECT 1 1
-.Os Linux
-.Sh NAME
-.Nm eject
-.Nd eject removable media
-.Sh SYNOPSIS
-.Nm eject
-.Op Fl t
-.Sh DESCRIPTION
+.TH EJECT 1 ubase\-VERSION
+.OS Linux
+.SH NAME
+eject \- eject removable media
+.SH SYNOPSIS
+.B eject
+.RB [ \-t ]
+.SH DESCRIPTION
 eject allows the CD-ROM tray to be opened or closed under software
-.br
-control.
-.Pp
-If no arguments are given, the CD-ROM tray is opened.
-.Pp
-The options are as follows:
-.Bl -tag -width Ds
-.It Fl t
+control.  If no arguments are given, the CD-ROM tray is opened.
+.SH OPTIONS
+.TP
+.BI \-t
 If supported, close the CD-ROM tray.
-.El

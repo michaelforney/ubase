@@ -106,7 +106,7 @@ main(int argc, char **argv)
 		newargv = (char *const[]){pw->pw_shell, NULL};
 		if (!pflag) {
 			setenv("HOME", pw->pw_dir, 1);
-			setenv("SHELL", pw->pw_dir, 1);
+			setenv("SHELL", pw->pw_shell, 1);
 			if (strcmp(pw->pw_name, "root") != 0) {
 				setenv("USER", pw->pw_name, 1);
 				setenv("LOGNAME", pw->pw_name, 1);

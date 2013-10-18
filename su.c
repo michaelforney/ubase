@@ -101,6 +101,11 @@ main(int argc, char **argv)
 	} else {
 		newargv = (char *const[]){pw->pw_shell, NULL};
 		setenv("HOME", pw->pw_dir, 1);
+		setenv("SHELL", pw->pw_dir, 1);
+		if (strcmp(pw->pw_name, "root") != 0) {
+			setenv("USER", pw->pw_name, 1);
+			setenv("LOGNAME", pw->pw_name, 1);
+		}
 		execve(pw->pw_shell, newargv, environ);
 	}
 	return (errno == ENOENT) ? 127 : 126;

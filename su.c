@@ -12,6 +12,9 @@
 
 extern char **environ;
 
+static char *msetenv(const char *, const char *);
+static void dologin(struct passwd *);
+
 static void
 usage(void)
 {
@@ -93,8 +96,49 @@ main(int argc, char **argv)
 	if (setuid(pw->pw_uid) < 0)
 		eprintf("setuid:");
 
-	newargv = (char *const[]){pw->pw_shell, NULL};
-	setenv("HOME", pw->pw_dir, 1);
-	execve(pw->pw_shell, newargv, environ);
+	if (lflag) {
+		dologin(pw);
+	} else {
+		newargv = (char *const[]){pw->pw_shell, NULL};
+		setenv("HOME", pw->pw_dir, 1);
+		execve(pw->pw_shell, newargv, environ);
+	}
 	return (errno == ENOENT) ? 127 : 126;
+}
+
+static char *
+msetenv(const char *name, const char *value)
+{
+	char *buf;
+	size_t sz;
+
+	sz = strlen(name) + strlen(value) + 2;
+	buf = malloc(sz);
+	if (!buf)
+		eprintf("malloc:");
+	snprintf(buf, sz, "%s=%s", name, value);
+	return buf;
+}
+
+static void
+dologin(struct passwd *pw)
+{
+	char shbuf[strlen(pw->pw_shell) + 1];
+	char * const *newargv;
+	char * const *newenv;
+
+	strcpy(shbuf, pw->pw_shell);
+	newargv = (char *const[]){shbuf, NULL};
+	newenv = (char *const[]){
+		msetenv("HOME", pw->pw_dir),
+		msetenv("SHELL", pw->pw_shell),
+		msetenv("USER", pw->pw_name),
+		msetenv("LOGNAME", pw->pw_name),
+		msetenv("TERM", getenv("TERM")),
+		msetenv("PATH", getenv("PATH")),
+		NULL
+	};
+	if (chdir(pw->pw_dir) < 0)
+		eprintf("chdir %s:", pw->pw_dir);
+	execve(pw->pw_shell, newargv, newenv);
 }

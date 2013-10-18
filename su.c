@@ -112,7 +112,8 @@ main(int argc, char **argv)
 				setenv("LOGNAME", pw->pw_name, 1);
 			}
 		}
-		execve(pw->pw_shell, newargv, environ);
+		execve(pflag ? getenv("SHELL") : pw->pw_shell,
+		       newargv, environ);
 	}
 	return (errno == ENOENT) ? 127 : 126;
 }

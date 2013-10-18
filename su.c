@@ -61,16 +61,16 @@ main(int argc, char **argv)
 		pass = getpass("Password: ");
 		if (!pass)
 			eprintf("getpass:");
+
+		cryptpass = crypt(pass, spw->sp_pwdp);
+		for (i = 0; pass[i]; i++)
+			pass[i] = '\0';
+		if (!cryptpass)
+			eprintf("crypt:");
+
+		if (strcmp(cryptpass, spw->sp_pwdp) != 0)
+			enprintf(EXIT_FAILURE, "Denied\n");
 	}
-
-	cryptpass = crypt(pass, spw->sp_pwdp);
-	for (i = 0; pass[i]; i++)
-		pass[i] = '\0';
-	if (!cryptpass)
-		eprintf("crypt:");
-
-	if (strcmp(cryptpass, spw->sp_pwdp) != 0)
-		enprintf(EXIT_FAILURE, "Denied\n");
 
 	errno = 0;
 	pw = getpwnam(usr);

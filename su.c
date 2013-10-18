@@ -10,11 +10,15 @@
 #include <stdlib.h>
 #include "util.h"
 
+extern char **environ;
+
 static void
 usage(void)
 {
-	eprintf("usage: %s [username]\n", argv0);
+	eprintf("usage: %s [-l] [username]\n", argv0);
 }
+
+static int lflag = 0;
 
 int
 main(int argc, char **argv)
@@ -27,6 +31,9 @@ main(int argc, char **argv)
 	int i;
 
 	ARGBEGIN {
+	case 'l':
+		lflag = 1;
+		break;
 	default:
 		usage();
 	} ARGEND;

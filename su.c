@@ -40,9 +40,12 @@ main(int argc, char **argv)
 
 	uid = getuid();
 
+	errno = 0;
 	spw = getspnam(usr);
-	if (!spw)
+	if (errno)
 		eprintf("getspnam: %s:", usr);
+	else if (!spw)
+		enprintf(EXIT_FAILURE, "who are you?\n");
 
 	switch (spw->sp_pwdp[0]) {
 	case '!':
@@ -74,7 +77,7 @@ main(int argc, char **argv)
 	if (errno)
 		eprintf("getpwnam: %s", usr);
 	else if (!pw)
-		enprintf(EXIT_FAILURE, "getpwnam: %s: no such user\n", usr);
+		enprintf(EXIT_FAILURE, "who are you?\n");
 
 	if (initgroups(usr, pw->pw_gid) < 0)
 		eprintf("initgroups:");

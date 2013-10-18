@@ -18,10 +18,11 @@ static void dologin(struct passwd *);
 static void
 usage(void)
 {
-	eprintf("usage: %s [-l] [username]\n", argv0);
+	eprintf("usage: %s [-lp] [username]\n", argv0);
 }
 
 static int lflag = 0;
+static int pflag = 0;
 
 int
 main(int argc, char **argv)
@@ -36,6 +37,9 @@ main(int argc, char **argv)
 	ARGBEGIN {
 	case 'l':
 		lflag = 1;
+		break;
+	case 'p':
+		pflag = 1;
 		break;
 	default:
 		usage();
@@ -100,11 +104,13 @@ main(int argc, char **argv)
 		dologin(pw);
 	} else {
 		newargv = (char *const[]){pw->pw_shell, NULL};
-		setenv("HOME", pw->pw_dir, 1);
-		setenv("SHELL", pw->pw_dir, 1);
-		if (strcmp(pw->pw_name, "root") != 0) {
-			setenv("USER", pw->pw_name, 1);
-			setenv("LOGNAME", pw->pw_name, 1);
+		if (!pflag) {
+			setenv("HOME", pw->pw_dir, 1);
+			setenv("SHELL", pw->pw_dir, 1);
+			if (strcmp(pw->pw_name, "root") != 0) {
+				setenv("USER", pw->pw_name, 1);
+				setenv("LOGNAME", pw->pw_name, 1);
+			}
 		}
 		execve(pw->pw_shell, newargv, environ);
 	}

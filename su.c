@@ -20,7 +20,7 @@ int
 main(int argc, char **argv)
 {
 	char *usr, *pass, *cryptpass;
-	char **newargv;
+	char * const *newargv;
 	struct spwd *spw;
 	struct passwd *pw;
 	uid_t uid;
@@ -83,11 +83,7 @@ main(int argc, char **argv)
 	if (setuid(pw->pw_uid) < 0)
 		eprintf("setuid:");
 
-	newargv = malloc(2 * sizeof(char *));
-	if (!newargv)
-		eprintf("malloc:");
-	newargv[0] = pw->pw_shell;
-	newargv[1] = NULL;
+	newargv = (char *const[]){pw->pw_shell, NULL};
 	setenv("HOME", pw->pw_dir, 1);
 	execve(pw->pw_shell, newargv, environ);
 	return (errno == ENOENT) ? 127 : 126;

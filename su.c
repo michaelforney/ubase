@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "config.h"
 #include "util.h"
 
 extern char **environ;
@@ -112,6 +113,10 @@ main(int argc, char **argv)
 				setenv("LOGNAME", pw->pw_name, 1);
 			}
 		}
+		if (strcmp(pw->pw_name, "root") == 0)
+			setenv("PATH", ENV_SUPATH, 1);
+		else
+			setenv("PATH", ENV_PATH, 1);
 		execve(pflag ? getenv("SHELL") : pw->pw_shell,
 		       newargv, environ);
 	}
@@ -147,7 +152,9 @@ dologin(struct passwd *pw)
 		msetenv("USER", pw->pw_name),
 		msetenv("LOGNAME", pw->pw_name),
 		msetenv("TERM", getenv("TERM")),
-		msetenv("PATH", getenv("PATH")),
+		msetenv("PATH",
+			strcmp(pw->pw_name, "root") == 0 ?
+			ENV_SUPATH : ENV_PATH),
 		NULL
 	};
 	if (chdir(pw->pw_dir) < 0)

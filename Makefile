@@ -3,7 +3,7 @@ include config.mk
 .POSIX:
 .SUFFIXES: .c .o
 
-HDR = arg.h grabmntinfo.h proc.h reboot.h util.h
+HDR = arg.h config.h grabmntinfo.h proc.h reboot.h util.h
 LIB = \
 	util/agetcwd.o      \
 	util/apathmax.o     \

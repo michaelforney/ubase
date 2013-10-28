@@ -14,18 +14,18 @@ struct {
 	const char *notopt;
 	unsigned long v;
 } optnames[] = {
-	{ "remount",	NULL,		MS_REMOUNT },
-	{ "ro",		"rw",		MS_RDONLY },
-	{ "sync",	"async",	MS_SYNCHRONOUS },
-	{ "dirsync",	NULL,		MS_DIRSYNC },
-	{ "nodev",	"dev",		MS_NODEV },
-	{ "noatime",	"atime",	MS_NOATIME },
-	{ "nodiratime",	"diratime",	MS_NODIRATIME },
-	{ "noexec",	"exec",		MS_NOEXEC },
-	{ "nosuid",	"suid",		MS_NOSUID },
-	{ "mand",	"nomand",	MS_MANDLOCK },
-	{ "relatime",	"norelatime",	MS_RELATIME },
-	{ NULL,		NULL,		0 }
+        { "remount",    NULL,           MS_REMOUNT     },
+        { "ro",         "rw",           MS_RDONLY      },
+        { "sync",       "async",        MS_SYNCHRONOUS },
+        { "dirsync",    NULL,           MS_DIRSYNC     },
+        { "nodev",      "dev",          MS_NODEV       },
+        { "noatime",    "atime",        MS_NOATIME     },
+        { "nodiratime", "diratime",     MS_NODIRATIME  },
+        { "noexec",     "exec",         MS_NOEXEC      },
+        { "nosuid",     "suid",         MS_NOSUID      },
+        { "mand",       "nomand",       MS_MANDLOCK    },
+        { "relatime",   "norelatime",   MS_RELATIME    },
+        { NULL,         NULL,           0              }
 };
 
 static struct option {

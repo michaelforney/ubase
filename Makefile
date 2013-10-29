@@ -32,6 +32,7 @@ SRC = \
 	mkswap.c            \
 	mount.c             \
 	mountpoint.c        \
+	pagesize.c          \
 	pidof.c             \
 	pivot_root.c        \
 	ps.c                \

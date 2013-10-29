@@ -45,7 +45,12 @@ main(int argc, char *argv[])
 	if (argc < 1)
 		usage();
 
-	pagesize = sysconf(_SC_PAGE_SIZE);
+	pagesize = sysconf(_SC_PAGESIZE);
+	if (pagesize <= 0) {
+		pagesize = sysconf(_SC_PAGE_SIZE);
+		if (pagesize <= 0)
+			enprintf(EXIT_FAILURE, "can't determine pagesize\n");
+	}
 
 	fd = open(argv[0], O_RDWR);
 	if (fd < 0)

@@ -13,6 +13,7 @@ Tools
  * sysctl
  * lspci
  * mkswap [-L]
+ * passwd
 
 Other
 =====

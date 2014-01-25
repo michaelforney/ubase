@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "grabmntinfo.h"
 #include "util.h"
 
 static int dmesg_show(int fd, const void *buf, size_t n);

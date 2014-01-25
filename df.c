@@ -35,8 +35,11 @@ main(int argc, char *argv[])
 	if (!siz)
 		eprintf("grabmntinfo:");
 
-	for (i = 0; i < siz; i++)
+	for (i = 0; i < siz; i++) {
 		mnt_show(minfo[i].fsname, minfo[i].mntdir);
+		free(minfo[i].fsname);
+		free(minfo[i].mntdir);
+	}
 	free(minfo);
 
 	return EXIT_SUCCESS;

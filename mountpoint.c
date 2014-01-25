@@ -72,6 +72,11 @@ main(int argc, char *argv[])
 		    st1.st_ino == st2.st_ino)
 			break;
 	}
+
+	for (i = 0; i < siz; i++) {
+		free(minfo[i].fsname);
+		free(minfo[i].mntdir);
+	}
 	free(minfo);
 
 	if (i == siz)

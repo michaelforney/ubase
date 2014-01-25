@@ -149,6 +149,10 @@ main(int argc, char *argv[])
 	if (mount(source, target, types, flags, data) < 0)
 		eprintf("mount:");
 
+	for (i = 0; i < siz; i++) {
+		free(minfo[i].fsname);
+		free(minfo[i].mntdir);
+	}
 	free(minfo);
 
 	opt = opthead;

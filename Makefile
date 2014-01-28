@@ -29,6 +29,7 @@ SRC = \
 	insmod.c            \
 	lsmod.c             \
 	lsusb.c             \
+	mknod.c             \
 	mkswap.c            \
 	mount.c             \
 	mountpoint.c        \

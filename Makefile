@@ -39,6 +39,7 @@ SRC = \
 	ps.c                \
 	rmmod.c             \
 	su.c                \
+	stat.c              \
 	swapoff.c           \
 	swapon.c            \
 	truncate.c          \

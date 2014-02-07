@@ -20,6 +20,7 @@ LIB = \
 SRC = \
 	chvt.c              \
 	clear.c             \
+	ctrlaltdel.c        \
 	df.c                \
 	dmesg.c             \
 	eject.c             \

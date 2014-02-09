@@ -6,8 +6,6 @@ Tools
  * swaplabel(8)
  * last(1)
  * losetup(8)
- * swapon [-a]
- * swapoff [-a]
  * mount [-an]
  * umount [-a]
  * sysctl

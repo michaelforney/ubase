@@ -10,7 +10,7 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s [-d] [-a] device\n", argv0);
+	eprintf("usage: %s [-dp] [-a] device\n", argv0);
 }
 
 int
@@ -27,6 +27,9 @@ main(int argc, char *argv[])
 		break;
 	case 'd':
 		flags |= SWAP_FLAG_DISCARD;
+		break;
+	case 'p':
+		flags |= SWAP_FLAG_PREFER;
 		break;
 	default:
 		usage();

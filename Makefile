@@ -3,7 +3,7 @@ include config.mk
 .POSIX:
 .SUFFIXES: .c .o
 
-HDR = arg.h config.h grabmntinfo.h proc.h reboot.h util.h
+HDR = arg.h config.def.h grabmntinfo.h proc.h reboot.h util.h
 LIB = \
 	util/agetcwd.o      \
 	util/apathmax.o     \
@@ -76,7 +76,11 @@ binlib: util.a
 
 bin: $(BIN)
 
-$(OBJ): util.h config.mk
+$(OBJ): config.h util.h config.mk
+
+config.h:
+	@echo creating $@ from config.def.h
+	@cp config.def.h $@
 
 .o:
 	@echo LD $@
@@ -119,10 +123,11 @@ dist: clean
 	@gzip ubase-$(VERSION).tar
 	@rm -rf ubase-$(VERSION)
 
-ubase-box: $(SRC) util.a
+ubase-box: config.h $(SRC) util.a
 	@echo creating box binary
 	@mkdir -p build
 	@cp $(HDR) build
+	@cp config.h build
 	@for f in $(SRC); do sed "s/^main(/`basename $$f .c`_&/" < $$f > build/$$f; done
 	@echo '#include <libgen.h>'  > build/$@.c
 	@echo '#include <stdio.h>'  >> build/$@.c

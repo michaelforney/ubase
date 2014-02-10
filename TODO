@@ -13,7 +13,6 @@ Tools
  * mkswap [-L]
  * passwd
  * login
- * getty
 
 Other
 =====

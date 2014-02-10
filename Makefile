@@ -26,6 +26,7 @@ SRC = \
 	eject.c             \
 	fallocate.c         \
 	free.c              \
+	getty.c             \
 	halt.c              \
 	insmod.c            \
 	lsmod.c             \

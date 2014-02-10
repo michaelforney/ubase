@@ -3,6 +3,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -23,7 +24,9 @@ main(int argc, char *argv[])
 {
 	int fd;
 	struct sigaction sa;
-	char term[128];
+	char term[128], logname[128], c;
+	int i = 0;
+	ssize_t n;
 
 	ARGBEGIN {
 	default:
@@ -76,5 +79,27 @@ main(int argc, char *argv[])
 	sigaction(SIGHUP, &sa, NULL);
 
 	putchar('\n');
-	return execvp("/bin/login", (char *[]){ "login", NULL });
+	printf("Login: ");
+	fflush(stdout);
+
+	/* Flush pending input */
+	ioctl(STDIN_FILENO, TCFLSH, (void *)0);
+	memset(logname, 0, sizeof(logname));
+	while (1) {
+		n = read(STDIN_FILENO, &c, 1);
+		if (n < 0)
+			eprintf("read:");
+		if (n == 0)
+			return EXIT_FAILURE;
+		if (i >= sizeof(logname) - 1)
+			eprintf("login name too long\n");
+		if (c == '\n' || c == '\r')
+			break;
+		logname[i++] = c;
+	}
+	if (logname[0] == '-')
+		eprintf("login name cannot start with '-'\n");
+	if (logname[0] == '\0')
+		return EXIT_FAILURE;
+	return execvp("/bin/login", (char *[]){ "login", logname, NULL });
 }

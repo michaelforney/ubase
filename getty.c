@@ -78,7 +78,6 @@ main(int argc, char *argv[])
 	sigemptyset(&sa.sa_mask);
 	sigaction(SIGHUP, &sa, NULL);
 
-	putchar('\n');
 	printf("Login: ");
 	fflush(stdout);
 

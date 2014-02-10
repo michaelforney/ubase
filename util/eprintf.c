@@ -33,7 +33,7 @@ enprintf(int status, const char *fmt, ...)
 void
 venprintf(int status, const char *fmt, va_list ap)
 {
-	/*fprintf(stderr, "%s: ", argv0);*/
+	fprintf(stderr, "%s: ", argv0);
 
 	vfprintf(stderr, fmt, ap);
 

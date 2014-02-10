@@ -51,10 +51,9 @@ main(int argc, char *argv[])
 		plen += strlen(argv[i]);
 	if (plen > 0) {
 		plen += argc;
-		opts = malloc(plen);
+		opts = calloc(1, plen);
 		if (!opts)
 			eprintf("malloc:");
-		memset(opts, 0, plen);
 		for (i = 0; i < argc; i++) {
 			strcat(opts, argv[i]);
 			if (i + 1 < argc)

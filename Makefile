@@ -40,8 +40,8 @@ SRC = \
 	pivot_root.c        \
 	ps.c                \
 	rmmod.c             \
-	su.c                \
 	stat.c              \
+	su.c                \
 	swapoff.c           \
 	swapon.c            \
 	truncate.c          \

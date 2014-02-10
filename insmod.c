@@ -54,6 +54,7 @@ main(int argc, char *argv[])
 		opts = malloc(plen);
 		if (!opts)
 			eprintf("malloc:");
+		memset(opts, 0, plen);
 		for (i = 0; i < argc; i++) {
 			strcat(opts, argv[i]);
 			if (i + 1 < argc)

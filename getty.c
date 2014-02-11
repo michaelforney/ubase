@@ -59,12 +59,11 @@ main(int argc, char *argv[])
 		eprintf("open %s:", tty);
 	if (isatty(fd) == 0)
 		eprintf("%s is not a tty\n", tty);
-	if (ioctl(fd, TIOCSCTTY, (void *)1) == 0) {
-		if (vhangup() < 0)
-			eprintf("vhangup:");
-	} else {
+	if (ioctl(fd, TIOCSCTTY, (void *)1) == 0)
+		vhangup();
+	else
 		fprintf(stderr, "could not set controlling tty\n");
-	}
+
 	close(fd);
 	fd = open(tty, O_RDWR);
 	if (fd < 0)

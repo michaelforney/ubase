@@ -13,7 +13,7 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s [tty] [term]\n", argv0);
+	eprintf("usage: %s [tty] [term] [cmd] [args...]\n", argv0);
 }
 
 static char *tty = "/dev/tty1";
@@ -32,9 +32,6 @@ main(int argc, char *argv[])
 	default:
 		usage();
 	} ARGEND;
-
-	if (argc > 2)
-		usage();
 
 	strlcpy(term, defaultterm, sizeof(term));
 	if (argc > 0) {
@@ -76,6 +73,9 @@ main(int argc, char *argv[])
 	sa.sa_flags = 0;
 	sigemptyset(&sa.sa_mask);
 	sigaction(SIGHUP, &sa, NULL);
+
+	if (argc > 2)
+		return execvp(argv[2], argv + 2);
 
 	printf("Login: ");
 	fflush(stdout);

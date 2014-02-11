@@ -26,6 +26,7 @@ main(int argc, char *argv[])
 	int fd;
 	struct sigaction sa;
 	char term[128], logname[LOGIN_NAME_MAX], c;
+	char hostname[HOST_NAME_MAX + 1];
 	int i = 0;
 	ssize_t n;
 
@@ -78,7 +79,9 @@ main(int argc, char *argv[])
 	if (argc > 2)
 		return execvp(argv[2], argv + 2);
 
-	printf("Login: ");
+	if (gethostname(hostname, sizeof(hostname)) == 0)
+		printf("%s ", hostname);
+	printf("login: ");
 	fflush(stdout);
 
 	/* Flush pending input */

@@ -1,5 +1,6 @@
 /* See LICENSE file for copyright and license details. */
 #include <fcntl.h>
+#include <limits.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,7 +25,7 @@ main(int argc, char *argv[])
 {
 	int fd;
 	struct sigaction sa;
-	char term[128], logname[128], c;
+	char term[128], logname[LOGIN_NAME_MAX], c;
 	int i = 0;
 	ssize_t n;
 

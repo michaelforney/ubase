@@ -76,6 +76,11 @@ main(int argc, char *argv[])
 	sigemptyset(&sa.sa_mask);
 	sigaction(SIGHUP, &sa, NULL);
 
+	if (fchown(fd, 0, 0) < 0)
+		eprintf("fchown %s:", tty);
+	if (fchmod(fd, 0600) < 0)
+		eprintf("chmod %s:", tty);
+
 	if (argc > 2)
 		return execvp(argv[2], argv + 2);
 

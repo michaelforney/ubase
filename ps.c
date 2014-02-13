@@ -95,7 +95,8 @@ psout(struct procstat *ps)
 		}
 	}
 
-	parsestatus(ps->pid, &pstatus);
+	if (parsestatus(ps->pid, &pstatus) < 0)
+		return;
 
 	/* This is the default case, only print processes that have
 	 * the same controlling terminal as the invoker and the same
@@ -175,6 +176,7 @@ psr(const char *file)
 	if (!pidfile(file))
 		return;
 	pid = estrtol(file, 10);
-	parsestat(pid, &ps);
+	if (parsestat(pid, &ps) < 0)
+		return;
 	psout(&ps);
 }

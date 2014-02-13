@@ -20,7 +20,7 @@ parsecmdline(pid_t pid, char *buf, size_t siz)
 	snprintf(path, sizeof(path), "/proc/%d/cmdline", pid);
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
-		eprintf("open %s:", path);
+		return -1;
 	n = read(fd, buf, siz - 1);
 	if (n < 0)
 		eprintf("read %s:", path);
@@ -44,7 +44,7 @@ parsestat(pid_t pid, struct procstat *ps)
 
 	snprintf(path, sizeof(path), "/proc/%d/stat", pid);
 	if (!(fp = fopen(path, "r")))
-		eprintf("fopen %s:", path);
+		return -1;
 	fscanf(fp, "%d %s %c %d %d %d %d %d %u %lu %lu %lu %lu %lu %lu",
 	       &ps->pid, ps->comm,
 	       &ps->state, &ps->ppid, &ps->pgrp,
@@ -73,7 +73,7 @@ parsestatus(pid_t pid, struct procstatus *pstatus)
 	snprintf(path, sizeof(path), "/proc/%d/status", pid);
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
-		eprintf("open %s:", path);
+		return -1;
 	n = read(fd, buf, sizeof(buf) - 1);
 	if (n < 0)
 		eprintf("%s: read error:", path);

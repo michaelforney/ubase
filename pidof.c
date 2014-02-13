@@ -74,7 +74,8 @@ main(int argc, char *argv[])
 			if (onode)
 				continue;
 		}
-		parsestat(pid, &ps);
+		if (parsestat(pid, &ps) < 0)
+			continue;
 		if (parsecmdline(ps.pid, cmdline,
 				 sizeof(cmdline)) < 0) {
 			cmd = ps.comm;

@@ -28,7 +28,8 @@ usage(void)
 int
 main(int argc, char *argv[])
 {
-	int n, i, fd;
+	unsigned int n, i;
+	int fd;
 	char c;
 
 	if(argc!=2 || strspn(argv[1], "1234567890") != strlen(argv[1]))

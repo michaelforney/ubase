@@ -84,6 +84,7 @@ dmesg_show(int fd, const void *buf, size_t n)
 	int last = '\n';
 	char newbuf[n], *q = newbuf;
 	const char *p = buf;
+	ssize_t r;
 	size_t i;
 
 	memset(newbuf, 0, n);
@@ -97,7 +98,8 @@ dmesg_show(int fd, const void *buf, size_t n)
 		}
 		last = p[i++];
 	}
-	if (write(fd, newbuf, n) != n)
+	r = write(fd, newbuf, n);
+	if(r < 0 || (size_t)r != n)
 		return -1;
 	if (last != '\n')
 		if (write(fd, "\n", 1) != 1)

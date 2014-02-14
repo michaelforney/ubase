@@ -51,7 +51,7 @@ parsestat(pid_t pid, struct procstat *ps)
 	       &ps->sid, &ps->tty_nr, &ps->tpgid, &ps->flags,
 	       &ps->minflt, &ps->cminflt, &ps->majflt, &ps->cmajflt,
 	       &ps->utime, &ps->stime);
-	fscanf(fp, "%ld %ld %ld %ld %ld %ld %lld %lu %ld %ld",
+	fscanf(fp, "%ld %ld %ld %ld %ld %ld %llu %lu %ld %ld",
 	       &ps->cutime, &ps->cstime, &ps->priority, &ps->nice,
 	       &ps->num_threads, &ps->itrealvalue, &ps->starttime,
 	       &ps->vsize, &ps->rss, &ps->rsslim);

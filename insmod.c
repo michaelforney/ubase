@@ -18,7 +18,7 @@ int
 main(int argc, char *argv[])
 {
 	char *buf = NULL, *opts = NULL;
-	unsigned long blen, plen = 0;
+	size_t blen, plen = 0;
 	int i, fd;
 	ssize_t n;
 	struct stat sb;
@@ -36,12 +36,12 @@ main(int argc, char *argv[])
 		eprintf("open %s:", argv[0]);
 	if (fstat(fd, &sb) < 0)
 		eprintf("stat %s:", argv[0]);
-	buf = malloc(sb.st_size);
-	if (!buf)
-		eprintf("malloc:");
 	blen = sb.st_size;
+	if(!(buf = malloc(blen)))
+		eprintf("malloc:");
 
-	if ((n = read(fd, buf, blen)) != blen)
+	n = read(fd, buf, blen);
+	if(n < 0 || (size_t)n != blen)
 		eprintf("read:");
 
 	argc--;
@@ -51,9 +51,8 @@ main(int argc, char *argv[])
 		plen += strlen(argv[i]);
 	if (plen > 0) {
 		plen += argc;
-		opts = calloc(1, plen);
-		if (!opts)
-			eprintf("malloc:");
+		if(!(opts = calloc(1, plen)))
+			eprintf("calloc:");
 		for (i = 0; i < argc; i++) {
 			strcat(opts, argv[i]);
 			if (i + 1 < argc)

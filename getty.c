@@ -27,7 +27,7 @@ main(int argc, char *argv[])
 	struct sigaction sa;
 	char term[128], logname[LOGIN_NAME_MAX], c;
 	char hostname[HOST_NAME_MAX + 1];
-	int i = 0;
+	unsigned int i = 0;
 	ssize_t n;
 
 	ARGBEGIN {

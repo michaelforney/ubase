@@ -43,18 +43,15 @@ usage(void)
 int
 main(int argc, char *argv[])
 {
-	int i;
+	int i, validopt, siz = 0, oflag = 0;
 	unsigned long flags = 0;
 	char *types = NULL, *arg = NULL, *p;
 	const char *source;
 	const char *target;
 	struct stat st1, st2;
-	int validopt;
 	void *data = NULL;
 	struct mntinfo *minfo = NULL;
 	struct option *opt, *tmp;
-	int siz;
-	int oflag = 0;
 
 	ARGBEGIN {
 	case 'B':

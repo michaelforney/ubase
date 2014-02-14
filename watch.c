@@ -38,7 +38,7 @@ main(int argc, char *argv[])
 	}
 
 	for (;;) {
-		printf("\e[2J\e[H");
+		printf("\x1b[2J\x1b[H"); /* clear */
 		fflush(NULL);
 		system(cmd);
 		sleep(interval);

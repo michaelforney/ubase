@@ -5,6 +5,6 @@
 int
 main(void)
 {
-	printf("\e[2J\e[H");
+	printf("\x1b[2J\x1b[H");
 	return EXIT_SUCCESS;
 }

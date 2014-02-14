@@ -28,7 +28,7 @@ static int pflag = 0;
 int
 main(int argc, char **argv)
 {
-	char *usr, *pass, *cryptpass;
+	char *usr = "root", *pass, *cryptpass;
 	char * const *newargv;
 	struct spwd *spw;
 	struct passwd *pw;
@@ -47,13 +47,11 @@ main(int argc, char **argv)
 	} ARGEND;
 
 	if (argc < 1)
-		usr = "root";
+		;
 	else if (argc == 1)
 		usr = argv[0];
 	else
 		usage();
-
-	uid = getuid();
 
 	errno = 0;
 	spw = getspnam(usr);
@@ -72,6 +70,7 @@ main(int argc, char **argv)
 		enprintf(EXIT_FAILURE, "Invalid shadow record\n");
 	}
 
+	uid = getuid();
 	if (uid) {
 		pass = getpass("Password: ");
 		if (!pass)

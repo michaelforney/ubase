@@ -48,7 +48,8 @@ SRC = \
 	umount.c            \
 	unshare.c           \
 	uptime.c            \
-	watch.c
+	watch.c             \
+	who.c
 
 MAN1 = \
 	chvt.1              \

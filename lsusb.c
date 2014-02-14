@@ -31,8 +31,7 @@ lsusb(const char *file)
 	char *cwd;
 	char path[PATH_MAX];
 	char buf[BUFSIZ];
-	int busnum, devnum, pid, vid;
-	int i = 0;
+	unsigned int i = 0, busnum = 0, devnum = 0, pid = 0, vid = 0;
 
 	cwd = agetcwd();
 	snprintf(path, sizeof(path), "%s/%s/uevent", cwd, file);

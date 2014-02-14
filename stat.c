@@ -26,6 +26,7 @@ main(int argc, char *argv[])
 	int i, ret = EXIT_SUCCESS;
 	int Lflag = 0;
 	int (*fn)(const char *, struct stat *);
+	char *fnname;
 
 	ARGBEGIN {
 	case 'L':
@@ -41,10 +42,17 @@ main(int argc, char *argv[])
 		show_stat("<stdin>", &st);
 	}
 
+	if (Lflag) {
+		fn = stat;
+		fnname = "stat";
+	} else {
+		fn = lstat;
+		fnname = "lstat";
+	}
+
 	for (i = 0; i < argc; i++) {
-		fn = Lflag ? stat : lstat;
 		if (fn(argv[i], &st) == -1) {
-			fprintf(stderr, "%s %s: %s\n", Lflag ? "stat" : "lstat",
+			fprintf(stderr, "%s %s: %s\n", fnname,
 			        argv[i], strerror(errno));
 			ret = EXIT_FAILURE;
 			continue;

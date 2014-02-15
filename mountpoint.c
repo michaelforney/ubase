@@ -1,11 +1,11 @@
 /* See LICENSE file for copyright and license details. */
-#include <sys/types.h>
-#include <sys/stat.h>
+#include <mntent.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "grabmntinfo.h"
+#include <sys/stat.h>
+#include <sys/types.h>
 #include "util.h"
 
 static void
@@ -17,10 +17,9 @@ usage(void)
 int
 main(int argc, char *argv[])
 {
-	int i;
 	int qflag = 0, dflag = 0, xflag = 0;
-	struct mntinfo *minfo = NULL;
-	int siz;
+	struct mntent *me = NULL;
+	FILE *fp;
 	int ret = 0;
 	struct stat st1, st2;
 
@@ -62,24 +61,19 @@ main(int argc, char *argv[])
 		return EXIT_SUCCESS;
 	}
 
-	siz = grabmntinfo(&minfo);
-	if (!siz)
-		eprintf("grabmntinfo:");
-	for (i = 0; i < siz; i++) {
-		if (stat(minfo[i].mntdir, &st2) < 0)
-			eprintf("stat %s:", minfo[i].mntdir);
+	fp = setmntent("/proc/mounts", "r");
+	if (!fp)
+		eprintf("setmntent %s:", "/proc/mounts");
+	while ((me = getmntent(fp)) != NULL) {
+		if (stat(me->mnt_dir, &st2) < 0)
+			eprintf("stat %s:", me->mnt_dir);
 		if (st1.st_dev == st2.st_dev &&
 		    st1.st_ino == st2.st_ino)
 			break;
 	}
+	endmntent(fp);
 
-	for (i = 0; i < siz; i++) {
-		free(minfo[i].fsname);
-		free(minfo[i].mntdir);
-	}
-	free(minfo);
-
-	if (i == siz)
+	if (me == NULL)
 		ret = 1;
 
 	if (!qflag)

@@ -45,10 +45,10 @@ main(int argc, char *argv[])
 		fp = setmntent("/etc/fstab", "r");
 		while ((me = getmntent(fp)) != NULL) {
 			if (strcmp(me->mnt_type, MNTTYPE_SWAP) == 0
-					&& (hasmntopt(me, MNTOPT_NOAUTO) == NULL)) {
+			    && (hasmntopt(me, MNTOPT_NOAUTO) == NULL)) {
 				if (swapon(me->mnt_fsname, flags) < 0) {
 					fprintf(stderr, "swapon %s: %s\n",
-							me->mnt_fsname, strerror(errno));
+						me->mnt_fsname, strerror(errno));
 					ret = EXIT_FAILURE;
 				}
 			}
@@ -58,7 +58,7 @@ main(int argc, char *argv[])
 		for (i = 0; i < argc; i++) {
 			if (swapon(argv[i], flags) < 0) {
 				fprintf(stderr, "swapon %s: %s\n",
-						argv[i], strerror(errno));
+					argv[i], strerror(errno));
 				ret = EXIT_FAILURE;
 			}
 		}

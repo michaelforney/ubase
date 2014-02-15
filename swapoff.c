@@ -40,7 +40,7 @@ main(int argc, char *argv[])
 			if (strcmp(me->mnt_type, MNTTYPE_SWAP) == 0) {
 				if (swapoff(me->mnt_fsname) < 0) {
 					fprintf(stderr, "swapoff %s: %s\n",
-							me->mnt_fsname, strerror(errno));
+						me->mnt_fsname, strerror(errno));
 					ret = EXIT_FAILURE;
 				}
 			}
@@ -50,7 +50,7 @@ main(int argc, char *argv[])
 		for (i = 0; i < argc; i++) {
 			if (swapoff(argv[i]) < 0) {
 				fprintf(stderr, "swapoff %s: %s\n",
-						argv[i], strerror(errno));
+					argv[i], strerror(errno));
 				ret = EXIT_FAILURE;
 			}
 		}

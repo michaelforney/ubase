@@ -43,6 +43,8 @@ main(int argc, char *argv[])
 		FILE *fp;
 
 		fp = setmntent("/etc/fstab", "r");
+		if (!fp)
+			eprintf("setmntent %s:", "/etc/fstab");
 		while ((me = getmntent(fp)) != NULL) {
 			if (strcmp(me->mnt_type, MNTTYPE_SWAP) == 0
 			    && (hasmntopt(me, MNTOPT_NOAUTO) == NULL)) {

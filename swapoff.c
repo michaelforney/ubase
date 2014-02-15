@@ -36,6 +36,8 @@ main(int argc, char *argv[])
 		FILE *fp;
 
 		fp = setmntent("/etc/fstab", "r");
+		if (!fp)
+			eprintf("setmntent %s:", "/etc/fstab");
 		while ((me = getmntent(fp)) != NULL) {
 			if (strcmp(me->mnt_type, MNTTYPE_SWAP) == 0) {
 				if (swapoff(me->mnt_fsname) < 0) {

@@ -1,8 +1,8 @@
 /* See LICENSE file for copyright and license details. */
-#include <sys/statvfs.h>
+#include <mntent.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "grabmntinfo.h"
+#include <sys/statvfs.h>
 #include "util.h"
 
 static void mnt_show(const char *fsname, const char *dir);
@@ -16,8 +16,8 @@ usage(void)
 int
 main(int argc, char *argv[])
 {
-	struct mntinfo *minfo = NULL;
-	int siz, i;
+	struct mntent *me = NULL;
+	FILE *fp;
 
 	ARGBEGIN {
 	case 'a':
@@ -31,16 +31,13 @@ main(int argc, char *argv[])
 	} ARGEND;
 
 	printf("Filesystem  512-blocks      Used     Avail Capacity  Mounted on\n");
-	siz = grabmntinfo(&minfo);
-	if (!siz)
-		eprintf("grabmntinfo:");
 
-	for (i = 0; i < siz; i++) {
-		mnt_show(minfo[i].fsname, minfo[i].mntdir);
-		free(minfo[i].fsname);
-		free(minfo[i].mntdir);
-	}
-	free(minfo);
+	fp = setmntent("/proc/mounts", "r");
+	if (!fp)
+		eprintf("setmntent %s:", "/proc/mounts");
+	while ((me = getmntent(fp)) != NULL)
+		mnt_show(me->mnt_fsname, me->mnt_dir);
+	endmntent(fp);
 
 	return EXIT_SUCCESS;
 }

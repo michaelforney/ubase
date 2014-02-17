@@ -108,5 +108,5 @@ main(int argc, char *argv[])
 		eprintf("login name cannot start with '-'\n");
 	if (logname[0] == '\0')
 		return EXIT_FAILURE;
-	return execvp("/bin/login", (char *[]){ "login", logname, NULL });
+	return execvp("/bin/login", (char *[]){ "login", "-p", logname, NULL });
 }

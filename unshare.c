@@ -10,7 +10,7 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s [-muinpu] cmd [args...]\n", argv0);
+	eprintf("usage: %s [-muinpU] cmd [args...]\n", argv0);
 }
 
 int

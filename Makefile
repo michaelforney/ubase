@@ -3,13 +3,12 @@ include config.mk
 .POSIX:
 .SUFFIXES: .c .o
 
-HDR = arg.h config.def.h grabmntinfo.h proc.h reboot.h util.h
+HDR = arg.h config.def.h proc.h reboot.h util.h
 LIB = \
 	util/agetcwd.o      \
 	util/apathmax.o     \
 	util/eprintf.o      \
 	util/estrtol.o      \
-	util/grabmntinfo.o  \
 	util/proc.o         \
 	util/putword.o      \
 	util/recurse.o      \

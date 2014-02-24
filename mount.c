@@ -1,12 +1,12 @@
 /* See LICENSE file for copyright and license details. */
-#include <sys/mount.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
+#include <mntent.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "grabmntinfo.h"
+#include <sys/mount.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include "util.h"
 
 struct {
@@ -43,14 +43,16 @@ usage(void)
 int
 main(int argc, char *argv[])
 {
-	int i, validopt, siz = 0, oflag = 0;
+	int i, validopt;
+	int oflag = 0;
 	unsigned long flags = 0;
 	char *types = NULL, *arg = NULL, *p;
 	const char *source;
 	const char *target;
 	struct stat st1, st2;
 	void *data = NULL;
-	struct mntinfo *minfo = NULL;
+	struct mntent *me = NULL;
+	FILE *fp;
 	struct option *opt, *tmp;
 
 	ARGBEGIN {
@@ -126,18 +128,19 @@ main(int argc, char *argv[])
 		source = NULL;
 		if (stat(target, &st1) < 0)
 			eprintf("stat %s:", target);
-		siz = grabmntinfo(&minfo);
-		if (!siz)
-			eprintf("grabmntinfo:");
-		for (i = 0; i < siz; i++) {
-			if (stat(minfo[i].mntdir, &st2) < 0)
-				eprintf("stat %s:", minfo[i].mntdir);
+		fp = setmntent("/proc/mounts", "r");
+		if (!fp)
+			eprintf("setmntent %s:", "/proc/mounts");
+		while ((me = getmntent(fp)) != NULL) {
+			if (stat(me->mnt_dir, &st2) < 0)
+				eprintf("stat %s:", me->mnt_dir);
 			if (st1.st_dev == st2.st_dev &&
 			    st1.st_ino == st2.st_ino) {
-				source = minfo[i].fsname;
+				source = strdup(me->mnt_fsname);
 				break;
 			}
 		}
+		endmntent(fp);
 		if (!source)
 			enprintf(EXIT_FAILURE, "can't find %s mountpoint\n",
 				 target);
@@ -145,12 +148,6 @@ main(int argc, char *argv[])
 
 	if (mount(source, target, types, flags, data) < 0)
 		eprintf("mount:");
-
-	for (i = 0; i < siz; i++) {
-		free(minfo[i].fsname);
-		free(minfo[i].mntdir);
-	}
-	free(minfo);
 
 	opt = opthead;
 	while (opt) {

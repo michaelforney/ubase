@@ -18,7 +18,7 @@ usage(void)
 }
 
 static char *tty = "/dev/tty1";
-static char *defaultterm = "TERM=linux";
+static char *defaultterm = "linux";
 
 int
 main(int argc, char *argv[])
@@ -38,10 +38,8 @@ main(int argc, char *argv[])
 	strlcpy(term, defaultterm, sizeof(term));
 	if (argc > 0) {
 		tty = argv[0];
-		if (argc > 1) {
-			strlcpy(term, "TERM=", sizeof(term));
-			strlcat(term, argv[1], sizeof(term));
-		}
+		if (argc > 1)
+			strlcpy(term, argv[1], sizeof(term));
 	}
 
 	sa.sa_handler = SIG_IGN;
@@ -49,7 +47,7 @@ main(int argc, char *argv[])
 	sigemptyset(&sa.sa_mask);
 	sigaction(SIGHUP, &sa, NULL);
 
-	putenv(term);
+	setenv("TERM", term, 1);
 
 	setsid();
 

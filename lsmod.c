@@ -38,7 +38,7 @@ main(int argc, char *argv[])
 	while (fgets(buf, sizeof buf, fp)) {
 		parse_modline(buf, &name, &size, &refcount, &users);
 		if (!name || !size || !refcount || !users)
-			enprintf(1, "invalid format: %s\n", modfile);
+			eprintf("invalid format: %s\n", modfile);
 		len = strlen(users) - 1;
 		if (users[len] == ',' || users[len] == '-')
 			users[len] = '\0';

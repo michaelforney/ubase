@@ -24,7 +24,7 @@ main(int argc, char *argv[])
 	if (pagesz <= 0) {
 		pagesz = sysconf(_SC_PAGE_SIZE);
 		if (pagesz <= 0)
-			enprintf(EXIT_FAILURE, "can't determine pagesize\n");
+			eprintf("can't determine pagesize\n");
 	}
 	printf("%ld\n", pagesz);
 	return EXIT_SUCCESS;

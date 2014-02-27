@@ -49,7 +49,7 @@ main(int argc, char *argv[])
 	if (pagesize <= 0) {
 		pagesize = sysconf(_SC_PAGE_SIZE);
 		if (pagesize <= 0)
-			enprintf(EXIT_FAILURE, "can't determine pagesize\n");
+			eprintf("can't determine pagesize\n");
 	}
 
 	fd = open(argv[0], O_RDWR);
@@ -64,8 +64,8 @@ main(int argc, char *argv[])
 
 	pages = sb.st_size / pagesize;
 	if (pages < SWAP_MIN_PAGES)
-		enprintf(EXIT_FAILURE, "swap space needs to be at least %ldKiB\n",
-			 SWAP_MIN_PAGES * pagesize / 1024);
+		eprintf("swap space needs to be at least %ldKiB\n",
+			SWAP_MIN_PAGES * pagesize / 1024);
 
 	/* Fill up the swap header */
 	hdr = (struct swap_hdr *)buf;
@@ -78,7 +78,7 @@ main(int argc, char *argv[])
 
 	/* Write out the signature page */
 	if (write(fd, buf, pagesize) != pagesize)
-		enprintf(EXIT_FAILURE, "unable to write signature page\n");
+		eprintf("unable to write signature page\n");
 
 	fsync(fd);
 	close(fd);

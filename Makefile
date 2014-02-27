@@ -27,6 +27,7 @@ SRC = \
 	free.c              \
 	getty.c             \
 	halt.c              \
+	id.c                \
 	insmod.c            \
 	lsmod.c             \
 	lsusb.c             \

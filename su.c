@@ -58,16 +58,16 @@ main(int argc, char **argv)
 	if (errno)
 		eprintf("getspnam: %s:", usr);
 	else if (!spw)
-		enprintf(EXIT_FAILURE, "who are you?\n");
+		eprintf("who are you?\n");
 
 	switch (spw->sp_pwdp[0]) {
 	case '!':
 	case '*':
-		enprintf(EXIT_FAILURE, "Denied\n");
+		eprintf("Denied\n");
 	case '$':
 		break;
 	default:
-		enprintf(EXIT_FAILURE, "Invalid shadow record\n");
+		eprintf("Invalid shadow record\n");
 	}
 
 	uid = getuid();
@@ -83,7 +83,7 @@ main(int argc, char **argv)
 			eprintf("crypt:");
 
 		if (strcmp(cryptpass, spw->sp_pwdp) != 0)
-			enprintf(EXIT_FAILURE, "Denied\n");
+			eprintf("Denied\n");
 	}
 
 	errno = 0;
@@ -91,7 +91,7 @@ main(int argc, char **argv)
 	if (errno)
 		eprintf("getpwnam: %s", usr);
 	else if (!pw)
-		enprintf(EXIT_FAILURE, "who are you?\n");
+		eprintf("who are you?\n");
 
 	if (initgroups(usr, pw->pw_gid) < 0)
 		eprintf("initgroups:");

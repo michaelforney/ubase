@@ -29,6 +29,7 @@ SRC = \
 	halt.c              \
 	id.c                \
 	insmod.c            \
+	killall5.c          \
 	lsmod.c             \
 	lsusb.c             \
 	mknod.c             \

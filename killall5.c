@@ -61,7 +61,7 @@ main(int argc, char *argv[])
 	if (!(dp = opendir("/proc")))
 		eprintf("opendir /proc:");
 	while ((entry = readdir(dp))) {
-		if (!pidfile(entry->d_name))
+		if (pidfile(entry->d_name) == 0)
 			continue;
 		pid = estrtol(entry->d_name, 10);
 		if (pid == 1 || pid == getpid() ||

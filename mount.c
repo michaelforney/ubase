@@ -1,4 +1,5 @@
 /* See LICENSE file for copyright and license details. */
+#include <errno.h>
 #include <mntent.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,7 +37,7 @@ static struct option {
 static void
 usage(void)
 {
-	eprintf("usage: %s [-BMRdn] [-t fstype] [-o options] source target\n",
+	eprintf("usage: %s [-BMRadn] [-t fstype] [-o options] [source] [target]\n",
 		argv0);
 }
 
@@ -44,7 +45,7 @@ int
 main(int argc, char *argv[])
 {
 	int i, validopt;
-	int oflag = 0;
+	int oflag = 0, aflag = 0;
 	unsigned long flags = 0;
 	char *types = NULL, *arg = NULL, *p;
 	const char *source;
@@ -64,6 +65,9 @@ main(int argc, char *argv[])
 		break;
 	case 'R':
 		flags |= MS_REC;
+		break;
+	case 'a':
+		aflag = 1;
 		break;
 	case 'd':
 		data = EARGF(usage());
@@ -91,7 +95,7 @@ main(int argc, char *argv[])
 		usage();
 	} ARGEND;
 
-	if (argc < 1)
+	if (argc < 1 && aflag == 0)
 		usage();
 
 	for (opt = opthead; opt; opt = opt->next) {
@@ -120,6 +124,9 @@ main(int argc, char *argv[])
 	if (oflag && !validopt)
 		eprintf("unknown option: %s\n", opt->name);
 
+	if (aflag == 1)
+		goto domount;
+
 	source = argv[0];
 	target = argv[1];
 
@@ -131,7 +138,7 @@ main(int argc, char *argv[])
 		fp = setmntent("/proc/mounts", "r");
 		if (!fp)
 			eprintf("setmntent %s:", "/proc/mounts");
-		while ((me = getmntent(fp)) != NULL) {
+		while ((me = getmntent(fp))) {
 			if (stat(me->mnt_dir, &st2) < 0)
 				eprintf("stat %s:", me->mnt_dir);
 			if (st1.st_dev == st2.st_dev &&
@@ -147,6 +154,18 @@ main(int argc, char *argv[])
 
 	if (mount(source, target, types, flags, data) < 0)
 		eprintf("mount:");
+
+domount:
+	if (aflag == 1) {
+		fp = setmntent("/etc/fstab", "r");
+		if (!fp)
+			eprintf("setmntent %s:", "/etc/fstab");
+		while ((me = getmntent(fp)))
+			if (mount(me->mnt_fsname, me->mnt_dir, me->mnt_type,
+				  0, me->mnt_opts) < 0)
+				fprintf(stderr, "mount: %s\n", strerror(errno));
+		endmntent(fp);
+	}
 
 	opt = opthead;
 	while (opt) {

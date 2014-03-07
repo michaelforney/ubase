@@ -55,9 +55,10 @@ main(int argc, char *argv[])
 	}
 
 	for (i = 0; i < argc; i++) {
-		if (umount2(argv[i], flags) < 0)
+		if (umount2(argv[i], flags) < 0) {
 			perror("umount2:");
-		ret = EXIT_FAILURE;
+			ret = EXIT_FAILURE;
+		}
 	}
 	return ret;
 }

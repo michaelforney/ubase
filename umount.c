@@ -43,9 +43,9 @@ main(int argc, char *argv[])
 		usage();
 
 	if (aflag == 1) {
-		fp = setmntent("/etc/fstab", "r");
+		fp = setmntent("/etc/mtab", "r");
 		if (!fp)
-			eprintf("setmntent %s:", "/etc/fstab");
+			eprintf("setmntent %s:", "/etc/mtab");
 		while ((me = getmntent(fp))) {
 			if (umount2(me->mnt_dir, flags) < 0) {
 				weprintf("umount2:");

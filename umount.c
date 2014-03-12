@@ -46,7 +46,7 @@ main(int argc, char *argv[])
 			eprintf("setmntent %s:", "/etc/fstab");
 		while ((me = getmntent(fp))) {
 			if (umount2(me->mnt_dir, flags) < 0) {
-				perror("umount2");
+				weprintf("umount2:");
 				ret = EXIT_FAILURE;
 			}
 		}
@@ -56,7 +56,7 @@ main(int argc, char *argv[])
 
 	for (i = 0; i < argc; i++) {
 		if (umount2(argv[i], flags) < 0) {
-			perror("umount2");
+			weprintf("umount2:");
 			ret = EXIT_FAILURE;
 		}
 	}

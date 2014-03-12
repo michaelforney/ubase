@@ -50,7 +50,9 @@ weprintf(const char *fmt, ...)
 {
 	va_list ap;
 
+#if 0
 	fprintf(stderr, "%s: ", argv0);
+#endif
 
 	va_start(ap, fmt);
 	vfprintf(stderr, fmt, ap);

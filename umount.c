@@ -2,6 +2,7 @@
 #include <mntent.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/mount.h>
 #include "util.h"
 
@@ -47,6 +48,8 @@ main(int argc, char *argv[])
 		if (!fp)
 			eprintf("setmntent %s:", "/etc/mtab");
 		while ((me = getmntent(fp))) {
+			if (strcmp(me->mnt_type, "proc") == 0)
+				continue;
 			if (umount2(me->mnt_dir, flags) < 0) {
 				weprintf("umount2:");
 				ret = EXIT_FAILURE;

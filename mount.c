@@ -135,8 +135,9 @@ main(int argc, char *argv[])
 				   strcmp(me->mnt_fsname, target) == 0 ||
 				   (source && strcmp(me->mnt_dir, source) == 0) ||
 				   (source && strcmp(me->mnt_fsname, source) == 0)) {
+					if(!source)
+						target = me->mnt_dir;
 					source = me->mnt_fsname;
-					target = me->mnt_dir;
 					if(!oflag)
 						parseopts(me->mnt_opts, &flags, data, datasiz);
 					if(!types)

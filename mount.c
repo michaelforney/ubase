@@ -132,7 +132,9 @@ main(int argc, char *argv[])
 		if((fp = setmntent(files[i], "r"))) {
 			while((me = getmntent(fp))) {
 				if(strcmp(me->mnt_dir, target) == 0 ||
-				   strcmp(me->mnt_fsname, target) == 0) {
+				   strcmp(me->mnt_fsname, target) == 0 ||
+				   (source && strcmp(me->mnt_dir, source) == 0) ||
+				   (source && strcmp(me->mnt_fsname, source) == 0)) {
 					source = me->mnt_fsname;
 					target = me->mnt_dir;
 					if(!oflag)

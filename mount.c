@@ -100,6 +100,7 @@ main(int argc, char *argv[])
 		aflag = 1;
 		break;
 	case 'o':
+		oflag = 1;
 		parseopts(EARGF(usage()), &flags, data, datasiz);
 		break;
 	case 't':
@@ -134,6 +135,8 @@ main(int argc, char *argv[])
 				   strcmp(me->mnt_fsname, target) == 0) {
 					source = me->mnt_fsname;
 					target = me->mnt_dir;
+					if(!oflag)
+						parseopts(me->mnt_opts, &flags, data, datasiz);
 					if(!types)
 						types = me->mnt_type;
 					goto mountsingle;

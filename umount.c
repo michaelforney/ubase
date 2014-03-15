@@ -6,6 +6,8 @@
 #include <sys/mount.h>
 #include "util.h"
 
+static int umountall(int);
+
 static void
 usage(void)
 {
@@ -21,8 +23,6 @@ main(int argc, char *argv[])
 	int aflag = 0;
 	int flags = 0;
 	int ret = EXIT_SUCCESS;
-	FILE *fp;
-	struct mntent *me;
 
 	ARGBEGIN {
 	case 'a':
@@ -43,21 +43,8 @@ main(int argc, char *argv[])
 	if (argc < 1 && aflag == 0)
 		usage();
 
-	if (aflag == 1) {
-		fp = setmntent("/etc/mtab", "r");
-		if (!fp)
-			eprintf("setmntent %s:", "/etc/mtab");
-		while ((me = getmntent(fp))) {
-			if (strcmp(me->mnt_type, "proc") == 0)
-				continue;
-			if (umount2(me->mnt_dir, flags) < 0) {
-				weprintf("umount2 %s:", me->mnt_dir);
-				ret = EXIT_FAILURE;
-			}
-		}
-		endmntent(fp);
-		return ret;
-	}
+	if (aflag == 1)
+		return umountall(flags);
 
 	for (i = 0; i < argc; i++) {
 		if (umount2(argv[i], flags) < 0) {
@@ -65,5 +52,27 @@ main(int argc, char *argv[])
 			ret = EXIT_FAILURE;
 		}
 	}
+	return ret;
+}
+
+static int
+umountall(int flags)
+{
+	FILE *fp;
+	struct mntent *me;
+	int ret;
+
+	fp = setmntent("/etc/mtab", "r");
+	if (!fp)
+		eprintf("setmntent %s:", "/etc/mtab");
+	while ((me = getmntent(fp))) {
+		if (strcmp(me->mnt_type, "proc") == 0)
+			continue;
+		if (umount2(me->mnt_dir, flags) < 0) {
+			weprintf("umount2 %s:", me->mnt_dir);
+			ret = EXIT_FAILURE;
+		}
+	}
+	endmntent(fp);
 	return ret;
 }

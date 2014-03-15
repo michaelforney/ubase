@@ -51,7 +51,7 @@ main(int argc, char *argv[])
 			if (strcmp(me->mnt_type, "proc") == 0)
 				continue;
 			if (umount2(me->mnt_dir, flags) < 0) {
-				weprintf("umount2:");
+				weprintf("umount2 %s:", me->mnt_dir);
 				ret = EXIT_FAILURE;
 			}
 		}
@@ -61,7 +61,7 @@ main(int argc, char *argv[])
 
 	for (i = 0; i < argc; i++) {
 		if (umount2(argv[i], flags) < 0) {
-			weprintf("umount2:");
+			weprintf("umount2 %s:", argv[i]);
 			ret = EXIT_FAILURE;
 		}
 	}

@@ -61,6 +61,8 @@ umountall(int flags)
 	FILE *fp;
 	struct mntent *me;
 	int ret;
+	char **mntdirs = NULL;
+	int len = 0;
 
 	fp = setmntent("/etc/mtab", "r");
 	if (!fp)
@@ -68,11 +70,19 @@ umountall(int flags)
 	while ((me = getmntent(fp))) {
 		if (strcmp(me->mnt_type, "proc") == 0)
 			continue;
-		if (umount2(me->mnt_dir, flags) < 0) {
-			weprintf("umount2 %s:", me->mnt_dir);
-			ret = EXIT_FAILURE;
-		}
+		mntdirs = realloc(mntdirs, ++len * sizeof(*mntdirs));
+		if (!mntdirs)
+			eprintf("realloc:");
+		mntdirs[len - 1] = strdup(me->mnt_dir);
 	}
 	endmntent(fp);
+	while (--len >= 0) {
+		if (umount2(mntdirs[len], flags) < 0) {
+			weprintf("umount2 %s:", mntdirs[len]);
+			ret = EXIT_FAILURE;
+		}
+		free(mntdirs[len]);
+	}
+	free(mntdirs);
 	return ret;
 }

@@ -151,7 +151,7 @@ main(int argc, char *argv[])
 		}
 	}
 	if(!source)
-		eprintf("can't find %s mountpoint\n", target);
+		eprintf("can't find %s in /etc/fstab\n", target);
 
 mountsingle:
 	if(mount(source, target, types, flags, data) < 0)

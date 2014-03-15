@@ -78,15 +78,13 @@ main(int argc, char *argv[])
 {
 	int aflag = 0, i;
 	unsigned long flags = 0;
-	char *types = NULL, data[512];
+	char *types = NULL, data[512] = "";
 	char *files[] = { "/proc/mounts", "/etc/fstab", NULL };
 	size_t datasiz = sizeof(data);
 	const char *source, *target;
 	struct stat st;
 	struct mntent *me = NULL;
 	FILE *fp;
-
-	data[0] = '\0';
 
 	ARGBEGIN {
 	case 'B':

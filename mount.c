@@ -1,5 +1,4 @@
 /* See LICENSE file for copyright and license details. */
-#include <errno.h>
 #include <mntent.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -145,7 +144,7 @@ main(int argc, char *argv[])
 			endmntent(fp);
 			fp = NULL;
 		} else {
-			fprintf(stderr, "setmntent %s: %s\n", files[i], strerror(errno));
+			weprintf("setmntent %s:", files[i]);
 		}
 	}
 	if(!source)
@@ -165,7 +164,7 @@ mountall:
 		flags = 0;
 		parseopts(me->mnt_opts, &flags, data, datasiz);
 		if(mount(me->mnt_fsname, me->mnt_dir, me->mnt_type, flags, data) < 0)
-			fprintf(stderr, "mount: %s\n", strerror(errno));
+			weprintf("mount:");
 	}
 	endmntent(fp);
 

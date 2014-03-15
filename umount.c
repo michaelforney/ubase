@@ -74,6 +74,8 @@ umountall(int flags)
 		if (!mntdirs)
 			eprintf("realloc:");
 		mntdirs[len - 1] = strdup(me->mnt_dir);
+		if (!mntdirs[len - 1])
+			eprintf("strdup:");
 	}
 	endmntent(fp);
 	while (--len >= 0) {

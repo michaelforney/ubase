@@ -76,7 +76,7 @@ usage(void)
 int
 main(int argc, char *argv[])
 {
-	int aflag = 0, i;
+	int aflag = 0, oflag = 0, status = EXIT_SUCCESS, i;
 	unsigned long flags = 0;
 	char *types = NULL, data[512] = "";
 	char *files[] = { "/proc/mounts", "/etc/fstab", NULL };
@@ -153,7 +153,7 @@ mountsingle:
 		eprintf("mount:");
 	if(fp)
 		endmntent(fp);
-	return EXIT_SUCCESS;
+	return status;
 
 mountall:
 	if(!(fp = setmntent("/etc/fstab", "r")))
@@ -161,10 +161,15 @@ mountall:
 	while((me = getmntent(fp))) {
 		flags = 0;
 		parseopts(me->mnt_opts, &flags, data, datasiz);
-		if(mount(me->mnt_fsname, me->mnt_dir, me->mnt_type, flags, data) < 0)
+		if(mount(me->mnt_fsname, me->mnt_dir, me->mnt_type, flags, data) < 0) {
 			weprintf("mount:");
+			if(status != 64)
+				status = 32; /* all failed */
+		} else {
+			status = 64; /* some failed */
+		}
 	}
 	endmntent(fp);
 
-	return EXIT_SUCCESS;
+	return status;
 }

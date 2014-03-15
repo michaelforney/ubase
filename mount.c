@@ -148,7 +148,8 @@ main(int argc, char *argv[])
 			endmntent(fp);
 			fp = NULL;
 		} else {
-			weprintf("setmntent %s:", files[i]);
+			if (strcmp(files[i], "/proc/mounts") != 0)
+				weprintf("setmntent %s:", files[i]);
 		}
 	}
 	if(!source)

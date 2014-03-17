@@ -129,29 +129,29 @@ main(int argc, char *argv[])
 	}
 
 	for(i = 0; files[i]; i++) {
-		if((fp = setmntent(files[i], "r"))) {
-			while((me = getmntent(fp))) {
-				if(strcmp(me->mnt_dir, target) == 0 ||
-				   strcmp(me->mnt_fsname, target) == 0 ||
-				   (source && strcmp(me->mnt_dir, source) == 0) ||
-				   (source && strcmp(me->mnt_fsname, source) == 0)) {
-					if(!source) {
-						target = me->mnt_dir;
-						source = me->mnt_fsname;
-					}
-					if(!oflag)
-						parseopts(me->mnt_opts, &flags, data, datasiz);
-					if(!types)
-						types = me->mnt_type;
-					goto mountsingle;
-				}
-			}
-			endmntent(fp);
-			fp = NULL;
-		} else {
+		if(!(fp = setmntent(files[i], "r"))) {
 			if (strcmp(files[i], "/proc/mounts") != 0)
 				weprintf("setmntent %s:", files[i]);
+			continue;
 		}
+		while((me = getmntent(fp))) {
+			if(strcmp(me->mnt_dir, target) == 0 ||
+			   strcmp(me->mnt_fsname, target) == 0 ||
+			   (source && strcmp(me->mnt_dir, source) == 0) ||
+			   (source && strcmp(me->mnt_fsname, source) == 0)) {
+				if(!source) {
+					target = me->mnt_dir;
+					source = me->mnt_fsname;
+				}
+				if(!oflag)
+					parseopts(me->mnt_opts, &flags, data, datasiz);
+				if(!types)
+					types = me->mnt_type;
+				goto mountsingle;
+			}
+		}
+		endmntent(fp);
+		fp = NULL;
 	}
 	if(!source)
 		eprintf("can't find %s in /etc/fstab\n", target);

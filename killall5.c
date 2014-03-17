@@ -4,7 +4,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <strings.h>
+#include <string.h>
 #include <unistd.h>
 #include "proc.h"
 #include "util.h"
@@ -23,12 +23,20 @@ struct {
 static void
 usage(void)
 {
-	eprintf("usage: %s [-s signal]\n", argv0);
+	eprintf("usage: %s [-o pid1,pid2,..,pidN] [-s signal]\n", argv0);
 }
+
+static struct omit {
+	pid_t pid;
+	struct omit *next;
+} *omithead;
 
 int
 main(int argc, char *argv[])
 {
+	struct omit *onode, *tmp;
+	int oflag = 0;
+	char *p, *arg = NULL;
 	DIR *dp;
 	struct dirent *entry;
 	char *end, *v;
@@ -51,9 +59,22 @@ main(int argc, char *argv[])
 		if(i == LEN(sigs))
 			eprintf("%s: unknown signal\n", v);
 		break;
+	case 'o':
+		oflag = 1;
+		arg = EARGF(usage());
+		break;
 	default:
 		usage();
 	} ARGEND;
+
+	for (p = strtok(arg, ","); p; p = strtok(NULL, ",")) {
+		onode = malloc(sizeof(*onode));
+		if (!onode)
+			eprintf("malloc:");
+		onode->pid = estrtol(p, 10);
+		onode->next = omithead;
+		omithead = onode;
+	}
 
 	if (sig != SIGSTOP && sig != SIGCONT)
 		kill(-1, SIGSTOP);
@@ -67,12 +88,26 @@ main(int argc, char *argv[])
 		if (pid == 1 || pid == getpid() ||
 		    getsid(pid) == getsid(0) || getsid(pid) == 0)
 			continue;
+		if (oflag == 1) {
+			for (onode = omithead; onode; onode = onode->next)
+				if (onode->pid == pid)
+					break;
+			if (onode)
+				continue;
+		}
 		kill(pid, sig);
 	}
 	closedir(dp);
 
 	if (sig != SIGSTOP && sig != SIGCONT)
 		kill(-1, SIGCONT);
+
+	onode = omithead;
+	while (onode) {
+		tmp = onode->next;
+		free(onode);
+		onode = tmp;
+	}
 
 	return EXIT_SUCCESS;
 }

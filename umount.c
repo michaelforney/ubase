@@ -64,9 +64,9 @@ umountall(int flags)
 	char **mntdirs = NULL;
 	int len = 0;
 
-	fp = setmntent("/etc/mtab", "r");
+	fp = setmntent("/proc/mounts", "r");
 	if (!fp)
-		eprintf("setmntent %s:", "/etc/mtab");
+		eprintf("setmntent %s:", "/proc/mounts");
 	while ((me = getmntent(fp))) {
 		if (strcmp(me->mnt_type, "proc") == 0)
 			continue;

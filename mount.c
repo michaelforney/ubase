@@ -66,6 +66,29 @@ parseopts(char *popts, unsigned long *flags, char *data, size_t bufsiz)
 	}
 }
 
+static int
+mounted(const char *dir)
+{
+	FILE *fp;
+	struct mntent *me;
+	struct stat st1, st2;
+
+	if (stat(dir, &st1) < 0)
+		 eprintf("stat %s:", dir);
+	fp = setmntent("/proc/mounts", "r");
+	if (!fp)
+		eprintf("setmntent %s:", "/proc/mounts");
+	while ((me = getmntent(fp)) != NULL) {
+		if (stat(me->mnt_dir, &st2) < 0)
+			 eprintf("stat %s:", me->mnt_dir);
+		if (st1.st_dev == st2.st_dev &&
+		    st1.st_ino == st2.st_ino)
+		    return 1;
+	}
+	endmntent(fp);
+	return 0;
+}
+
 static void
 usage(void)
 {
@@ -172,7 +195,8 @@ mountall:
 		flags = 0;
 		parseopts(me->mnt_opts, &flags, data, datasiz);
 		if(mount(me->mnt_fsname, me->mnt_dir, me->mnt_type, flags, data) < 0) {
-			weprintf("mount: %s:", me->mnt_fsname);
+			if (mounted(me->mnt_dir) == 0)
+				weprintf("mount: %s:", me->mnt_fsname);
 			if(status != 64)
 				status = 32; /* all failed */
 		} else {

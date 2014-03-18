@@ -2,6 +2,7 @@
 #include <mntent.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/statvfs.h>
 #include "util.h"
 
@@ -18,9 +19,11 @@ main(int argc, char *argv[])
 {
 	struct mntent *me = NULL;
 	FILE *fp;
+	int aflag = 0;
 
 	ARGBEGIN {
 	case 'a':
+		aflag = 1;
 		break;
 	case 's':
 	case 'h':
@@ -35,8 +38,12 @@ main(int argc, char *argv[])
 	fp = setmntent("/proc/mounts", "r");
 	if (!fp)
 		eprintf("setmntent %s:", "/proc/mounts");
-	while ((me = getmntent(fp)) != NULL)
+	while ((me = getmntent(fp)) != NULL) {
+		if (aflag == 0)
+			if (strcmp(me->mnt_type, "rootfs") == 0)
+				continue;
 		mnt_show(me->mnt_fsname, me->mnt_dir);
+	}
 	endmntent(fp);
 
 	return EXIT_SUCCESS;

@@ -182,7 +182,7 @@ main(int argc, char *argv[])
 mountsingle:
 	if(mount(source, target, types, flags, data) < 0) {
 		weprintf("mount: %s:", source);
-		status = 32; /* all failed */
+		status = EXIT_FAILURE;
 	}
 	if(fp)
 		endmntent(fp);
@@ -195,12 +195,10 @@ mountall:
 		flags = 0;
 		parseopts(me->mnt_opts, &flags, data, datasiz);
 		if(mount(me->mnt_fsname, me->mnt_dir, me->mnt_type, flags, data) < 0) {
-			if (mounted(me->mnt_dir) == 0)
+			if(mounted(me->mnt_dir) == 0) {
 				weprintf("mount: %s:", me->mnt_fsname);
-			if(status != 64)
-				status = 32; /* all failed */
-		} else {
-			status = 64; /* some failed */
+				status = EXIT_FAILURE;
+			}
 		}
 	}
 	endmntent(fp);

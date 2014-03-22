@@ -73,17 +73,21 @@ mounted(const char *dir)
 	struct mntent *me;
 	struct stat st1, st2;
 
-	if (stat(dir, &st1) < 0)
-		 eprintf("stat %s:", dir);
+	if (stat(dir, &st1) < 0) {
+		 weprintf("stat %s:", dir);
+		 return 0;
+	}
 	fp = setmntent("/proc/mounts", "r");
 	if (!fp)
 		eprintf("setmntent %s:", "/proc/mounts");
 	while ((me = getmntent(fp)) != NULL) {
-		if (stat(me->mnt_dir, &st2) < 0)
-			 eprintf("stat %s:", me->mnt_dir);
+		if (stat(me->mnt_dir, &st2) < 0) {
+			 weprintf("stat %s:", me->mnt_dir);
+			 continue;
+		}
 		if (st1.st_dev == st2.st_dev &&
 		    st1.st_ino == st2.st_ino)
-		    return 1;
+			return 1;
 	}
 	endmntent(fp);
 	return 0;

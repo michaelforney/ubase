@@ -49,9 +49,9 @@ main(int argc, char **argv)
 		if (!*usr.ut_name || !*usr.ut_line ||
 		    usr.ut_line[0] == '~')
 			continue;
-		if (mflag && strcmp(usr.ut_line, tty))
+		if (mflag != 0 && strcmp(usr.ut_line, tty) != 0)
 			continue;
-		if (strcmp(usr.ut_name, "LOGIN") == lflag)
+		if (!!strcmp(usr.ut_name, "LOGIN") == lflag)
 			continue;
 		t = usr.ut_time;
 		strftime(timebuf, sizeof timebuf, "%Y-%m-%d %H:%M", localtime(&t));
@@ -60,4 +60,3 @@ main(int argc, char **argv)
 	fclose(ufp);
 	return EXIT_SUCCESS;
 }
-

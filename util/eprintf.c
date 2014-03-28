@@ -33,7 +33,7 @@ enprintf(int status, const char *fmt, ...)
 void
 venprintf(int status, const char *fmt, va_list ap)
 {
-#if DEBUG
+#ifdef DEBUG
 	fprintf(stderr, "%s: ", argv0);
 #endif
 

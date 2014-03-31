@@ -1,7 +1,32 @@
-ubase is a set of tools similar to util-linux to complement sbase[1].
+ubase - suckless linux base utils
+=================================
 
-Build a statically linked version of sbase-box with musl:
+ubase is  a collection of  tools similar  in spirit to  util-linux but
+much simpler.
 
-  make CC=musl-gcc LDFLAGS=-static ubase-box
+The following programs are currently implemented:
 
-[1] http://git.suckless.org/sbase
+    chvt clear ctrlaltdel df dmesg  eject fallocate free getty halt id
+    insmod killall5 lsmod lsusb mknod mkswap mount mountpoint pagesize
+    pidof pivot_root ps  rmmod stat su swapoff  swapon truncate umount
+    unshare uptime watch who
+
+The complement  of ubase  is sbase[1] which  mostly follows  POSIX and
+provides all the portable tools.  Together they are intended to form a
+base system similar to busybox but much smaller and suckless.
+
+Building
+--------
+
+To  build ubase,  simply  type  make.  You  may  have  to fiddle  with
+config.mk depending on your system.
+
+You  can  also  build  ubase-box,  which  generates  a  single  binary
+containing  all  the  required  tools.    You  can  then  symlink  the
+individual tools to ubase-box.
+
+Ideally you will  want to statically link ubase.   We highly recommend
+using musl-libc[2].
+
+[1] http://git.suckless.org/sbase/
+[2] http://www.musl-libc.org/

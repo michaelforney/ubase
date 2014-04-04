@@ -12,11 +12,12 @@
 #include "util.h"
 
 static void show_stat(const char *file, struct stat *st);
+static void show_stat_terse(const char *file, struct stat *st);
 
 static void
 usage(void)
 {
-	eprintf("usage: %s [-L] [file...]\n", argv0);
+	eprintf("usage: %s [-L] [-t] [file...]\n", argv0);
 }
 
 int
@@ -32,6 +33,9 @@ main(int argc, char *argv[])
 	case 'L':
 		fn = stat;
 		fnname = "stat";
+		break;
+	case 't':
+		showstat = show_stat_terse;
 		break;
 	default:
 		usage();
@@ -54,6 +58,20 @@ main(int argc, char *argv[])
 	}
 
 	return ret;
+}
+
+static void
+show_stat_terse(const char *file, struct stat *st)
+{
+	printf("%s ", file);
+	printf("%lu %lu ", (unsigned long)st->st_size,
+	       (unsigned long)st->st_blocks);
+	printf("%04o %u %u ", st->st_mode & 0777, st->st_uid, st->st_gid);
+	printf("%llx ", (unsigned long long)st->st_dev);
+	printf("%lu %lu ", (unsigned long)st->st_ino, (unsigned long)st->st_nlink);
+	printf("%d %d ", major(st->st_rdev), minor(st->st_rdev));
+	printf("%ld %ld %ld ", st->st_atime, st->st_mtime, st->st_ctime);
+	printf("%lu\n", (unsigned long)st->st_blksize);
 }
 
 static void

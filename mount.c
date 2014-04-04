@@ -101,6 +101,23 @@ usage(void)
 		argv0);
 }
 
+static int
+catfile(FILE *in, FILE *out)
+{
+	char buf[BUFSIZ];
+	size_t bytesread;
+
+	while(1) {
+		if(feof(in))
+			break;
+		bytesread = fread(buf, 1, sizeof(buf), in);
+		if(ferror(in))
+			return 0;
+		fwrite(buf, 1, bytesread, out);
+	}
+	return 1;
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -140,8 +157,16 @@ main(int argc, char *argv[])
 		usage();
 	} ARGEND;
 
-	if(argc < 1 && aflag == 0)
-		usage();
+	if(argc < 1 && aflag == 0) {
+		if(!(fp = fopen(files[0], "r")))
+			eprintf("fopen %s:", files[0]);
+		if(catfile(fp, stdout) != 1) {
+			weprintf("error while reading %s:", files[0]);
+			status = EXIT_FAILURE;
+		}
+		fclose(fp);
+		return status;
+	}
 
 	if(aflag == 1)
 		goto mountall;

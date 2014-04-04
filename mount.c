@@ -31,7 +31,7 @@ struct {
 };
 
 static void
-parseopts(char *popts, unsigned long *flags, char *data, size_t bufsiz)
+parseopts(char *popts, unsigned long *flags, char *data, size_t datasiz)
 {
 	unsigned int i, validopt;
 	size_t optlen, dlen = 0;
@@ -55,7 +55,7 @@ parseopts(char *popts, unsigned long *flags, char *data, size_t bufsiz)
 		if(!validopt) {
 			/* unknown option, pass as data option to mount() */
 			if((optlen = strlen(name))) {
-				if(dlen + optlen + 2 >= bufsiz)
+				if(dlen + optlen + 2 >= datasiz)
 					return; /* prevent overflow */
 				if(dlen)
 					data[dlen++] = ',';

@@ -14,6 +14,7 @@ struct {
 	const char *notopt;
 	unsigned long v;
 } optnames[] = {
+	{ "defaults",   NULL,           0              },
 	{ "remount",    NULL,           MS_REMOUNT     },
 	{ "ro",         "rw",           MS_RDONLY      },
 	{ "sync",       "async",        MS_SYNCHRONOUS },

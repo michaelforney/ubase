@@ -24,13 +24,14 @@ main(int argc, char *argv[])
 {
 	struct stat st;
 	int i, ret = EXIT_SUCCESS;
-	int Lflag = 0;
-	int (*fn)(const char *, struct stat *);
-	char *fnname;
+	int (*fn)(const char *, struct stat *) = lstat;
+	char *fnname = "lstat";
+	void (*showstat)(const char *, struct stat *) = show_stat;
 
 	ARGBEGIN {
 	case 'L':
-		Lflag = 1;
+		fn = stat;
+		fnname = "stat";
 		break;
 	default:
 		usage();
@@ -42,14 +43,6 @@ main(int argc, char *argv[])
 		show_stat("<stdin>", &st);
 	}
 
-	if (Lflag) {
-		fn = stat;
-		fnname = "stat";
-	} else {
-		fn = lstat;
-		fnname = "lstat";
-	}
-
 	for (i = 0; i < argc; i++) {
 		if (fn(argv[i], &st) == -1) {
 			fprintf(stderr, "%s %s: %s\n", fnname,
@@ -57,7 +50,7 @@ main(int argc, char *argv[])
 			ret = EXIT_FAILURE;
 			continue;
 		}
-		show_stat(argv[i], &st);
+		showstat(argv[i], &st);
 	}
 
 	return ret;

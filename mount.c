@@ -40,7 +40,7 @@ parseopts(char *popts, unsigned long *flags, char *data, size_t datasiz)
 	data[0] = '\0';
 	for(name = strtok(popts, ","); name; name = strtok(NULL, ",")) {
 		validopt = 0;
-		for(i = 0; optnames[i].v; i++) {
+		for(i = 0; optnames[i].opt; i++) {
 			if(optnames[i].opt && strcmp(name, optnames[i].opt) == 0) {
 				*flags |= optnames[i].v;
 				validopt = 1;

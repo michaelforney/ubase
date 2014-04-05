@@ -107,9 +107,7 @@ catfile(FILE *in, FILE *out)
 	char buf[BUFSIZ];
 	size_t bytesread;
 
-	while(1) {
-		if(feof(in))
-			break;
+	while(!feof(in)) {
 		bytesread = fread(buf, 1, sizeof(buf), in);
 		if(ferror(in))
 			return 0;

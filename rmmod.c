@@ -38,7 +38,7 @@ main(int argc, char *argv[])
 	for (i = 0; i < argc; i++) {
 		mod = argv[i];
 		p = strrchr(mod, '.');
-		if (strlen(p) == 3 && !strcmp(p, ".ko"))
+		if (p && !strcmp(p, ".ko"))
 			*p = '\0';
 		if (syscall(__NR_delete_module, mod, flags) < 0)
 			eprintf("delete_module:");

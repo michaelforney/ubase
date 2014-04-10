@@ -65,9 +65,12 @@ main(int argc, char *argv[])
 	fd = open(tty, O_RDWR);
 	if (fd < 0)
 		eprintf("open %s:", tty);
-	dup2(fd, STDIN_FILENO);
-	dup2(fd, STDOUT_FILENO);
-	dup2(fd, STDERR_FILENO);
+	if (dup2(fd, STDIN_FILENO) != STDIN_FILENO)
+		eprintf("dup2:");
+	if (dup2(fd, STDOUT_FILENO) != STDOUT_FILENO)
+		eprintf("dup2:");
+	if (dup2(fd, STDERR_FILENO) != STDERR_FILENO)
+		eprintf("dup2:");
 
 	sa.sa_handler = SIG_DFL;
 	sa.sa_flags = 0;

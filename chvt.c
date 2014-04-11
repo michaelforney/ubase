@@ -46,12 +46,12 @@ main(int argc, char *argv[])
 		close(fd);
 	}
 
-	eprintf("chvt: couldn't find a console.\n");
+	eprintf("couldn't find a console.\n");
 VTfound:
 	if(ioctl(fd, VT_ACTIVATE, n) == -1)
-		eprintf("chvt: VT_ACTIVATE '%d':", n);
+		eprintf("VT_ACTIVATE %d:", n);
 	if(ioctl(fd, VT_WAITACTIVE, n) == -1)
-		eprintf("chvt: VT_WAITACTIVE '%d':", n);
+		eprintf("VT_WAITACTIVE %d:", n);
 	close(fd);
 
 	return EXIT_SUCCESS;

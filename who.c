@@ -28,7 +28,7 @@ main(int argc, char **argv)
 		mflag = 1;
 		tty = ttyname(STDIN_FILENO);
 		if (!tty)
-			eprintf("who: stdin:");
+			eprintf("ttyname: stdin:");
 		if ((ttmp = strrchr(tty, '/')))
 			tty = ttmp+1;
 		break;
@@ -43,7 +43,7 @@ main(int argc, char **argv)
 		usage();
 
 	if (!(ufp = fopen("/var/run/utmp", "r")))
-		eprintf("who: '%s':", "/var/run/utmp");
+		eprintf("fopen: %s:", "/var/run/utmp");
 
 	while(fread(&usr, sizeof(usr), 1, ufp) == 1) {
 		if (!*usr.ut_name || !*usr.ut_line ||

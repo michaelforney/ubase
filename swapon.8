@@ -1,0 +1,19 @@
+.TH SWAPON 8 ubase-VERSION
+.SH NAME
+\fBswapon\fR - enable devices and files for paging and swapping
+.SH SYNOPSIS
+\fBswapon\fR [\fB-dp\fR] [\fB-a\fI device\fR]
+.SH DESCRIPTION
+\fBswapon\fR is used to specify devices on which paging and
+swapping are to take place.
+.SH OPTIONS
+.TP
+\fB-d\fR
+Discard freed swap pages before they are reused.
+.TP
+\fB-p\fR
+Set higher priority than the default to the new swap area.
+.TP
+\fB-a\fR
+Make all devices marked as ``swap'' in /etc/fstab are made
+available, except for those with the ``noauto'' option.

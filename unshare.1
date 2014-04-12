@@ -1,0 +1,36 @@
+.TH UNSHARE 1 ubase-VERSION
+.SH NAME
+\fBunshare\fR - run program with some namespaces unshared from parent
+.SH SYNOPSIS
+\fBunshare\fR [\fB-muinpU\fR] cmd [\fIargs...\fR]
+.SH DESCRIPTION
+\fBunshare\fR
+Unshares the indicated namespaces from the parent process
+and then executes the specified program. The namespaces to be unshared are
+indicated via options.
+.SH OPTIONS
+.TP
+\fB-m\fR
+Unshare the mount namespace, so that the calling process has a private
+copy of its namespace which is not shared with any other process.
+.TP
+\fB-u\fR
+Unshare the UTS IPC namespace, so that the calling process has a
+private copy of the UTS namespace which is not shared with any other
+process.
+.TP
+\fB-i\fR
+Unshare the System V IPC namespace, so that the calling process has a
+private copy of the System V IPC namespace which is not shared with
+any other process.
+.TP
+\fB-n\fR
+Unshare the network namespace, so that the calling process is moved
+into a new network namespace which is not shared with any previously
+existing process.
+.TP
+\fB-p\fR
+Create the process in a new PID namespace.
+.TP
+\fB-U\fR
+The process will have a distinct set of UIDs, GIDs and capabilities.

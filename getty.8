@@ -1,0 +1,11 @@
+.TH GETTY 8 ubase-VERSION
+.SH NAME
+\fBgetty\fR - Suckless linux getty
+.SH SYNOPSIS
+\fBgetty\fR [\fItty\fR] [\fIterm\fR] [\fIcmd\fR] [\fIargs...\fR]
+.SH DESCRIPTION
+\fBgetty\fR opens a tty device, prompts for a login name and by default
+invokes the /bin/login program.  You can start another program instead of
+/bin/login via \fIcmd\fR with \fIargs\fR.  The hostname is printed in the
+login name prompt as well.  The \fItty\fR should be specified using an
+absolute path.

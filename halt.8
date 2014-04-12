@@ -1,16 +1,14 @@
-.TH HALT 8 ubase\-VERSION
-.OS Linux
+.TH HALT 8 ubase-VERSION
 .SH NAME
-halt \- Halt, power-off or reboot the machine
+\fBhalt\fR - Halt, power-off or reboot the machine
 .SH SYNOPSIS
-.B halt
-.RB [ \-pr ]
+\fBhalt\fR [\fB-pr\fR]
 .SH DESCRIPTION
-halt can be used to halt, power-off or reboot the machine.
+\fBhalt\fR can be used to power-off or reboot the machine.
+This is a low-level tool and should not be used directly or data-loss
+can happen if the filesystems are not properly unmounted first.
 .SH OPTIONS
 .TP
-.BI \-p
-power-off the machine.
+\fB-p\fR power-off the machine.
 .TP
-.BI \-r
-reboot the machine.
+\fB-r\fR reboot the machine.

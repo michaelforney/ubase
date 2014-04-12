@@ -1,40 +1,23 @@
-.TH MKNOD 1 ubase\-VERSION
+.TH MKNOD 1 ubase-VERSION
 .SH NAME
-mknod \- create a special device file
-
+\fBmknod\fR - create a special device file
 .SH SYNOPSIS
-.B mknod
-.RB [ \-m
-.IR mode ]
-.I name
-.I type
-.I major
-.I minor
-
+\fBmknod\fR [\fB-m \fImode\fR] \fIname type major minor
 .SH DESCRIPTION
-.B mknod
-Creates a special device file named
-.I name
-with major number
-.IR major ,
-and minor number
-.IR minor .
-
-.IR type
-specifies what kind of special file will be created,
+\fBmknod\fR reates a special device file named \fIname\fR
+with major number \fImajor\fR, and minor number \fIminor\fR.
+\fItype\fR specifies what kind of special file will be created
 and must be one of:
 .TP
-.BR u \ or\  c
+\fBu\fR or \fBc\fR
 A character device.
 .TP
-.BR b
+\fBb\fR
 A block device.
-
 .SH OPTIONS
 .TP
-.B \-m "mode"
+\fB-m\fR \fImode\fR
 Set the mode of the new file based on the octal value of
-.IR mode .
-
+\fImode\fR.
 .SH SEE ALSO
-.IR mknod (2)
+mknod (2)

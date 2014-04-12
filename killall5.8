@@ -1,0 +1,16 @@
+.TH KILLALL5 8 ubase-VERSION
+.SH NAME
+\fBkillall\fR - Send a signal to all processes
+.SH SYNOPSIS
+\fBkillall5\fR [\fB-o\fI pid1,pid2,...,pidN\fR] [\fB-s\fI signal\fR]
+.SH DESCRIPTION
+\fBkillall5\fR is an implementation of the SystemV killall command.
+It sends a signal to all processes except kernel threads and the processes
+in its own session.  It is primarily used by the system's init scripts.
+.SH OPTIONS
+.TP
+\fB-o\fR Tell killall5 to omit processes with that process id.
+.TP
+\fB-s\fR Send \fIsignal\fR instead of the default SIGTERM.
+.SH SEE ALSO
+halt(8), reboot(8)

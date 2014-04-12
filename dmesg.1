@@ -1,0 +1,18 @@
+.TH DMESG 1 ubase-VERSION
+.SH NAME
+\fBdmesg\fR - print or control the kernel ring buffer
+.SH SYNOPSIS
+\fBdmesg\fR [\fB-Ccr\fR] [\fB-n\fR \fIlevel\fR]
+.SH DESCRIPTION
+\fBdmesg\fR examines or controls the kernel ring buffer.  By default
+it reads all the messages from the kernel ring buffer and prints them
+on stdout.
+.SH OPTIONS
+.TP
+\fB-C\fR Clear the ring buffer.
+.TP
+\fB-c\fR Clear the ring buffer after printing its contents.
+.TP
+\fB-n\fR Set the console \fIlevel\fR.
+.TP
+\fB-r\fR Print the raw message buffer.

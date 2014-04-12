@@ -18,7 +18,7 @@ enum {
 static void
 usage(void)
 {
-	eprintf("usage: [-Ccnr] %s\n", argv0);
+	eprintf("usage: [-Ccr] [-n level] %s\n", argv0);
 }
 
 int

@@ -1,0 +1,23 @@
+.TH RMMOD 8 ubase-VERSION
+.SH NAME
+\fBrmmod\fR - Remove a module from the Linux kernel
+.SH SYNOPSIS
+\fBrmmod\fR [\fB-fw\fR] \fImodule...\fR
+.SH DESCRIPTION
+\fBrmmod\fR removes one or more modules from the kernel.
+.SH OPTIONS
+.TP
+\fB-f\fR
+This option can be extremely dangerous: it has no effect unless
+CONFIG_MODULE_FORCE_UNLOAD was set when the kernel was compiled.
+With this option, you can remove modules which are being used, or
+which are not designed to be removed, or have been marked as unsafe.
+.TP
+\fB-w\fR
+Normally, \fBrmmod\fR will refuse to unload modules which are in
+use.  With this option, \fBrmmod\fR will isolate the module, and
+wait until the module is no longer used.  Noone new will be
+able to use the module, but s up to you to make sure the
+current  users eventually finish with it.
+.SH SEE ALSO
+insmod(8), lsmod(8)

@@ -1,0 +1,18 @@
+.TH PIDOF 1 ubase-VERSION
+.SH NAME
+\fBpidof\fR - Find the process ID of a running program
+.SH SYNOPSIS
+\fBpidof\fR [\fB-o\fI pid1,pid2,...,pidN\fR] [\fB-s\fR] [\fIprogram...\fR]
+.SH DESCRIPTION
+\fBpidof\fR finds the process id's of the named programs and prints them on
+stdout.
+.SH OPTIONS
+.TP
+\fB-o\fR
+Tell pidof to omit processes with that process id.  The special pid
+%PPID can be used to name the parent process of the pidof program.
+.TP
+\fB-s\fR
+Single shot - this instructs the program to only return one process id.
+.SH SEE ALSO
+killall5(8)

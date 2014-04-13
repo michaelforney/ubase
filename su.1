@@ -1,0 +1,20 @@
+.TH SU 1 ubase-VERSION
+.SH NAME
+\fBsu\fR - Run a command with a substitute user and group ID
+.SH SYNOPSIS
+\fBsu\fR [\fB-lp\fR] [\fIuser\fR]
+.SH DESCRIPTION
+\fBsu\fR allows to run commands with a substitute user and group ID.
+When called without arguments, su defaults to running an interactive shell
+as root.  For backward compatibility su defaults to not change the current
+directory and to only set the environment variables \fBHOME\fR and \fBSHELL\fR
+(plus \fBUSER\fR and \fBLOGNAME\fR if target \fIuser\fR is not root).
+.SH OPTIONS
+.TP
+\fB-l\fR
+Starts the shell as login shell with an environment similar to a real
+login.
+.TP
+\fB-p\fR
+Preserves the whole environment.  This option is ignored if the \fB-l\fR
+option is specified.

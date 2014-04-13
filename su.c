@@ -19,7 +19,7 @@ static void dologin(struct passwd *);
 static void
 usage(void)
 {
-	eprintf("usage: %s [-lp] [username]\n", argv0);
+	eprintf("usage: %s [-lp] [user]\n", argv0);
 }
 
 static int lflag = 0;

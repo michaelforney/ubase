@@ -45,6 +45,7 @@ SRC = \
 	su.c                \
 	swapoff.c           \
 	swapon.c            \
+	switch_root.c       \
 	truncate.c          \
 	umount.c            \
 	unshare.c           \

@@ -1,0 +1,33 @@
+.TH MOUNT 8 ubase-VERSION
+.SH NAME
+\fBmount\fR - Mount a filesystem
+.SH SYNOPSIS
+\fBmount\fR [\fB-BMRan\fR] [\fB-t\fI fstype\fR] [\fB-o\fI options\fR] [\fIsource\fR] [\fItarget\fR]
+.SH DESCRIPTION
+\fBmount\fR attaches the filesystem specified to the filesystem hierarchy.  The \fBumount(8)\fR command will detach it again.
+.SH OPTIONS
+.TP
+\fB-B\fR
+Remount a subtree somewhere else (so that its contents are
+visible in both places).
+.TP
+\fB-M\fR
+Move a subtree to some other place.
+.TP
+\fB-R\fR
+Remount a subtree and all possible submounts somewhere else (so
+that its contents are available in both places).
+.TP
+\fB-a\fR
+Mount all filesystems mentioned in /etc/fstab.
+.TP
+\fB-n\fR
+Mount without writing in /etc/mtab.  This is the default action.
+.TP
+\fB-t\fR
+Set the filesystem type.
+.TP
+\fB-o\fR
+Specify a comma separated string of filesystem specific options.
+.SH SEE ALSO
+mount(2), umount(2), umount(8), swapon(8)

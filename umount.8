@@ -1,0 +1,28 @@
+.TH UMOUNT 8 ubase-VERSION
+.SH NAME
+\fBumount\fR - Unmount file systems
+.SH SYNOPSIS
+\fBumount\fR [\fB-lfn\fR] \fItarget...\fR
+.TP
+\fBumount\fR \fB-a\fR [\fB-lfn\fR]
+.SH DESCRIPTION
+\fBumount\fR detaches the \fItarget\fR filesystem(s).
+A file system is specified by giving the directory where it
+has been mounted.  Giving the special device on which the file system
+lives may also work, but is obsolete, mainly because it  will fail in
+case this device was mounted on more than one directory.
+.SH OPTIONS
+.TP
+\fB-l\fR
+Lazy unmount.  Detach the filesystem from the fs hierarchy now, and cleanup
+all references to the filesystem as soon as it is not busy anymore.
+.TP
+\fB-f\fR
+Force unmount (in case of an unreachable NFS server).
+.TP
+\fB-n\fR
+Unmount without writing in /etc/mtab.  This is the default action.
+.TP
+\fB-a\fR
+All of the file systems described in /proc/mounts are unmounted.  The
+proc filesystem is not unmounted.

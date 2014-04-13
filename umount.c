@@ -11,7 +11,7 @@ static int umountall(int);
 static void
 usage(void)
 {
-	weprintf("usage: %s [-lfn] target\n", argv0);
+	weprintf("usage: %s [-lfn] target...\n", argv0);
 	weprintf("usage: %s -a [-lfn]\n", argv0);
 	exit(EXIT_FAILURE);
 }

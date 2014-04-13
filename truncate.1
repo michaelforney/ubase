@@ -1,0 +1,18 @@
+.TH TRUNCATE 1 ubase-VERSION
+.SH NAME
+\fBtruncate\fR - Shrink or extend the size of a file to the specified size
+.SH SYNOPSIS
+\fBtruncate\fR [\fB-c\fR] \fB-s\fI size file...\fR
+.SH DESCRIPTION
+\fBtruncate\fR shrinks or extends the size of each \fIfile\fR to the
+specified size.  A \fIfile\fR argument that does not exist is created.
+If a \fIfile\fR is larger than the specified size, the extra data is lost.
+If a \fIfile\fR is shorter, it is extended and the extended part (hole) reads
+as zero bytes.
+.SH OPTIONS
+.TP
+\fB-c\fR Do not create any files.
+.TP
+\fB-s\fR Set or adjust the file size by \fIsize\fR bytes.
+.SH SEE ALSO
+truncate(2), ftruncate(2)

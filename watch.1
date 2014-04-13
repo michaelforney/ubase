@@ -1,0 +1,19 @@
+.TH WATCH 1 ubase-VERSION
+.SH NAME
+\fBwatch\fR - Execute a program periodically, showing output fullscreen
+.SH SYNOPSIS
+\fBwatch\fR [\fB-t\fR] [\fB-n\fI interval\fR] \fIcommand\fR
+.SH DESCRIPTION
+\fBwatch\fR runs \fIcommand\fR repeatedly, displaying its output one
+screenfull at a time.  This allows you to watch the program output change
+over time.  By default the program is run every 2 seconds and will run
+until terminated.
+.SH OPTIONS
+.TP
+\fB-t\fR
+Turn off the header showing the interval, command and current
+time at the top of the display, as well as the following blank line.  This
+is the default action.
+.TP
+\fB-n\fR
+Specify the update interval.

@@ -1,0 +1,26 @@
+.TH PS 1 ubase-VERSION
+.SH NAME
+\fBps\fR - Display process status
+.SH SYNOPSIS
+\fBps\fR [\fB-aAdef\fR]
+.SH DESCRIPTION
+\fBps\fR displays information about active processes.  When given no options,
+\fBps\fR prints information about processes of the current user that has a
+controlling terminal.
+.SH OPTIONS
+.TP
+\fB-a\fR
+Select all processes except both session leaders and processes not
+associated with a terminal.
+.TP
+\fB-A\fR
+Select all processes.  Identical to \fB-e\fR.
+.TP
+\fB-d\fR
+Select all processes except session leaders.
+.TP
+\fB-e\fR
+Select all processes.  Identical to \fB-A\fR.
+.TP
+\fB-f\fR
+Do full-format listing.

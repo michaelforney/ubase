@@ -114,9 +114,9 @@ main(int argc, char **argv)
 		if(open(console, O_RDWR) == -1)
 			eprintf("open %s:", console);
 		if (dup2(STDIN_FILENO, STDOUT_FILENO) != STDOUT_FILENO)
-			eprintf("dup2 %s:", "0,1");
+			eprintf("dup2 %s:", "stdin,stdout");
 		if (dup2(STDIN_FILENO, STDERR_FILENO) != STDERR_FILENO)
-			eprintf("dup2 %s:", "0,2");
+			eprintf("dup2 %s:", "stdin,stderr");
 	}
 
 	/* execute init */

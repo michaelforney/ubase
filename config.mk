@@ -10,4 +10,4 @@ MANPREFIX = $(PREFIX)/share/man
 LD = $(CC)
 CPPFLAGS = -D_GNU_SOURCE
 CFLAGS   = -Os -Wall -Wextra $(CPPFLAGS)
-LDFLAGS  = -s -lcrypt
+LDFLAGS  = -s -lcrypt # -static

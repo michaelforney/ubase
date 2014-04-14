@@ -57,12 +57,40 @@ MAN1 = \
 	chvt.1              \
 	clear.1             \
 	df.1                \
-	eject.1
+	dmesg.1             \
+	eject.1             \
+	fallocate.1         \
+	free.1              \
+	id.1                \
+	mknod.1             \
+	mountpoint.1        \
+	pagesize.1          \
+	pidof.1             \
+	ps.1                \
+	stat.1              \
+	su.1                \
+	truncate.1          \
+	unshare.1           \
+	uptime.1            \
+	watch.1             \
+	who.1
 
 MAN8 = \
+	ctrlaltdel.8        \
+	getty.8             \
 	halt.8              \
+	insmod.8            \
+	killall5.8          \
 	lsmod.8             \
-	lsusb.8
+	lsusb.8             \
+	mkswap.8            \
+	mount.8             \
+	pivot_root.8        \
+	rmmod.8             \
+	swapoff.8           \
+	swapon.8            \
+	switch_root.8       \
+	umount.8
 
 OBJ = $(SRC:.c=.o) $(LIB)
 BIN = $(SRC:.c=)

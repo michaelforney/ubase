@@ -13,29 +13,29 @@ indicated via options.
 \fB-m\fR
 Unshare the mount namespace, so that the calling process has a private
 copy of its namespace which is not shared with any other process.
-This flag has the same effect as the \fBclone(2) CLONE_NEWNS \fRflag.
+This flag has the same effect as the \fBclone(2) CLONE_NEWNS\fR flag.
 .TP
 \fB-u\fR
 Unshare the UTS IPC namespace, so that the calling process has a
 private copy of the UTS namespace which is not shared with any other
-process. This flag has the same effect as the \fBclone(2) CLONE_NEWUTS
-\fRflag.
+process. This flag has the same effect as the \fBclone(2) CLONE_NEWUTS\fR
+flag.
 .TP
 \fB-i\fR
 Unshare the System V IPC namespace, so that the calling process has a
 private copy of the System V IPC namespace which is not shared with
 any other process. This flag has the same effect as the \fBclone(2)
-CLONE_NEWIPC \fRflag
+CLONE_NEWIPC\fR flag
 .TP
 \fB-n\fR
 Unshare the network namespace, so that the calling process is moved
 into a new network namespace which is not shared with any previously
 existing process. This flag has the same effect as the \fBclone(2)
-CLONE_NEWNET \fRflag.
+CLONE_NEWNET\fR flag.
 .TP
 \fB-p\fR
 Create the process in a new PID namespace. This flag has the same
-effect as the \fBclone(2) CLONE_NEWPID \fRflag.
+effect as the \fBclone(2) CLONE_NEWPID\fR flag.
 .TP
 \fB-U\fR
 The process will have a distinct set of UIDs, GIDs and capabilities.

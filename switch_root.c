@@ -20,9 +20,8 @@ delete_content(const char *dir, dev_t curdevice)
 	struct dirent *dent;
 
 	/* don't dive into other filesystems */
-	if (lstat(dir, &st) || st.st_dev != curdevice){
+	if (lstat(dir, &st) || st.st_dev != curdevice)
 		return;
-	}
 	/* delete contents recursively */
 	if (S_ISDIR(st.st_mode)) {
 		d = opendir(dir);
@@ -32,9 +31,7 @@ delete_content(const char *dir, dev_t curdevice)
 				if (dent->d_name[0] == '.'
 				 && ((dent->d_name[1] == '.' && dent->d_name[2] == 0)
 				     || (dent->d_name[1] == 0)))
-				{
 					continue;
-				}
 
 				/* build path and dive deeper */
 				strlcat(path, dir, sizeof(path));
@@ -77,45 +74,39 @@ main(int argc, char **argv)
 	} ARGEND;
 
 	/* check number of args and if we are PID 1 */
-	if (argc != 2 || getpid() != 1){
+	if (argc != 2 || getpid() != 1)
 		usage();
-	}
 
 	/* chdir to newroot and make sure it's a different fs */
-	if (chdir(argv[0])) {
+	if (chdir(argv[0]))
 		eprintf("chdir %s:", argv[0]);
-	}
-	if (stat("/", &st)) {
-		eprintf("stat %s:", "/");
-	}
-	curdev = st.st_dev;
-	if (stat(".", &st)) {
-		eprintf("stat %s:", ".");
-	}
-	if (st.st_dev == curdev) {
-		usage();
-	}
 
-	/* further checks */
-	if (stat("/init", &st) || !S_ISREG(st.st_mode)) {
-		/* avoids trouble with real filesystems */
+	if (stat("/", &st))
+		eprintf("stat %s:", "/");
+
+	curdev = st.st_dev;
+	if (stat(".", &st))
+		eprintf("stat %s:", ".");
+	if (st.st_dev == curdev)
+		usage();
+
+	/* avoids trouble with real filesystems */
+	if (stat("/init", &st) || !S_ISREG(st.st_mode))
 		eprintf("/init is not a regular file\n");
-	}
+
 	statfs("/", &stfs);
-	if ((unsigned)stfs.f_type != RAMFS_MAGIC && (unsigned)stfs.f_type != TMPFS_MAGIC){
+	if ((unsigned)stfs.f_type != RAMFS_MAGIC && (unsigned)stfs.f_type != TMPFS_MAGIC)
 		eprintf("current filesystem is not a RAMFS or TMPFS\n");
-	}
 
 	/* wipe / */
 	delete_content("/", curdev);
 
 	/* overmount / with newroot and chroot into it */
-	if (mount(".", "/", NULL, MS_MOVE, NULL)) {
+	if (mount(".", "/", NULL, MS_MOVE, NULL))
 		eprintf("mount %s:", ".");
-	}
-	if (chroot(".")) {
+
+	if (chroot("."))
 		eprintf("chroot failed\n");
-	}
 
 	/* if -c is set, redirect stdin/stdout/stderr to console */
 	if (console) {

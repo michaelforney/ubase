@@ -2,7 +2,6 @@
 #include <dirent.h>
 #include <fcntl.h>
 #include <limits.h>
-#include <linux/magic.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,6 +10,9 @@
 #include <sys/vfs.h>
 #include <unistd.h>
 #include "util.h"
+
+#define RAMFS_MAGIC		0x858458f6	/* some random number */
+#define TMPFS_MAGIC		0x01021994
 
 static void
 delete_content(const char *dir, dev_t curdevice)

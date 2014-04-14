@@ -28,9 +28,8 @@ delete_content(const char *dir, dev_t curdevice)
 		if (d) {
 			for(; (dent = readdir(d)) ;) {
 				/* skip ".." and "." */
-				if (dent->d_name[0] == '.'
-				 && ((dent->d_name[1] == '.' && dent->d_name[2] == 0)
-				     || (dent->d_name[1] == 0)))
+				if (strcmp(dent->d_name, ".") == 0 ||
+				    strcmp(dent->d_name, "..") == 0)
 					continue;
 
 				/* build path and dive deeper */

@@ -110,16 +110,13 @@ main(int argc, char **argv)
 
 	/* if -c is set, redirect stdin/stdout/stderr to console */
 	if (console) {
-		close(0);
-		if(open(console, O_RDWR) == -1){
+		close(STDIN_FILENO);
+		if(open(console, O_RDWR) == -1)
 			eprintf("open %s:", console);
-		}
-		if (dup2(0,1) == -1){
+		if (dup2(STDIN_FILENO, STDOUT_FILENO) != STDOUT_FILENO)
 			eprintf("dup2 %s:", "0,1");
-		}
-		if (dup2(0,2) == -1){
+		if (dup2(STDIN_FILENO, STDERR_FILENO) != STDERR_FILENO)
 			eprintf("dup2 %s:", "0,2");
-		}
 	}
 
 	/* execute init */

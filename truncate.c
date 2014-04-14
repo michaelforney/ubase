@@ -19,7 +19,7 @@ main(int argc, char *argv[])
 {
 	int cflag = 0, sflag = 0;
 	int fd, i, ret = EXIT_SUCCESS;
-	long size;
+	long size = 0;
 
 	ARGBEGIN {
 	case 's':
@@ -33,7 +33,7 @@ main(int argc, char *argv[])
 		usage();
 	} ARGEND;
 
-	if (argc < 1 || !sflag)
+	if (argc < 1 || sflag == 0)
 		usage();
 
 	for (i = 0; i < argc; i++) {

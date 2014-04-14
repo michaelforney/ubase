@@ -1,14 +1,15 @@
 /* See LICENSE file for copyright and license details. */
+#include <dirent.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <linux/magic.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <linux/magic.h>
-#include <limits.h>
-#include <unistd.h>
+#include <string.h>
 #include <sys/mount.h>
 #include <sys/stat.h>
 #include <sys/vfs.h>
-#include <fcntl.h>
-#include <dirent.h>
+#include <unistd.h>
 #include "util.h"
 
 static void

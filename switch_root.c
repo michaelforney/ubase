@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <linux/magic.h>
-#include <linux/limits.h>
+#include <limits.h>
 #include <unistd.h>
 #include <sys/mount.h>
 #include <sys/stat.h>

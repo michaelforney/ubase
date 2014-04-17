@@ -80,17 +80,18 @@ static int
 setsysctl(char *variable, char *value)
 {
 	char path[PATH_MAX];
-	char *p;
 	int fd;
 	ssize_t n;
 
-	for (p = variable; *p; p++)
-		if (*p == '.')
-			*p = '/';
+	streplace(variable, '.', '/');
 
 	strlcpy(path, "/proc/sys/", sizeof(path));
-	if (strlcat(path, variable, sizeof(path)) >= sizeof(path))
+	if (strlcat(path, variable, sizeof(path)) >= sizeof(path)) {
+		streplace(variable, '/', '.');
 		return -1;
+	}
+
+	streplace(variable, '/', '.');
 
 	fd = open(path, O_WRONLY);
 	if (fd < 0)

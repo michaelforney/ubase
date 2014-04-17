@@ -6,7 +6,6 @@ Tools
  * swaplabel(8)
  * last(1)
  * losetup(8)
- * sysctl
  * lspci
  * mkswap [-L]
  * passwd

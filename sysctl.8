@@ -1,0 +1,9 @@
+.TH SYSCTL 8 ubase-VERSION
+.SH NAME
+\fBsysctl\fR - Configure kernel parameters at runtime
+.SH SYNOPSIS
+\fBsysctl\fR \fIvariable\fR[=\fIvalue\fR]...
+.SH DESCRIPTION
+\fBsysctl\fR modifies kernel parameters at runtime.  The parameters available
+are those listed under \fI/proc/sys/\fR.  Procfs is required for sysctl support
+in Linux.  You can use \fBsysctl\fR to both read and write sysctl data.

@@ -47,6 +47,7 @@ SRC = \
 	swapoff.c           \
 	swapon.c            \
 	switch_root.c       \
+	sysctl.c            \
 	truncate.c          \
 	umount.c            \
 	unshare.c           \
@@ -92,6 +93,7 @@ MAN8 = \
 	swapoff.8           \
 	swapon.8            \
 	switch_root.8       \
+	sysctl.8            \
 	umount.8
 
 OBJ = $(SRC:.c=.o) $(LIB)

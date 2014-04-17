@@ -40,6 +40,7 @@ SRC = \
 	pidof.c             \
 	pivot_root.c        \
 	ps.c                \
+	respawn.c           \
 	rmmod.c             \
 	stat.c              \
 	su.c                \
@@ -67,6 +68,7 @@ MAN1 = \
 	pagesize.1          \
 	pidof.1             \
 	ps.1                \
+	respawn.1           \
 	stat.1              \
 	su.1                \
 	truncate.1          \

@@ -59,6 +59,10 @@ getsysctl(char *variable, char **value)
 	if (p)
 		*p = '\0';
 
+	for (p = variable; *p; p++)
+		if (*p == '/')
+			*p = '.';
+
 	*value = buf;
 
 	close(fd);

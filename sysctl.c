@@ -12,7 +12,7 @@ getsysctl(char *variable, char **value)
 {
 	char path[PATH_MAX];
 	char *p;
-	char *buf, c;
+	char *buf, *tmp, c;
 	int fd;
 	ssize_t n;
 	size_t sz, i;
@@ -43,11 +43,13 @@ getsysctl(char *variable, char **value)
 			break;
 		if (i == sz - 1) {
 			sz *= 2;
-			buf = realloc(buf, sz);
-			if (!buf) {
+			tmp = realloc(buf, sz);
+			if (!tmp) {
 				close(fd);
+				free(buf);
 				return -1;
 			}
+			buf = tmp;
 		}
 		buf[i++] = c;
 	}

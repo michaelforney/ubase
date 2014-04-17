@@ -12,9 +12,10 @@ getsysctl(char *variable, char **value)
 {
 	char path[PATH_MAX];
 	char *p;
-	char *buf;
+	char *buf, c;
 	int fd;
 	ssize_t n;
+	size_t sz, i;
 
 	for (p = variable; *p; p++)
 		if (*p == '.')
@@ -28,19 +29,29 @@ getsysctl(char *variable, char **value)
 	if (fd < 0)
 		return -1;
 
-	buf = malloc(1024);
-	if (!buf) {
-		close(fd);
-		return -1;
+	i = 0;
+	sz = 1;
+	buf = NULL;
+	while (1) {
+		n = read(fd, &c, 1);
+		if (n < 0) {
+			close(fd);
+			free(buf);
+			return -1;
+		}
+		if (n == 0)
+			break;
+		if (i == sz - 1) {
+			sz *= 2;
+			buf = realloc(buf, sz);
+			if (!buf) {
+				close(fd);
+				return -1;
+			}
+		}
+		buf[i++] = c;
 	}
-
-	n = read(fd, buf, 1023);
-	if (n <= 0) {
-		close(fd);
-		free(buf);
-		return -1;
-	}
-	buf[n] = '\0';
+	buf[i] = '\0';
 
 	p = strrchr(buf, '\n');
 	if (p)

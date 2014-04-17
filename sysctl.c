@@ -10,11 +10,9 @@
 static void
 streplace(char *s, int a, int b)
 {
-	char *p;
-
-	for (p = s; *p; p++)
-		if (*p == a)
-			*p = b;
+	for (; *s; s++)
+		if (*s == a)
+			*s = b;
 }
 
 static int

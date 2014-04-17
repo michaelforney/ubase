@@ -122,6 +122,7 @@ main(int argc, char *argv[])
 	char *value;
 	char *p;
 	int i;
+	int r = EXIT_SUCCESS;
 
 	argv0 = argv[0];
 	argv++;
@@ -133,6 +134,7 @@ main(int argc, char *argv[])
 	for (i = 0; i < argc; i++) {
 		for (p = argv[i]; *p; p++) {
 			if (p[0] == '.' && p[1] == '.') {
+				r = EXIT_FAILURE;
 				weprintf("malformed input: %s\n", argv[i]);
 				break;
 			}
@@ -142,6 +144,7 @@ main(int argc, char *argv[])
 		p = strchr(argv[i], '=');
 		if (p) {
 			if (p[1] == '\0') {
+				r = EXIT_FAILURE;
 				weprintf("malformed input: %s\n", argv[i]);
 				continue;
 			}
@@ -155,12 +158,14 @@ main(int argc, char *argv[])
 		if (variable) {
 			if (value) {
 				if (setsysctl(variable, value) < 0) {
+					r = EXIT_FAILURE;
 					weprintf("failed to set sysctl for %s\n", variable);
 					continue;
 				}
 			}
 			else {
 				if (getsysctl(variable, &value) < 0) {
+					r = EXIT_FAILURE;
 					weprintf("failed to get sysctl for %s\n", variable);
 					continue;
 				}
@@ -170,5 +175,5 @@ main(int argc, char *argv[])
 		}
 	}
 
-	return EXIT_SUCCESS;
+	return r;
 }

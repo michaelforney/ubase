@@ -131,17 +131,27 @@ main(int argc, char *argv[])
 		usage();
 
 	for (i = 0; i < argc; i++) {
-		value = NULL;
-		variable = argv[i];
-		p = strchr(variable, '=');
+		for (p = argv[i]; *p; p++) {
+			if (p[0] == '.' && p[1] == '.') {
+				weprintf("malformed input: %s\n", argv[i]);
+				break;
+			}
+		}
+		if (*p != '\0')
+			continue;
+		p = strchr(argv[i], '=');
 		if (p) {
 			if (p[1] == '\0') {
-				weprintf("malformed sysctl: %s\n", argv[i]);
+				weprintf("malformed input: %s\n", argv[i]);
 				continue;
 			}
 			*p = '\0';
 			value = &p[1];
+		} else {
+			value = NULL;
 		}
+		variable = argv[i];
+
 		if (variable) {
 			if (value) {
 				if (setsysctl(variable, value) < 0) {

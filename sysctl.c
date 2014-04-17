@@ -7,6 +7,16 @@
 #include <unistd.h>
 #include "util.h"
 
+static void
+streplace(char *s, int a, int b)
+{
+	char *p;
+
+	for (p = s; *p; p++)
+		if (*p == a)
+			*p = b;
+}
+
 static int
 getsysctl(char *variable, char **value)
 {
@@ -17,13 +27,15 @@ getsysctl(char *variable, char **value)
 	ssize_t n;
 	size_t sz, i;
 
-	for (p = variable; *p; p++)
-		if (*p == '.')
-			*p = '/';
+	streplace(variable, '.', '/');
 
 	strlcpy(path, "/proc/sys/", sizeof(path));
-	if (strlcat(path, variable, sizeof(path)) >= sizeof(path))
+	if (strlcat(path, variable, sizeof(path)) >= sizeof(path)) {
+		streplace(variable, '/', '.');
 		return -1;
+	}
+
+	streplace(variable, '/', '.');
 
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
@@ -58,10 +70,6 @@ getsysctl(char *variable, char **value)
 	p = strrchr(buf, '\n');
 	if (p)
 		*p = '\0';
-
-	for (p = variable; *p; p++)
-		if (*p == '/')
-			*p = '.';
 
 	*value = buf;
 

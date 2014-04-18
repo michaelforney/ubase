@@ -98,7 +98,7 @@ setsysctl(char *variable, char *value)
 		return -1;
 
 	n = write(fd, value, strlen(value));
-	if (n != (ssize_t)strlen(value)) {
+	if ((size_t)n != strlen(value)) {
 		close(fd);
 		return -1;
 	}

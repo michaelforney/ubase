@@ -154,23 +154,21 @@ main(int argc, char *argv[])
 		}
 		variable = argv[i];
 
-		if (variable) {
-			if (value) {
-				if (setsysctl(variable, value) < 0) {
-					r = EXIT_FAILURE;
-					weprintf("failed to set sysctl for %s\n", variable);
-					continue;
-				}
+		if (value) {
+			if (setsysctl(variable, value) < 0) {
+				r = EXIT_FAILURE;
+				weprintf("failed to set sysctl for %s\n", variable);
+				continue;
 			}
-			else {
-				if (getsysctl(variable, &value) < 0) {
-					r = EXIT_FAILURE;
-					weprintf("failed to get sysctl for %s\n", variable);
-					continue;
-				}
-				printf("%s = %s\n", variable, value);
-				free(value);
+		}
+		else {
+			if (getsysctl(variable, &value) < 0) {
+				r = EXIT_FAILURE;
+				weprintf("failed to get sysctl for %s\n", variable);
+				continue;
 			}
+			printf("%s = %s\n", variable, value);
+			free(value);
 		}
 	}
 

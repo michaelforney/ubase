@@ -60,7 +60,7 @@ usage(void)
 }
 
 int
-main(int argc, char **argv)
+main(int argc, char *argv[])
 {
 	char *console = NULL;
 	dev_t curdev;

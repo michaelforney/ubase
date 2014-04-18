@@ -14,7 +14,7 @@ usage(void)
 }
 
 int
-main(int argc, char **argv)
+main(int argc, char *argv[])
 {
 	struct utmp usr;
 	FILE *ufp;

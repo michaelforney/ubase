@@ -15,7 +15,7 @@ usage(void)
 }
 
 int
-main(int argc, char **argv)
+main(int argc, char *argv[])
 {
 	mode_t type, mode = 0644;
 	dev_t dev;

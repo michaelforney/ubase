@@ -26,7 +26,7 @@ static int lflag = 0;
 static int pflag = 0;
 
 int
-main(int argc, char **argv)
+main(int argc, char *argv[])
 {
 	char *usr = "root", *pass, *cryptpass;
 	char * const *newargv;

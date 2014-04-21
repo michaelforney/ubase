@@ -2,7 +2,7 @@
 .SH NAME
 \fBrespawn\fR - Spawn the given command repeatedly
 .SH SYNOPSIS
-\fBrespawn\fR [\fB-d\fI N\fR] \fIcmd\fR [\fIargs...\fR]
+\fBrespawn\fR [\fB-l\fI fifo\fR] [\fB-d\fI N\fR] \fIcmd\fR [\fIargs...\fR]
 .SH DESCRIPTION
 \fBrespawn\fR spawns the given \fIcmd\fR in a new session
 repeatedly.
@@ -10,3 +10,9 @@ repeatedly.
 .TP
 \fB-d\fR
 Set the delay between invocations of \fIcmd\fR.  It defaults to 0.
+.TP
+\fB-l\fR
+Listen on the specified \fIfifo\fR for writes.  For each write
+spawn a new instance of \fIcmd\fR.  This can be used in conjunction
+with a process supervisor to restart a particular program.  The \fB-l\fR
+and \fB-d\fR options are incompatible.  All writes are discarded.

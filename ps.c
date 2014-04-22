@@ -12,7 +12,6 @@
 #include "proc.h"
 #include "util.h"
 
-static void usage(void);
 static void psout(struct procstat *ps);
 static void psr(const char *file);
 
@@ -22,6 +21,12 @@ enum {
 	PS_dflag = 1 << 2,
 	PS_fflag = 1 << 3
 };
+
+static void
+usage(void)
+{
+	eprintf("usage: [-aAdef] %s\n", argv0);
+}
 
 static int flags;
 
@@ -54,12 +59,6 @@ main(int argc, char *argv[])
 		printf("UID        PID  PPID  C STIME TTY          TIME CMD\n");
 	recurse("/proc", psr);
 	return EXIT_SUCCESS;
-}
-
-static void
-usage(void)
-{
-	eprintf("usage: [-aAdef] %s\n", argv0);
 }
 
 static void

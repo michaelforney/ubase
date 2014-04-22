@@ -8,11 +8,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 #include "config.h"
 #include "util.h"
 
 extern char **environ;
 
+static const char *randreply(void);
 static char *msetenv(const char *, const char *);
 static void dologin(struct passwd *);
 
@@ -53,6 +55,8 @@ main(int argc, char *argv[])
 	else
 		usage();
 
+	srand(time(NULL));
+
 	errno = 0;
 	spw = getspnam(usr);
 	if (errno)
@@ -63,7 +67,7 @@ main(int argc, char *argv[])
 	switch (spw->sp_pwdp[0]) {
 	case '!':
 	case '*':
-		eprintf("Denied\n");
+		eprintf("Denied.\n");
 	case '$':
 		break;
 	default:
@@ -83,7 +87,7 @@ main(int argc, char *argv[])
 			eprintf("crypt:");
 
 		if (strcmp(cryptpass, spw->sp_pwdp) != 0)
-			eprintf("Denied\n");
+			eprintf(randreply());
 	}
 
 	errno = 0;
@@ -120,6 +124,26 @@ main(int argc, char *argv[])
 		       newargv, environ);
 	}
 	return (errno == ENOENT) ? 127 : 126;
+}
+
+static const char *
+randreply(void)
+{
+	static const char *replies[] = {
+		"Time flies like an arrow, fruit flies like a banana.\n",
+		"Denied.\n",
+		"You type like a dairy farmer.\n",
+		"CChheecckk yyoouurr dduupplleexx sswwiittcchh..\n",
+		"I met a girl with 12 nipples, it sounds weird dozen tit?\n",
+		"Here I am, brain the size of a planet and they ask me to keep hashing rubbish.\n",
+		"Clones are people two.\n",
+		"Your mom is an interesting su response.\n",
+		"no.\n",
+		"Your mom forgot to null-terminate???B?33??Abort (core dumped)\n",
+		"A fool-proof method for sculpting an elephant: first, get a huge block of marble; then you chip away everything that doesn't look like an elephant.\n",
+		"Bloating .data for fun and profit.\n",
+	};
+	return replies[rand() % LEN(replies)];
 }
 
 static char *

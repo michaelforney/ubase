@@ -7,6 +7,7 @@ HDR = arg.h config.def.h proc.h reboot.h util.h
 LIB = \
 	util/agetcwd.o        \
 	util/apathmax.o       \
+	util/ealloc.o         \
 	util/eprintf.o        \
 	util/estrtol.o        \
 	util/explicit_bzero.o \

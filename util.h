@@ -12,6 +12,8 @@ void devtotty(int, int *, int *);
 void enprintf(int, const char *, ...);
 void eprintf(const char *, ...);
 long estrtol(const char *, int);
+#undef explicit_bzero
+void explicit_bzero(void *, size_t);
 void putword(const char *);
 void recurse(const char *, void (*)(const char *));
 #undef strlcat

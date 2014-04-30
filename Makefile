@@ -5,15 +5,16 @@ include config.mk
 
 HDR = arg.h config.def.h proc.h reboot.h util.h
 LIB = \
-	util/agetcwd.o      \
-	util/apathmax.o     \
-	util/eprintf.o      \
-	util/estrtol.o      \
-	util/proc.o         \
-	util/putword.o      \
-	util/recurse.o      \
-	util/strlcat.o      \
-	util/strlcpy.o      \
+	util/agetcwd.o        \
+	util/apathmax.o       \
+	util/eprintf.o        \
+	util/estrtol.o        \
+	util/explicit_bzero.o \
+	util/proc.o           \
+	util/putword.o        \
+	util/recurse.o        \
+	util/strlcat.o        \
+	util/strlcpy.o        \
 	util/tty.o
 
 SRC = \

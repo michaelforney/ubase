@@ -86,6 +86,8 @@ main(int argc, char *argv[])
 
 		if (strcmp(cryptpass, spw->sp_pwdp) != 0)
 			eprintf(randreply());
+		explicit_bzero(cryptpass, strlen(cryptpass));
+		explicit_bzero(spw, sizeof *spw);
 	}
 
 	errno = 0;

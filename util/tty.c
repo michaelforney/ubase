@@ -21,9 +21,7 @@ ttytostr(int tty_maj, int tty_min)
 
 	/* Up to 10k ttys */
 	len = strlen(pts) + 4 + 1;
-	ttystr = malloc(len);
-	if (!ttystr)
-		eprintf("malloc:");
+	ttystr = emalloc(len);
 	switch (tty_maj) {
 	case 136:
 		snprintf(ttystr, len, "%s%d", pts, tty_min);

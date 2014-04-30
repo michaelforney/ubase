@@ -19,7 +19,5 @@ apathmax(char **p, long *size)
 		}
 	}
 
-	if(!(*p = malloc(*size)))
-		eprintf("malloc:");
+	*p = emalloc(*size);
 }
-

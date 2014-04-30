@@ -70,12 +70,8 @@ umountall(int flags)
 	while ((me = getmntent(fp))) {
 		if (strcmp(me->mnt_type, "proc") == 0)
 			continue;
-		mntdirs = realloc(mntdirs, ++len * sizeof(*mntdirs));
-		if (!mntdirs)
-			eprintf("realloc:");
-		mntdirs[len - 1] = strdup(me->mnt_dir);
-		if (!mntdirs[len - 1])
-			eprintf("strdup:");
+		mntdirs = erealloc(mntdirs, ++len * sizeof(*mntdirs));
+		mntdirs[len - 1] = estrdup(me->mnt_dir);
 	}
 	endmntent(fp);
 	while (--len >= 0) {

@@ -54,9 +54,7 @@ main(int argc, char *argv[])
 	if (n < 0)
 		eprintf("klogctl:");
 
-	buf = malloc(n);
-	if (!buf)
-		eprintf("malloc:");
+	buf = emalloc(n);
 
 	n = klogctl(SYSLOG_ACTION_READ_ALL, buf, n);
 	if (n < 0)

@@ -37,8 +37,7 @@ main(int argc, char *argv[])
 	if (fstat(fd, &sb) < 0)
 		eprintf("stat %s:", argv[0]);
 	blen = sb.st_size;
-	if(!(buf = malloc(blen)))
-		eprintf("malloc:");
+	buf = emalloc(blen);
 
 	n = read(fd, buf, blen);
 	if(n < 0 || (size_t)n != blen)
@@ -51,8 +50,7 @@ main(int argc, char *argv[])
 		plen += strlen(argv[i]);
 	if (plen > 0) {
 		plen += argc;
-		if(!(opts = calloc(1, plen)))
-			eprintf("calloc:");
+		opts = ecalloc(1, plen);
 		for (i = 0; i < argc; i++) {
 			strcat(opts, argv[i]);
 			if (i + 1 < argc)

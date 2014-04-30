@@ -68,9 +68,7 @@ main(int argc, char *argv[])
 	} ARGEND;
 
 	for (p = strtok(arg, ","); p; p = strtok(NULL, ",")) {
-		onode = malloc(sizeof(*onode));
-		if (!onode)
-			eprintf("malloc:");
+		onode = emalloc(sizeof(*onode));
 		onode->pid = estrtol(p, 10);
 		onode->next = omithead;
 		omithead = onode;

@@ -49,9 +49,7 @@ main(int argc, char *argv[])
 		return 1;
 
 	for (p = strtok(arg, ","); p; p = strtok(NULL, ",")) {
-		onode = malloc(sizeof(*onode));
-		if (!onode)
-			eprintf("malloc:");
+		onode = emalloc(sizeof(*onode));
 		if (strcmp(p, "%PPID") == 0)
 			onode->pid = getppid();
 		else

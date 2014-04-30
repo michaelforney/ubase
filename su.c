@@ -151,9 +151,7 @@ msetenv(const char *name, const char *value)
 	size_t sz;
 
 	sz = strlen(name) + strlen(value) + 2;
-	buf = malloc(sz);
-	if (!buf)
-		eprintf("malloc:");
+	buf = emalloc(sz);
 	snprintf(buf, sz, "%s=%s", name, value);
 	return buf;
 }

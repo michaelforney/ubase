@@ -58,9 +58,7 @@ main(int argc, char *argv[])
 	if (fstat(fd, &sb) < 0)
 		eprintf("stat %s:", argv[0]);
 
-	buf = calloc(1, pagesize);
-	if (!buf)
-		eprintf("malloc:");
+	buf = ecalloc(1, pagesize);
 
 	pages = sb.st_size / pagesize;
 	if (pages < SWAP_MIN_PAGES)

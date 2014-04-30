@@ -35,7 +35,6 @@ main(int argc, char *argv[])
 	struct spwd *spw;
 	struct passwd *pw;
 	uid_t uid;
-	int i;
 
 	ARGBEGIN {
 	case 'l':
@@ -81,8 +80,7 @@ main(int argc, char *argv[])
 			eprintf("getpass:");
 
 		cryptpass = crypt(pass, spw->sp_pwdp);
-		for (i = 0; pass[i]; i++)
-			pass[i] = '\0';
+		explicit_bzero(pass, strlen(pass));
 		if (!cryptpass)
 			eprintf("crypt:");
 

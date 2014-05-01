@@ -1,5 +1,5 @@
 # ubase version
-VERSION = 0.0
+VERSION = 0.1
 
 # paths
 PREFIX = /usr/local

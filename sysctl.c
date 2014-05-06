@@ -8,7 +8,7 @@
 #include "util.h"
 
 static void
-streplace(char *s, int a, int b)
+replacestr(char *s, int a, int b)
 {
 	for (; *s; s++)
 		if (*s == a)
@@ -25,15 +25,15 @@ getsysctl(char *variable, char **value)
 	ssize_t n;
 	size_t sz, i;
 
-	streplace(variable, '.', '/');
+	replacestr(variable, '.', '/');
 
 	strlcpy(path, "/proc/sys/", sizeof(path));
 	if (strlcat(path, variable, sizeof(path)) >= sizeof(path)) {
-		streplace(variable, '/', '.');
+		replacestr(variable, '/', '.');
 		return -1;
 	}
 
-	streplace(variable, '/', '.');
+	replacestr(variable, '/', '.');
 
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
@@ -83,15 +83,15 @@ setsysctl(char *variable, char *value)
 	int fd;
 	ssize_t n;
 
-	streplace(variable, '.', '/');
+	replacestr(variable, '.', '/');
 
 	strlcpy(path, "/proc/sys/", sizeof(path));
 	if (strlcat(path, variable, sizeof(path)) >= sizeof(path)) {
-		streplace(variable, '/', '.');
+		replacestr(variable, '/', '.');
 		return -1;
 	}
 
-	streplace(variable, '/', '.');
+	replacestr(variable, '/', '.');
 
 	fd = open(path, O_WRONLY);
 	if (fd < 0)

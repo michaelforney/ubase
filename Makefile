@@ -67,6 +67,7 @@ MAN1 = \
 	fallocate.1         \
 	free.1              \
 	id.1                \
+	login.1             \
 	mknod.1             \
 	mountpoint.1        \
 	pagesize.1          \

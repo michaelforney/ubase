@@ -67,9 +67,9 @@ main(int argc, char *argv[])
         ioctl(STDIN_FILENO, TCFLSH, (void *)0);
 
 	pass = getpass("Password: ");
+	putchar('\n');
 	if (!pass)
 		eprintf("getpass:");
-	putchar('\n');
 	cryptpass = crypt(pass, pw->pw_passwd);
 	explicit_bzero(pass, strlen(pass));
 	if (!cryptpass)

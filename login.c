@@ -24,8 +24,6 @@ int
 main(int argc, char *argv[])
 {
 	struct passwd *pw;
-	uid_t uid;
-	gid_t gid;
 	char *pass, *cryptpass;
 	int pflag = 0;
 
@@ -50,14 +48,11 @@ main(int argc, char *argv[])
 	switch (pw->pw_passwd[0]) {
 	case '!':
 	case '*':
-		eprintf("Denied\n");
+		eprintf("denied\n");
 	}
 
 	if (pw->pw_passwd[0] == 'x' && pw->pw_passwd[1] == '\0')
 		eprintf("no shadow support\n");
-
-	uid = pw->pw_uid;
-	gid = pw->pw_gid;
 
 	/* Empty password? Login now */
 	if (pw->pw_passwd[0] == '\0')
@@ -75,14 +70,14 @@ main(int argc, char *argv[])
 	if (!cryptpass)
 		eprintf("crypt:");
 	if (strcmp(cryptpass, pw->pw_passwd) != 0)
-		eprintf("oops\n");
+		eprintf("login failed\n");
 
 login:
-	if (initgroups(argv[0], gid) < 0)
+	if (initgroups(argv[0], pw->pw_gid) < 0)
 		eprintf("initgroups:");
-	if (setgid(gid) < 0)
+	if (setgid(pw->pw_gid) < 0)
 		eprintf("setgid:");
-	if (setuid(uid) < 0)
+	if (setuid(pw->pw_uid) < 0)
 		eprintf("setuid:");
 
 	return dologin(pw, pflag);
@@ -91,8 +86,6 @@ login:
 static int
 dologin(struct passwd *pw, int preserve)
 {
-	char *shell[] = { pw->pw_shell, pw->pw_shell, "-l", NULL };
-
 	if (preserve == 0)
 		clearenv();
 	setenv("HOME", pw->pw_dir, 1);
@@ -103,7 +96,7 @@ dologin(struct passwd *pw, int preserve)
 	       ENV_SUPATH : ENV_PATH, 1);
 	if (chdir(pw->pw_dir) < 0)
 		eprintf("chdir %s:", pw->pw_dir);
-	execvp(shell[0], shell + 1);
-	weprintf("execvp %s:", shell[0]);
+	execlp(pw->pw_shell, pw->pw_shell, "-l", NULL);
+	weprintf("execvp %s:", pw->pw_shell);
 	return (errno == ENOENT) ? 127 : 126;
 }

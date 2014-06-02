@@ -7,8 +7,8 @@ much simpler.
 The following programs are currently implemented:
 
     chvt clear ctrlaltdel df dmesg  eject fallocate free getty halt id
-    insmod killall5 lsmod lsusb mknod mkswap mount mountpoint pagesize
-    pidof  pivot_root   ps  respawn  rmmod  stat   su  swapoff  swapon
+    insmod killall5  login lsmod  lsusb mknod mkswap  mount mountpoint
+    pagesize pidof pivot_root ps respawn  rmmod stat su swapoff swapon
     switch_root sysctl truncate umount unshare uptime watch who
 
 The complement  of ubase  is sbase[1] which  mostly follows  POSIX and

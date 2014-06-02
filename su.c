@@ -68,10 +68,6 @@ main(int argc, char *argv[])
 	case '!':
 	case '*':
 		eprintf("Denied\n");
-	case '$':
-		break;
-	default:
-		eprintf("Invalid shadow record\n");
 	}
 
 	uid = getuid();

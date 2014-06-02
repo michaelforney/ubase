@@ -67,7 +67,7 @@ main(int argc, char *argv[])
 	switch (spw->sp_pwdp[0]) {
 	case '!':
 	case '*':
-		eprintf("Denied.\n");
+		eprintf("Denied\n");
 	case '$':
 		break;
 	default:

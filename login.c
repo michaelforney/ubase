@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <grp.h>
 #include <pwd.h>
+#include <shadow.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,7 +25,10 @@ int
 main(int argc, char *argv[])
 {
 	struct passwd *pw;
+	struct spwd *spw;
 	char *pass, *cryptpass;
+	uid_t uid;
+	gid_t gid;
 	int pflag = 0;
 
 	ARGBEGIN {
@@ -54,8 +58,8 @@ main(int argc, char *argv[])
 		eprintf("denied\n");
 	}
 
-	if (pw->pw_passwd[0] == 'x' && pw->pw_passwd[1] == '\0')
-		eprintf("no shadow support\n");
+	uid = pw->pw_uid;
+	gid = pw->pw_gid;
 
 	/* Empty password? Login now */
 	if (pw->pw_passwd[0] == '\0')
@@ -65,22 +69,44 @@ main(int argc, char *argv[])
 	ioctl(STDIN_FILENO, TCFLSH, (void *)0);
 
 	pass = getpass("Password: ");
-	putchar('\n');
 	if (!pass)
 		eprintf("getpass:");
-	cryptpass = crypt(pass, pw->pw_passwd);
-	explicit_bzero(pass, strlen(pass));
-	if (!cryptpass)
-		eprintf("crypt:");
-	if (strcmp(cryptpass, pw->pw_passwd) != 0)
-		eprintf("login failed\n");
+
+	if (pw->pw_passwd[0] == 'x' && pw->pw_passwd[1] == '\0') {
+		errno = 0;
+		spw = getspnam(argv[0]);
+		if (errno)
+			eprintf("getspnam: %s:", argv[0]);
+		else if (!spw)
+			eprintf("who are you?\n");
+		switch (spw->sp_pwdp[0]) {
+		case '!':
+		case '*':
+			eprintf("denied\n");
+		}
+		cryptpass = crypt(pass, spw->sp_pwdp);
+		explicit_bzero(pass, strlen(pass));
+		if (!cryptpass)
+			eprintf("crypt:");
+		if (strcmp(cryptpass, spw->sp_pwdp) != 0)
+			eprintf("login failed\n");
+		explicit_bzero(cryptpass, strlen(cryptpass));
+		explicit_bzero(spw, sizeof *spw);
+	} else {
+		cryptpass = crypt(pass, pw->pw_passwd);
+		explicit_bzero(pass, strlen(pass));
+		if (!cryptpass)
+			eprintf("crypt:");
+		if (strcmp(cryptpass, pw->pw_passwd) != 0)
+			eprintf("login failed\n");
+	}
 
 login:
-	if (initgroups(argv[0], pw->pw_gid) < 0)
+	if (initgroups(argv[0], gid) < 0)
 		eprintf("initgroups:");
-	if (setgid(pw->pw_gid) < 0)
+	if (setgid(gid) < 0)
 		eprintf("setgid:");
-	if (setuid(pw->pw_uid) < 0)
+	if (setuid(uid) < 0)
 		eprintf("setuid:");
 
 	return dologin(pw, pflag);
@@ -91,12 +117,11 @@ dologin(struct passwd *pw, int preserve)
 {
 	if (preserve == 0)
 		clearenv();
-	setenv("HOME", pw->pw_dir, 1);
-	setenv("SHELL", pw->pw_shell, 1);
-	setenv("USER", pw->pw_name, 1);
-	setenv("LOGNAME", pw->pw_name, 1);
-	setenv("PATH", strcmp(pw->pw_name, "root") == 0 ?
-	       ENV_SUPATH : ENV_PATH, 1);
+	setenv("HOME", pw->pw_dir, preserve);
+	setenv("SHELL", pw->pw_shell, preserve);
+	setenv("USER", pw->pw_name, preserve);
+	setenv("LOGNAME", pw->pw_name, preserve);
+	setenv("PATH", ENV_PATH, preserve);
 	if (chdir(pw->pw_dir) < 0)
 		eprintf("chdir %s:", pw->pw_dir);
 	execlp(pw->pw_shell, pw->pw_shell, "-l", NULL);

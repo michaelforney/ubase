@@ -1,5 +1,6 @@
-Tools
-=====
+Tools to be implemented
+=======================
+
  * vmstat(8)
  * top(1)
  * Better ps(1) support
@@ -9,5 +10,10 @@ Tools
  * lspci
  * mkswap [-L]
  * passwd
+ * adduser
+ * addgroup
+ * rmuser
+ * rmgroup
  * login
  * dd
+ * ifconfig

@@ -16,7 +16,7 @@
 extern char **environ;
 
 static const char *randreply(void);
-static void dologin(struct passwd *);
+static int dologin(struct passwd *);
 
 static void
 usage(void)
@@ -119,7 +119,7 @@ dosu:
 		eprintf("setuid:");
 
 	if (lflag) {
-		dologin(pw);
+		return dologin(pw);
 	} else {
 		newargv = (char *const[]){pw->pw_shell, NULL};
 		if (!pflag) {
@@ -136,8 +136,10 @@ dosu:
 			setenv("PATH", ENV_PATH, 1);
 		execve(pflag ? getenv("SHELL") : pw->pw_shell,
 		       newargv, environ);
+		weprintf("execve %s:", pw->pw_shell);
+		return (errno == ENOENT) ? 127 : 126;
 	}
-	return (errno == ENOENT) ? 127 : 126;
+	return EXIT_SUCCESS;
 }
 
 static const char *
@@ -160,7 +162,7 @@ randreply(void)
 	return replies[rand() % LEN(replies)];
 }
 
-static void
+static int
 dologin(struct passwd *pw)
 {
 	char *term = getenv("TERM");
@@ -177,4 +179,6 @@ dologin(struct passwd *pw)
 	if (chdir(pw->pw_dir) < 0)
 		eprintf("chdir %s:", pw->pw_dir);
 	execlp(pw->pw_shell, pw->pw_shell, "-l", NULL);
+	weprintf("execlp %s:", pw->pw_shell);
+	return (errno == ENOENT) ? 127 : 126;
 }

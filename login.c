@@ -121,6 +121,6 @@ dologin(struct passwd *pw, int preserve)
 	if (chdir(pw->pw_dir) < 0)
 		eprintf("chdir %s:", pw->pw_dir);
 	execlp(pw->pw_shell, pw->pw_shell, "-l", NULL);
-	weprintf("execvp %s:", pw->pw_shell);
+	weprintf("execlp %s:", pw->pw_shell);
 	return (errno == ENOENT) ? 127 : 126;
 }

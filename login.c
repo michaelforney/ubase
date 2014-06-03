@@ -117,11 +117,11 @@ dologin(struct passwd *pw, int preserve)
 {
 	if (preserve == 0)
 		clearenv();
-	setenv("HOME", pw->pw_dir, preserve);
-	setenv("SHELL", pw->pw_shell, preserve);
-	setenv("USER", pw->pw_name, preserve);
-	setenv("LOGNAME", pw->pw_name, preserve);
-	setenv("PATH", ENV_PATH, preserve);
+	setenv("HOME", pw->pw_dir, !preserve);
+	setenv("SHELL", pw->pw_shell, !preserve);
+	setenv("USER", pw->pw_name, !preserve);
+	setenv("LOGNAME", pw->pw_name, !preserve);
+	setenv("PATH", ENV_PATH, !preserve);
 	if (chdir(pw->pw_dir) < 0)
 		eprintf("chdir %s:", pw->pw_dir);
 	execlp(pw->pw_shell, pw->pw_shell, "-l", NULL);

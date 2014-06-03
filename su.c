@@ -58,42 +58,66 @@ main(int argc, char *argv[])
 	srand(time(NULL));
 
 	errno = 0;
-	spw = getspnam(usr);
+	pw = getpwnam(usr);
 	if (errno)
-		eprintf("getspnam: %s:", usr);
-	else if (!spw)
+		eprintf("getpwnam: %s:", usr);
+	else if (!pw)
 		eprintf("who are you?\n");
 
-	switch (spw->sp_pwdp[0]) {
+	switch (pw->pw_passwd[0]) {
 	case '!':
 	case '*':
 		eprintf("denied\n");
 	}
+
+	/* Empty password? Su now */
+	if (pw->pw_passwd[0] == '\0')
+		goto dosu;
 
 	uid = getuid();
 	if (uid) {
 		pass = getpass("Password: ");
 		if (!pass)
 			eprintf("getpass:");
-
-		cryptpass = crypt(pass, spw->sp_pwdp);
-		explicit_bzero(pass, strlen(pass));
-		if (!cryptpass)
-			eprintf("crypt:");
-
-		if (strcmp(cryptpass, spw->sp_pwdp) != 0)
-			eprintf(randreply());
-		explicit_bzero(cryptpass, strlen(cryptpass));
-		explicit_bzero(spw, sizeof *spw);
 	}
 
-	errno = 0;
-	pw = getpwnam(usr);
-	if (errno)
-		eprintf("getpwnam: %s", usr);
-	else if (!pw)
-		eprintf("who are you?\n");
+	if (pw->pw_passwd[0] == 'x' && pw->pw_passwd[1] == '\0') {
+		errno = 0;
+		spw = getspnam(usr);
+		if (errno)
+			eprintf("getspnam: %s:", usr);
+		else if (!spw)
+			eprintf("who are you?\n");
 
+		switch (spw->sp_pwdp[0]) {
+		case '!':
+		case '*':
+			eprintf("denied\n");
+		}
+		if (uid) {
+			cryptpass = crypt(pass, spw->sp_pwdp);
+			if (!cryptpass)
+				eprintf("crypt:");
+			if (strcmp(cryptpass, spw->sp_pwdp) != 0)
+				eprintf(randreply());
+		}
+		explicit_bzero(spw, sizeof *spw);
+	} else {
+		if (uid) {
+			cryptpass = crypt(pass, pw->pw_passwd);
+			if (!cryptpass)
+				eprintf("crypt:");
+			if (strcmp(cryptpass, pw->pw_passwd) != 0)
+				eprintf("login failed\n");
+		}
+	}
+
+	if (uid) {
+		explicit_bzero(pass, strlen(pass));
+		explicit_bzero(cryptpass, strlen(cryptpass));
+	}
+
+dosu:
 	if (initgroups(usr, pw->pw_gid) < 0)
 		eprintf("initgroups:");
 	if (setgid(pw->pw_gid) < 0)

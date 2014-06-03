@@ -12,15 +12,16 @@
 #include "rtc.h"
 #include "util.h"
 
-static void echotime(char *);
 static void readrtctm(struct tm *, int);
 static void writertctm(struct tm *, int);
-static void writetime(char *);
+static void show(char *);
+static void hctosys(char *);
+static void systohc(char *);
 
 static void
 usage(void)
 {
-	eprintf("usage: %s [-rw] [-u]\n", argv0);
+	eprintf("usage: %s [-rsw] [-u]\n", argv0);
 }
 
 int
@@ -28,11 +29,15 @@ main(int argc, char *argv[])
 {
 	char *dev = "/dev/rtc";
 	int rflag = 0;
+	int sflag = 0;
 	int wflag = 0;
 
 	ARGBEGIN {
 	case 'r':
 		rflag = 1;
+		break;
+	case 's':
+		sflag = 1;
 		break;
 	case 'w':
 		wflag = 1;
@@ -43,7 +48,7 @@ main(int argc, char *argv[])
 		usage();
 	} ARGEND;
 
-	if ((rflag ^ wflag) == 0)
+	if ((rflag ^ sflag ^ wflag) == 0)
 		eprintf("missing or incompatible function\n");
 
 	/* Only UTC support at the moment */
@@ -51,27 +56,13 @@ main(int argc, char *argv[])
 	tzset();
 
 	if (rflag == 1)
-		echotime(dev);
+		show(dev);
+	else if (sflag == 1)
+		hctosys(dev);
 	else if (wflag == 1)
-		writetime(dev);
+		systohc(dev);
 
 	return EXIT_SUCCESS;
-}
-
-static void
-echotime(char *dev)
-{
-	struct tm tm;
-	time_t t;
-	int fd;
-
-	fd = open(dev, O_RDONLY);
-	if (fd < 0)
-		eprintf("open %s:", dev);
-	readrtctm(&tm, fd);
-	t = mktime(&tm);
-	printf("%s", asctime(localtime(&t)));
-	close(fd);
 }
 
 static void
@@ -110,7 +101,43 @@ writertctm(struct tm *tm, int fd)
 }
 
 static void
-writetime(char *dev)
+show(char *dev)
+{
+	struct tm tm;
+	time_t t;
+	int fd;
+
+	fd = open(dev, O_RDONLY);
+	if (fd < 0)
+		eprintf("open %s:", dev);
+	readrtctm(&tm, fd);
+	t = mktime(&tm);
+	printf("%s", asctime(localtime(&t)));
+	close(fd);
+}
+
+static void
+hctosys(char *dev)
+{
+	struct timeval tv;
+	struct tm tm;
+	int r;
+	int fd;
+
+	fd = open(dev, O_RDONLY);
+	if (fd < 0)
+		eprintf("open %s:", dev);
+	readrtctm(&tm, fd);
+	tv.tv_sec = mktime(&tm);
+	tv.tv_usec = 0;
+	r = settimeofday(&tv, NULL);
+	if (r < 0)
+		eprintf("settimeofday:");
+	close(fd);
+}
+
+static void
+systohc(char *dev)
 {
 	struct timeval tv;
 	struct tm *tm;

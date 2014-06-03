@@ -21,7 +21,7 @@ static void systohc(char *);
 static void
 usage(void)
 {
-	eprintf("usage: %s [-rsw] [-u]\n", argv0);
+	eprintf("usage: %s [-rsw] [-u] [dev]\n", argv0);
 }
 
 int
@@ -47,6 +47,11 @@ main(int argc, char *argv[])
 	default:
 		usage();
 	} ARGEND;
+
+	if (argc > 1)
+		usage();
+	else if (argc == 1)
+		dev = argv[0];
 
 	if ((rflag ^ sflag ^ wflag) == 0)
 		eprintf("missing or incompatible function\n");

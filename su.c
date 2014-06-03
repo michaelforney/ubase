@@ -101,7 +101,6 @@ main(int argc, char *argv[])
 			if (strcmp(cryptpass, spw->sp_pwdp) != 0)
 				eprintf(randreply());
 		}
-		explicit_bzero(spw, sizeof *spw);
 	} else {
 		if (uid) {
 			cryptpass = crypt(pass, pw->pw_passwd);
@@ -110,11 +109,6 @@ main(int argc, char *argv[])
 			if (strcmp(cryptpass, pw->pw_passwd) != 0)
 				eprintf("login failed\n");
 		}
-	}
-
-	if (uid) {
-		explicit_bzero(pass, strlen(pass));
-		explicit_bzero(cryptpass, strlen(cryptpass));
 	}
 
 dosu:

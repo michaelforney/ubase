@@ -85,16 +85,12 @@ main(int argc, char *argv[])
 			eprintf("denied\n");
 		}
 		cryptpass = crypt(pass, spw->sp_pwdp);
-		explicit_bzero(pass, strlen(pass));
 		if (!cryptpass)
 			eprintf("crypt:");
 		if (strcmp(cryptpass, spw->sp_pwdp) != 0)
 			eprintf("login failed\n");
-		explicit_bzero(cryptpass, strlen(cryptpass));
-		explicit_bzero(spw, sizeof *spw);
 	} else {
 		cryptpass = crypt(pass, pw->pw_passwd);
-		explicit_bzero(pass, strlen(pass));
 		if (!cryptpass)
 			eprintf("crypt:");
 		if (strcmp(cryptpass, pw->pw_passwd) != 0)

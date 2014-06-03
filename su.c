@@ -171,7 +171,7 @@ dologin(struct passwd *pw)
 	setenv("SHELL", pw->pw_shell, 1);
 	setenv("USER", pw->pw_name, 1);
 	setenv("LOGNAME", pw->pw_name, 1);
-	setenv("TERM", term ? term : "vt100", 1);
+	setenv("TERM", term ? term : "linux", 1);
 	if (strcmp(pw->pw_name, "root") == 0)
 		setenv("PATH", ENV_SUPATH, 1);
 	else

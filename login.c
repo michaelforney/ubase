@@ -117,6 +117,7 @@ dologin(struct passwd *pw, int preserve)
 	setenv("SHELL", pw->pw_shell, !preserve);
 	setenv("USER", pw->pw_name, !preserve);
 	setenv("LOGNAME", pw->pw_name, !preserve);
+	setenv("TERM", "linux", !preserve);
 	setenv("PATH", ENV_PATH, !preserve);
 	if (chdir(pw->pw_dir) < 0)
 		eprintf("chdir %s:", pw->pw_dir);

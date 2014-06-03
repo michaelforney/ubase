@@ -77,14 +77,36 @@ echotime(char *dev)
 static void
 readrtctm(struct tm *tm, int fd)
 {
-	memset(tm, 0, sizeof(*tm));
-	ioctl(fd, RTC_RD_TIME, tm);
+	struct rtc_time rt;
+
+	memset(&rt, 0, sizeof(rt));
+	ioctl(fd, RTC_RD_TIME, &rt);
+	tm->tm_sec = rt.tm_sec;
+	tm->tm_min = rt.tm_min;
+	tm->tm_hour = rt.tm_hour;
+	tm->tm_mday = rt.tm_mday;
+	tm->tm_mon = rt.tm_mon;
+	tm->tm_year = rt.tm_year;
+	tm->tm_wday = rt.tm_wday;
+	tm->tm_yday = rt.tm_yday;
+	tm->tm_isdst = rt.tm_isdst;
 }
 
 static void
 writertctm(struct tm *tm, int fd)
 {
-	ioctl(fd, RTC_SET_TIME, tm);
+	struct rtc_time rt;
+
+	rt.tm_sec = tm->tm_sec;
+	rt.tm_min = tm->tm_min;
+	rt.tm_hour = tm->tm_hour;
+	rt.tm_mday = tm->tm_mday;
+	rt.tm_mon = tm->tm_mon;
+	rt.tm_year = tm->tm_year;
+	rt.tm_wday = tm->tm_wday;
+	rt.tm_yday = tm->tm_yday;
+	rt.tm_isdst = tm->tm_isdst;
+	ioctl(fd, RTC_SET_TIME, &rt);
 }
 
 static void

@@ -14,6 +14,5 @@ Tools to be implemented
  * addgroup
  * rmuser
  * rmgroup
- * login
  * dd
  * ifconfig

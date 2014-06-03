@@ -155,6 +155,7 @@ systohc(char *dev)
 	gettimeofday(&tv, NULL);
 	t = tv.tv_sec;
 	tm = gmtime(&t);
+	weprintf("warning: assuming UTC for systohc\n");
 	writertctm(tm, fd);
 	close(fd);
 }

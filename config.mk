@@ -9,5 +9,5 @@ MANPREFIX = $(PREFIX)/share/man
 #CC = musl-gcc
 LD = $(CC)
 CPPFLAGS = -D_GNU_SOURCE
-CFLAGS   = -Wall -Wextra $(CPPFLAGS)
+CFLAGS   = -std=c99 -Wall -Wextra -pedantic $(CPPFLAGS)
 LDFLAGS  = -s -lcrypt # -static

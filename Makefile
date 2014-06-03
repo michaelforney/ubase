@@ -87,6 +87,7 @@ MAN8 = \
 	ctrlaltdel.8        \
 	getty.8             \
 	halt.8              \
+	hwclock.8           \
 	insmod.8            \
 	killall5.8          \
 	lsmod.8             \

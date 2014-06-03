@@ -1,0 +1,24 @@
+.TH HWCLOCK 8 ubase-VERSION
+.SH NAME
+\fBhwclock\fR - Query or set the hardware clock
+.SH SYNOPSIS
+\fBhwclock\fR [\fB-rsw\fR] [\fB-u\fR] [\fIdev\fR]
+.SH DESCRIPTION
+\fBhwclock\fR is a tool for accessing the hardware clock. You can display
+the current time, set the hardware clock from the System Time, or
+set the System Time from the hardware clock. It currently only works with UTC.
+You can use \fIdev\fR to specify the RTC device node absolute path.
+.SH FUNCTIONS
+.TP
+\fB-r\fR
+Read the hardware clock and print the time on stdout.
+.TP
+\fB-s\fR
+Set the system time from the hardware clock.
+.TP
+\fB-w\fR
+Set the hardware clock to the system time.
+.SH OPTIONS
+.TP
+\fB-u\fR
+Use UTC. This is the default and only option.

@@ -3,7 +3,7 @@ include config.mk
 .POSIX:
 .SUFFIXES: .c .o
 
-HDR = arg.h config.def.h proc.h reboot.h util.h
+HDR = arg.h config.def.h proc.h reboot.h rtc.h util.h
 LIB = \
 	util/agetcwd.o        \
 	util/apathmax.o       \
@@ -29,6 +29,7 @@ SRC = \
 	free.c              \
 	getty.c             \
 	halt.c              \
+	hwclock.c           \
 	id.c                \
 	insmod.c            \
 	killall5.c          \

@@ -38,6 +38,9 @@ main(int argc, char *argv[])
 	if (argc < 1)
 		usage();
 
+	if (isatty(STDIN_FILENO) == 0)
+		eprintf("stdin is not a tty\n");
+
 	errno = 0;
 	pw = getpwnam(argv[0]);
 	if (errno)
@@ -59,7 +62,7 @@ main(int argc, char *argv[])
 		goto login;
 
 	/* Flush pending input */
-        ioctl(STDIN_FILENO, TCFLSH, (void *)0);
+	ioctl(STDIN_FILENO, TCFLSH, (void *)0);
 
 	pass = getpass("Password: ");
 	putchar('\n');

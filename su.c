@@ -16,7 +16,6 @@
 extern char **environ;
 
 static const char *randreply(void);
-static char *msetenv(const char *, const char *);
 static void dologin(struct passwd *);
 
 static void
@@ -161,39 +160,21 @@ randreply(void)
 	return replies[rand() % LEN(replies)];
 }
 
-static char *
-msetenv(const char *name, const char *value)
-{
-	char *buf;
-	size_t sz;
-
-	sz = strlen(name) + strlen(value) + 2;
-	buf = emalloc(sz);
-	snprintf(buf, sz, "%s=%s", name, value);
-	return buf;
-}
-
 static void
 dologin(struct passwd *pw)
 {
-	char shbuf[strlen(pw->pw_shell) + 1];
-	char * const *newargv;
-	char * const *newenv;
-
-	strcpy(shbuf, pw->pw_shell);
-	newargv = (char *const[]){shbuf, NULL};
-	newenv = (char *const[]){
-		msetenv("HOME", pw->pw_dir),
-		msetenv("SHELL", pw->pw_shell),
-		msetenv("USER", pw->pw_name),
-		msetenv("LOGNAME", pw->pw_name),
-		msetenv("TERM", getenv("TERM")),
-		msetenv("PATH",
-			strcmp(pw->pw_name, "root") == 0 ?
-			ENV_SUPATH : ENV_PATH),
-		NULL
-	};
+	char *term = getenv("TERM");
+	clearenv();
+	setenv("HOME", pw->pw_dir, 1);
+	setenv("SHELL", pw->pw_shell, 1);
+	setenv("USER", pw->pw_name, 1);
+	setenv("LOGNAME", pw->pw_name, 1);
+	setenv("TERM", term ? term : "vt100", 1);
+	if (strcmp(pw->pw_name, "root") == 0)
+		setenv("PATH", ENV_SUPATH, 1);
+	else
+		setenv("PATH", ENV_PATH, 1);
 	if (chdir(pw->pw_dir) < 0)
 		eprintf("chdir %s:", pw->pw_dir);
-	execve(pw->pw_shell, newargv, newenv);
+	execlp(pw->pw_shell, pw->pw_shell, "-l", NULL);
 }

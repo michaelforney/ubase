@@ -263,10 +263,10 @@ main(int argc, char *argv[])
 	signal(SIGINT, sig_int);
 
 	if (copy(&config) < 0)
-		eprintf("copy:");
+		weprintf("copy:");
 	print_stat(&config);
 
 	if (config.nosync == 0)
 		sync(); sync();
-	return EXIT_SUCCESS;
+	return config.saved_errno;
 }

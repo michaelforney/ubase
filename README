@@ -6,7 +6,7 @@ much simpler.
 
 The following programs are currently implemented:
 
-    chvt clear  ctrlaltdel df  dmesg eject  fallocate free  getty halt
+    chvt clear ctrlaltdel dd df  dmesg eject fallocate free getty halt
     hwclock id  insmod killall5 login  lsmod lsusb mknod  mkswap mount
     mountpoint  pagesize pidof  pivot_root  ps respawn  rmmod stat  su
     swapoff swapon  switch_root sysctl truncate umount  unshare uptime

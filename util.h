@@ -27,6 +27,9 @@ char *estrdup(const char *);
 /* estrtol.c */
 long estrtol(const char *, int);
 
+/* estrtoul.c */
+unsigned long estrtoul(const char *, int);
+
 /* explicit_bzero.c */
 #undef explicit_bzero
 void explicit_bzero(void *, size_t);

@@ -237,15 +237,15 @@ main(int argc, char *argv[])
 		else if (sscanf(argv[i], "of=%1023c", buf) == 1)
 			config.out = strdup(buf);
 		else if (sscanf(argv[i], "skip=%1023c", buf) == 1)
-			config.skip = strtoul(buf, NULL, 10);
+			config.skip = estrtoul(buf, 0);
 		else if (sscanf(argv[i], "seek=%1023c", buf) == 1)
-			config.seek = strtoul(buf, NULL, 10);
+			config.seek = estrtoul(buf, 0);
 		else if (sscanf(argv[i], "count=%1023c", buf) == 1)
-			config.count = strtoul(buf, NULL, 10);
+			config.count = estrtoul(buf, 0);
 		else if (strcmp(argv[i], "direct") == 0)
 			config.direct = 1;
 		else if (sscanf(argv[i], "bs=%1023c", buf) == 1)
-			config.bs = strtoul(buf, NULL, 10);
+			config.bs = estrtoul(buf, 0);
 		else if (strcmp(argv[i], "bs") == 0)
 			config.bs = 0;
 		else if (strcmp(argv[i], "quiet") == 0)

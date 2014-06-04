@@ -10,6 +10,7 @@ LIB = \
 	util/ealloc.o         \
 	util/eprintf.o        \
 	util/estrtol.o        \
+	util/estrtoul.o       \
 	util/explicit_bzero.o \
 	util/proc.o           \
 	util/putword.o        \

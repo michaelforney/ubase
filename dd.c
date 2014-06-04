@@ -132,7 +132,8 @@ prepare_copy(struct dd_config *ddc, int *ifd, int *ofd)
 	return 0;
 }
 
-int copy_splice(struct dd_config *ddc)
+static int
+copy_splice(struct dd_config *ddc)
 {
         int ifd, ofd, p[2] = {-1, -1};
         ssize_t r = 0;

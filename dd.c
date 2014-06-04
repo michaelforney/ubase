@@ -68,7 +68,7 @@ prepare_copy(struct dd_config *ddc, int *ifd, int *ofd)
 		memset(&fst, 0, sizeof(fst));
 		if (statfs(ddc->out, &fst) < 0 || fst.f_bsize == 0)
 			fst.f_bsize = 0x1000;
-		if (fst.f_bsize > st.st_blksize)
+		if ((unsigned long)fst.f_bsize > (unsigned long)st.st_blksize)
 			ddc->bs = fst.f_bsize;
 		else
 			ddc->bs = st.st_blksize;

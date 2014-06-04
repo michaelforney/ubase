@@ -29,7 +29,7 @@ individual tools to ubase-box.
 Ideally you will  want to statically link ubase.   We highly recommend
 using musl-libc[2].
 
-ubase is known to compile with gcc and tcc.
+ubase is known to compile with gcc, clang and tcc.
 
 [1] http://git.suckless.org/sbase/
 [2] http://www.musl-libc.org/

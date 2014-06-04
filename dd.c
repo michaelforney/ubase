@@ -210,10 +210,9 @@ print_stat(const struct dd_config *ddc)
 	fprintf(stderr, "%"PRIu64" records out\n", ddc->rec_out);
 	fprintf(stderr, "%"PRIu64" bytes (%"PRIu64" MB) copied", ddc->b_out,
 		ddc->b_out/(1<<20));
-	fprintf(stderr, ", %lu s, %f MB/s [%f mB/s]\n",
+	fprintf(stderr, ", %lu s, %f MB/s\n",
 		(unsigned long)ddc->t_end - ddc->t_start,
-		((double)(ddc->b_out/(1<<20)))/(ddc->t_end - ddc->t_start),
-		((double)(ddc->b_out/(1000*1000)))/(ddc->t_end - ddc->t_start));
+		((double)(ddc->b_out/(1<<20)))/(ddc->t_end - ddc->t_start));
 }
 
 static void

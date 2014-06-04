@@ -20,6 +20,7 @@
 #include <sys/vfs.h>
 #include <time.h>
 #include <unistd.h>
+#include "util.h"
 
 struct dd_config {
 	const char *in, *out;
@@ -191,8 +192,7 @@ copy(struct dd_config *ddc)
 static void
 usage(void)
 {
-	fprintf(stderr, "Usage: odd [if=F1] [of=F2] [bsize] [skip=N] [count=N] [quiet] [nosync]\n");
-	exit(EXIT_FAILURE);
+	eprintf("usage: %s [-h] [if=F1] [of=F2] [bsize] [skip=N] [count=N] [quiet] [nosync]\n", argv0);
 }
 
 static void
@@ -223,6 +223,7 @@ main(int argc, char *argv[])
 	char buf[1024];
 	struct dd_config config;
 
+	argv0 = argv[0];
 	memset(&config, 0, sizeof(config));
 	config.bs = 1<<16;
 	config.in = "/dev/stdin";
@@ -251,6 +252,8 @@ main(int argc, char *argv[])
 			config.quiet = 1;
 		else if (strcmp(argv[i], "nosync") == 0)
 			config.nosync = 1;
+		else if (strcmp(argv[i], "-h") == 0)
+			usage();
 	}
 
 	if (!config.in || !config.out)
@@ -260,7 +263,7 @@ main(int argc, char *argv[])
 	signal(SIGINT, sig_int);
 
 	if (copy(&config) < 0)
-		fprintf(stderr, "Error: %s\n", strerror(config.saved_errno));
+		eprintf("copy:");
 	print_stat(&config);
 
 	if (config.nosync == 0)

@@ -22,6 +22,7 @@ SRC = \
 	chvt.c              \
 	clear.c             \
 	ctrlaltdel.c        \
+	dd.c                \
 	df.c                \
 	dmesg.c             \
 	eject.c             \

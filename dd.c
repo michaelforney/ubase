@@ -41,6 +41,7 @@ prepare_copy(struct dd_config *ddc, int *ifd, int *ofd)
 	struct stat st;
 	int fli = O_RDONLY|O_LARGEFILE|O_NOCTTY, flo = O_WRONLY|O_LARGEFILE|O_NOATIME|O_NOCTTY;
 	uid_t euid = 0;
+	long pagesize;
 
 	if (ddc->direct) {
 		fli |= O_DIRECT;
@@ -68,14 +69,17 @@ prepare_copy(struct dd_config *ddc, int *ifd, int *ofd)
 	if (!ddc->bs) {
 		struct statfs fst;
 		memset(&fst, 0, sizeof(fst));
+		pagesize = sysconf(_SC_PAGESIZE);
+		if (pagesize <= 0)
+			pagesize = 0x1000;
 		if (statfs(ddc->out, &fst) < 0 || fst.f_bsize == 0)
-			fst.f_bsize = 0x1000;
+			fst.f_bsize = pagesize;
 		if ((unsigned long)fst.f_bsize > (unsigned long)st.st_blksize)
 			ddc->bs = fst.f_bsize;
 		else
 			ddc->bs = st.st_blksize;
 		if (ddc->bs == 0)
-			ddc->bs = 0x1000;
+			ddc->bs = pagesize;
 	}
 
 	/* check if device or regular file */

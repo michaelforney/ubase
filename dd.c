@@ -8,6 +8,7 @@
  */
 #include <errno.h>
 #include <fcntl.h>
+#include <inttypes.h>
 #include <signal.h>
 #include <stdio.h>
 #include <string.h>
@@ -201,9 +202,12 @@ print_stat(const struct dd_config *ddc)
 	if (ddc->quiet)
 		return;
 
-	fprintf(stderr, "%lu records in\n%lu records out\n%lu bytes (%lu MB) copied, %lu s, %f MB/s [%f mB/s]\n",
-		ddc->rec_in, ddc->rec_out, ddc->b_out, ddc->b_out/(1<<20),
-		ddc->t_end - ddc->t_start,
+	fprintf(stderr, "%"PRIu64" records in\n", ddc->rec_in);
+	fprintf(stderr, "%"PRIu64" records out\n", ddc->rec_out);
+	fprintf(stderr, "%"PRIu64" bytes (%"PRIu64" MB) copied", ddc->b_out,
+		ddc->b_out/(1<<20));
+	fprintf(stderr, ", %lu s, %f MB/s [%f mB/s]\n",
+		(unsigned long)ddc->t_end - ddc->t_start,
 		((double)(ddc->b_out/(1<<20)))/(ddc->t_end - ddc->t_start),
 		((double)(ddc->b_out/(1000*1000)))/(ddc->t_end - ddc->t_start));
 }

@@ -1,5 +1,4 @@
 /* See LICENSE file for copyright and license details. */
-#define _XOPEN_SOURCE
 #include <sys/types.h>
 #include <unistd.h>
 #include <errno.h>

@@ -3,15 +3,17 @@ include config.mk
 .POSIX:
 .SUFFIXES: .c .o
 
-HDR = arg.h config.def.h proc.h reboot.h rtc.h util.h
+HDR = arg.h config.def.h passwd.h proc.h reboot.h rtc.h text.h util.h
 LIB = \
 	util/agetcwd.o        \
+	util/agetline.o       \
 	util/apathmax.o       \
 	util/ealloc.o         \
 	util/eprintf.o        \
 	util/estrtol.o        \
 	util/estrtoul.o       \
 	util/explicit_bzero.o \
+	util/passwd.o         \
 	util/proc.o           \
 	util/putword.o        \
 	util/recurse.o        \
@@ -43,6 +45,7 @@ SRC = \
 	mount.c             \
 	mountpoint.c        \
 	pagesize.c          \
+	passwd.c            \
 	pidof.c             \
 	pivot_root.c        \
 	ps.c                \

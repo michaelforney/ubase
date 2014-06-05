@@ -9,7 +9,6 @@ Tools to be implemented
  * losetup(8)
  * lspci
  * mkswap [-L]
- * passwd
  * adduser
  * addgroup
  * rmuser

@@ -21,7 +21,8 @@ usage(void)
 int
 main(int argc, char *argv[])
 {
-	char *pass, *cryptpass1, *cryptpass2, *cryptpass3;
+	char *pass;
+	char *cryptpass1 = NULL, *cryptpass2 = NULL, *cryptpass3 = NULL;
 	char *p;
 	char template[] = "/tmp/pw.XXXXXX";
 	struct passwd *pw;
@@ -49,8 +50,11 @@ main(int argc, char *argv[])
 		eprintf("denied\n");
 	}
 
-	if (pw->pw_passwd[0] == '\0')
+	if (pw->pw_passwd[0] == '\0') {
+		/* Default to SHA-512 for empty passwords */
+		pw->pw_passwd = "$6$";
 		goto newpass;
+	}
 
 	if (pw->pw_passwd[0] == 'x' && pw->pw_passwd[1] == '\0')
 		eprintf("no shadow support\n");
@@ -62,6 +66,8 @@ main(int argc, char *argv[])
 	putchar('\n');
 	if (!pass)
 		eprintf("getpass:");
+	if (pass[0] == '\0')
+		eprintf("no password supplied\n");
 	p = crypt(pass, pw->pw_passwd);
 	if (!p)
 		eprintf("crypt:");
@@ -77,11 +83,13 @@ newpass:
 	putchar('\n');
 	if (!pass)
 		eprintf("getpass:");
+	if (pass[0] == '\0')
+		eprintf("no password supplied\n");
 	p = crypt(pass, pw->pw_passwd);
 	if (!p)
 		eprintf("crypt:");
 	cryptpass2 = estrdup(p);
-	if (strcmp(cryptpass1, cryptpass2) == 0)
+	if (cryptpass1 && strcmp(cryptpass1, cryptpass2) == 0)
 		eprintf("password left unchanged\n");
 
 	/* Flush pending input */
@@ -91,6 +99,8 @@ newpass:
 	putchar('\n');
 	if (!pass)
 		eprintf("getpass:");
+	if (pass[0] == '\0')
+		eprintf("no password supplied\n");
 	p = crypt(pass, pw->pw_passwd);
 	if (!p)
 		eprintf("crypt:");

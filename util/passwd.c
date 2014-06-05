@@ -109,5 +109,6 @@ pw_copy(int ffd, int tfd, const struct passwd *newpw)
 		free(p);
 	}
 	fflush(to);
+	free(buf);
 	return 0;
 }

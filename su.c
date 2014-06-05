@@ -8,13 +8,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <time.h>
 #include "config.h"
 #include "util.h"
 
 extern char **environ;
 
-static const char *randreply(void);
 static int dologin(struct passwd *);
 
 static void
@@ -53,8 +51,6 @@ main(int argc, char *argv[])
 		usr = argv[0];
 	else
 		usage();
-
-	srand(time(NULL));
 
 	errno = 0;
 	pw = getpwnam(usr);
@@ -99,7 +95,7 @@ main(int argc, char *argv[])
 			if (!cryptpass)
 				eprintf("crypt:");
 			if (strcmp(cryptpass, spw->sp_pwdp) != 0)
-				eprintf(randreply());
+				eprintf("incorrect password\n");
 		}
 	} else {
 		if (uid) {
@@ -143,26 +139,6 @@ dosu:
 		return (errno == ENOENT) ? 127 : 126;
 	}
 	return EXIT_SUCCESS;
-}
-
-static const char *
-randreply(void)
-{
-	static const char *replies[] = {
-		"Time flies like an arrow, fruit flies like a banana.\n",
-		"Denied.\n",
-		"You type like a dairy farmer.\n",
-		"CChheecckk yyoouurr dduupplleexx sswwiittcchh..\n",
-		"I met a girl with 12 nipples, it sounds weird dozen tit?\n",
-		"Here I am, brain the size of a planet and they ask me to keep hashing rubbish.\n",
-		"Clones are people two.\n",
-		"Your mom is an interesting su response.\n",
-		"no.\n",
-		"Your mom forgot to null-terminate???B?33??Abort (core dumped)\n",
-		"A fool-proof method for sculpting an elephant: first, get a huge block of marble; then you chip away everything that doesn't look like an elephant.\n",
-		"Bloating .data for fun and profit.\n",
-	};
-	return replies[rand() % LEN(replies)];
 }
 
 static int

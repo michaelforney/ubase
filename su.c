@@ -30,9 +30,9 @@ int
 main(int argc, char *argv[])
 {
 	char *usr = "root", *pass, *cryptpass;
-	char * const *newargv;
 	struct spwd *spw;
 	struct passwd *pw;
+	char *newargv[2];
 	uid_t uid;
 
 	ARGBEGIN {
@@ -120,7 +120,8 @@ dosu:
 	if (lflag) {
 		return dologin(pw);
 	} else {
-		newargv = (char *const[]){pw->pw_shell, NULL};
+		newargv[0] = pw->pw_shell;
+		newargv[1] = NULL;
 		if (!pflag) {
 			setenv("HOME", pw->pw_dir, 1);
 			setenv("SHELL", pw->pw_shell, 1);

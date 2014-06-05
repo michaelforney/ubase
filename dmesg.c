@@ -80,12 +80,13 @@ static int
 dmesg_show(int fd, const void *buf, size_t n)
 {
 	int last = '\n';
-	char newbuf[n], *q = newbuf;
+	char *newbuf, *q;
 	const char *p = buf;
 	ssize_t r;
 	size_t i;
 
-	memset(newbuf, 0, n);
+	newbuf = calloc(n, sizeof(char));
+	q = newbuf;
 	for (i = 0; i < n; ) {
 		if (last == '\n' && p[i] == '<') {
 			i += 2;
@@ -97,6 +98,7 @@ dmesg_show(int fd, const void *buf, size_t n)
 		last = p[i++];
 	}
 	r = write(fd, newbuf, n);
+	free(newbuf);
 	if(r < 0 || (size_t)r != n)
 		return -1;
 	if (last != '\n')

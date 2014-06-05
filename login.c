@@ -110,16 +110,18 @@ login:
 static int
 dologin(struct passwd *pw, int preserve)
 {
+	char *shell = pw->pw_shell[0] == '\0' ? "/bin/sh" : pw->pw_shell;
+
 	if (preserve == 0)
 		clearenv();
 	setenv("HOME", pw->pw_dir, 1);
-	setenv("SHELL", pw->pw_shell, 1);
+	setenv("SHELL", shell, 1);
 	setenv("USER", pw->pw_name, 1);
 	setenv("LOGNAME", pw->pw_name, 1);
 	setenv("PATH", ENV_PATH, 1);
 	if (chdir(pw->pw_dir) < 0)
 		eprintf("chdir %s:", pw->pw_dir);
-	execlp(pw->pw_shell, pw->pw_shell, "-l", NULL);
-	weprintf("execlp %s:", pw->pw_shell);
+	execlp(shell, shell, "-l", NULL);
+	weprintf("execlp %s:", shell);
 	return (errno == ENOENT) ? 127 : 126;
 }

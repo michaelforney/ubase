@@ -30,6 +30,7 @@ int
 main(int argc, char *argv[])
 {
 	char *usr = "root", *pass, *cryptpass;
+	char *shell;
 	struct spwd *spw;
 	struct passwd *pw;
 	char *newargv[2];
@@ -120,11 +121,12 @@ dosu:
 	if (lflag) {
 		return dologin(pw);
 	} else {
-		newargv[0] = pw->pw_shell;
+		shell = pw->pw_shell[0] == '\0' ? "/bin/sh" : pw->pw_shell;
+		newargv[0] = shell;
 		newargv[1] = NULL;
 		if (!pflag) {
 			setenv("HOME", pw->pw_dir, 1);
-			setenv("SHELL", pw->pw_shell, 1);
+			setenv("SHELL", shell, 1);
 			if (strcmp(pw->pw_name, "root") != 0) {
 				setenv("USER", pw->pw_name, 1);
 				setenv("LOGNAME", pw->pw_name, 1);
@@ -134,9 +136,9 @@ dosu:
 			setenv("PATH", ENV_SUPATH, 1);
 		else
 			setenv("PATH", ENV_PATH, 1);
-		execve(pflag ? getenv("SHELL") : pw->pw_shell,
+		execve(pflag ? getenv("SHELL") : shell,
 		       newargv, environ);
-		weprintf("execve %s:", pw->pw_shell);
+		weprintf("execve %s:", shell);
 		return (errno == ENOENT) ? 127 : 126;
 	}
 	return EXIT_SUCCESS;
@@ -165,10 +167,11 @@ randreply(void)
 static int
 dologin(struct passwd *pw)
 {
+	char *shell = pw->pw_shell[0] == '\0' ? "/bin/sh" : pw->pw_shell;
 	char *term = getenv("TERM");
 	clearenv();
 	setenv("HOME", pw->pw_dir, 1);
-	setenv("SHELL", pw->pw_shell, 1);
+	setenv("SHELL", shell, 1);
 	setenv("USER", pw->pw_name, 1);
 	setenv("LOGNAME", pw->pw_name, 1);
 	setenv("TERM", term ? term : "linux", 1);
@@ -178,7 +181,7 @@ dologin(struct passwd *pw)
 		setenv("PATH", ENV_PATH, 1);
 	if (chdir(pw->pw_dir) < 0)
 		eprintf("chdir %s:", pw->pw_dir);
-	execlp(pw->pw_shell, pw->pw_shell, "-l", NULL);
-	weprintf("execlp %s:", pw->pw_shell);
+	execlp(shell, shell, "-l", NULL);
+	weprintf("execlp %s:", shell);
 	return (errno == ENOENT) ? 127 : 126;
 }

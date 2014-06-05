@@ -76,6 +76,7 @@ main(int argc, char *argv[])
 	uid = getuid();
 	if (uid) {
 		pass = getpass("Password: ");
+		putchar('\n');
 		if (!pass)
 			eprintf("getpass:");
 	}

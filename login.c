@@ -68,6 +68,7 @@ main(int argc, char *argv[])
 	ioctl(STDIN_FILENO, TCFLSH, (void *)0);
 
 	pass = getpass("Password: ");
+	putchar('\n');
 	if (!pass)
 		eprintf("getpass:");
 

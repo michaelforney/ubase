@@ -126,7 +126,6 @@ main(int argc, char *argv[])
 	char *files[] = { "/proc/mounts", "/etc/fstab", NULL };
 	size_t datasiz = sizeof(data);
 	const char *source, *target;
-	struct stat st;
 	struct mntent *me = NULL;
 	FILE *fp;
 
@@ -176,8 +175,6 @@ main(int argc, char *argv[])
 	if(!target) {
 		target = argv[0];
 		source = NULL;
-		if(stat(target, &st) < 0)
-			eprintf("stat %s:", target);
 		if(!(resolvpath = realpath(target, NULL)))
 			eprintf("realpath %s:", target);
 		target = resolvpath;

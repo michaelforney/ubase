@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <limits.h>
 #include "util.h"
 
 struct {
@@ -121,7 +122,7 @@ main(int argc, char *argv[])
 {
 	int aflag = 0, oflag = 0, status = EXIT_SUCCESS, i;
 	unsigned long flags = 0;
-	char *types = NULL, data[512] = "";
+	char *types = NULL, data[512] = "", *resolvpath = NULL;
 	char *files[] = { "/proc/mounts", "/etc/fstab", NULL };
 	size_t datasiz = sizeof(data);
 	const char *source, *target;
@@ -177,6 +178,9 @@ main(int argc, char *argv[])
 		source = NULL;
 		if(stat(target, &st) < 0)
 			eprintf("stat %s:", target);
+		if(!(resolvpath = realpath(target, NULL)))
+			eprintf("realpath %s:", target);
+		target = resolvpath;
 	}
 
 	for(i = 0; files[i]; i++) {
@@ -214,6 +218,7 @@ mountsingle:
 	}
 	if(fp)
 		endmntent(fp);
+	free(resolvpath);
 	return status;
 
 mountall:

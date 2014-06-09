@@ -25,6 +25,7 @@ main(int argc, char *argv[])
 	char *cryptpass1 = NULL, *cryptpass2 = NULL, *cryptpass3 = NULL;
 	char *p;
 	char template[] = "/tmp/pw.XXXXXX";
+	uid_t uid;
 	struct passwd *pw;
 	int ffd, tfd;
 	int r;
@@ -43,6 +44,10 @@ main(int argc, char *argv[])
 		eprintf("getpwnam: %s:", argv[0]);
 	else if (!pw)
 		eprintf("who are you?\n");
+
+	uid = getuid();
+	if (uid == 0)
+		goto newpass;
 
 	switch (pw->pw_passwd[0]) {
 	case '!':

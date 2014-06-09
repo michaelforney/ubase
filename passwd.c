@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include "config.h"
 #include "passwd.h"
 #include "util.h"
 
@@ -53,14 +54,14 @@ main(int argc, char *argv[])
 		if (pw->pw_passwd[0] == '!' ||
 		    pw->pw_passwd[0] == '*' ||
 		    pw->pw_passwd[0] == '\0')
-			pw->pw_passwd = "$6$";
+			pw->pw_passwd = PW_CIPHER;
 		goto newpass;
 	} else {
 		if (pw->pw_passwd[0] == '!' ||
 		    pw->pw_passwd[0] == '*')
 			eprintf("denied\n");
 		if (pw->pw_passwd[0] == '\0') {
-			pw->pw_passwd = "$6$";
+			pw->pw_passwd = PW_CIPHER;
 			goto newpass;
 		}
 	}

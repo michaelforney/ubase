@@ -24,8 +24,12 @@ pw_check(struct passwd *pw, const char *pass)
 		return -1;
 	}
 
-	if (pw->pw_passwd[0] == '\0')
-		return pass[0] == '\0' ? 1 : 0;
+	if (pw->pw_passwd[0] == '\0') {
+		if (pass[0] == '\0')
+			return 1;
+		weprintf("incorrect password\n");
+		return 0;
+	}
 
 	if (pw->pw_passwd[0] == 'x' && pw->pw_passwd[1] == '\0') {
 		errno = 0;

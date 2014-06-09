@@ -59,8 +59,8 @@ main(int argc, char *argv[])
 	pass = getpass("Password: "); putchar('\n');
 	if (!pass)
 		eprintf("getpass:");
-	if (pw_check(pw, pass) == 0)
-		eprintf("incorrect password\n");
+	if (pw_check(pw, pass) <= 0)
+		exit(EXIT_FAILURE);
 
 	if (initgroups(argv[0], gid) < 0)
 		eprintf("initgroups:");

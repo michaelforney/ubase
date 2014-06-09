@@ -63,8 +63,8 @@ main(int argc, char *argv[])
 		pass = getpass("Password: "); putchar('\n');
 		if (!pass)
 			eprintf("getpass:");
-		if (pw_check(pw, pass) == 0)
-			eprintf("incorrect password\n");
+		if (pw_check(pw, pass) <= 0)
+			exit(EXIT_FAILURE);
 	}
 
 	if (initgroups(usr, pw->pw_gid) < 0)

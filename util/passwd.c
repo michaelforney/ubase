@@ -10,6 +10,8 @@
 #include "../text.h"
 #include "../util.h"
 
+/* Returns -1 on error, 0 for incorrect password
+ * and 1 if all went OK */
 int
 pw_check(struct passwd *pw, const char *pass)
 {
@@ -17,8 +19,10 @@ pw_check(struct passwd *pw, const char *pass)
 	struct spwd *spw;
 
 	p = pw->pw_passwd;
-	if (p[0] == '!' || p[0] == '*')
-		eprintf("denied\n");
+	if (p[0] == '!' || p[0] == '*') {
+		weprintf("denied\n");
+		return -1;
+	}
 
 	if (pw->pw_passwd[0] == '\0')
 		return pass[0] == '\0' ? 1 : 0;
@@ -26,20 +30,29 @@ pw_check(struct passwd *pw, const char *pass)
 	if (pw->pw_passwd[0] == 'x' && pw->pw_passwd[1] == '\0') {
 		errno = 0;
 		spw = getspnam(pw->pw_name);
-		if (errno)
-			eprintf("getspnam: %:", pw->pw_name);
-		else if (!spw)
-			eprintf("who are you?\n");
+		if (errno) {
+			weprintf("getspnam: %s:", pw->pw_name);
+			return -1;
+		} else if (!spw) {
+			weprintf("who are you?\n");
+			return -1;
+		}
 		p = spw->sp_pwdp;
-		if (p[0] == '!' || p[0] == '*')
-			eprintf("denied\n");
+		if (p[0] == '!' || p[0] == '*') {
+			weprintf("denied\n");
+			return -1;
+		}
 	}
 
 	cryptpass = crypt(pass, p);
-	if (!cryptpass)
-		eprintf("crypt:");
-	if (strcmp(cryptpass, p) != 0)
+	if (!cryptpass) {
+		weprintf("crypt:");
+		return -1;
+	}
+	if (strcmp(cryptpass, p) != 0) {
+		weprintf("incorrect password\n");
 		return 0;
+	}
 	return 1;
 }
 

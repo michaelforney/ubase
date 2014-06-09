@@ -45,24 +45,25 @@ main(int argc, char *argv[])
 	else if (!pw)
 		eprintf("who are you?\n");
 
-	uid = getuid();
-	if (uid == 0)
-		goto newpass;
-
-	switch (pw->pw_passwd[0]) {
-	case '!':
-	case '*':
-		eprintf("denied\n");
-	}
-
-	if (pw->pw_passwd[0] == '\0') {
-		/* Default to SHA-512 for empty passwords */
-		pw->pw_passwd = "$6$";
-		goto newpass;
-	}
-
 	if (pw->pw_passwd[0] == 'x' && pw->pw_passwd[1] == '\0')
 		eprintf("no shadow support\n");
+
+	uid = getuid();
+	if (uid == 0) {
+		if (pw->pw_passwd[0] == '!' ||
+		    pw->pw_passwd[0] == '*' ||
+		    pw->pw_passwd[0] == '\0')
+			pw->pw_passwd = "$6$";
+		goto newpass;
+	} else {
+		if (pw->pw_passwd[0] == '!' ||
+		    pw->pw_passwd[0] == '*')
+			eprintf("denied\n");
+		if (pw->pw_passwd[0] == '\0') {
+			pw->pw_passwd = "$6$";
+			goto newpass;
+		}
+	}
 
 	/* Flush pending input */
 	ioctl(STDIN_FILENO, TCFLSH, (void *)0);

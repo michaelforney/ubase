@@ -77,6 +77,7 @@ MAN1 = \
 	mknod.1             \
 	mountpoint.1        \
 	pagesize.1          \
+	passwd.1            \
 	pidof.1             \
 	ps.1                \
 	respawn.1           \

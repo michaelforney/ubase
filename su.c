@@ -4,10 +4,10 @@
 #include <errno.h>
 #include <pwd.h>
 #include <grp.h>
-#include <shadow.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "passwd.h"
 #include "config.h"
 #include "util.h"
 
@@ -27,9 +27,8 @@ static int pflag = 0;
 int
 main(int argc, char *argv[])
 {
-	char *usr = "root", *pass, *cryptpass;
+	char *usr = "root", *pass;
 	char *shell;
-	struct spwd *spw;
 	struct passwd *pw;
 	char *newargv[2];
 	uid_t uid;
@@ -59,55 +58,15 @@ main(int argc, char *argv[])
 	else if (!pw)
 		eprintf("who are you?\n");
 
-	switch (pw->pw_passwd[0]) {
-	case '!':
-	case '*':
-		eprintf("denied\n");
-	}
-
-	/* Empty password? Su now */
-	if (pw->pw_passwd[0] == '\0')
-		goto dosu;
-
 	uid = getuid();
 	if (uid) {
-		pass = getpass("Password: ");
-		putchar('\n');
+		pass = getpass("Password: "); putchar('\n');
 		if (!pass)
 			eprintf("getpass:");
+		if (pw_check(pw, pass) == 0)
+			eprintf("incorrect password\n");
 	}
 
-	if (pw->pw_passwd[0] == 'x' && pw->pw_passwd[1] == '\0') {
-		errno = 0;
-		spw = getspnam(usr);
-		if (errno)
-			eprintf("getspnam: %s:", usr);
-		else if (!spw)
-			eprintf("who are you?\n");
-
-		switch (spw->sp_pwdp[0]) {
-		case '!':
-		case '*':
-			eprintf("denied\n");
-		}
-		if (uid) {
-			cryptpass = crypt(pass, spw->sp_pwdp);
-			if (!cryptpass)
-				eprintf("crypt:");
-			if (strcmp(cryptpass, spw->sp_pwdp) != 0)
-				eprintf("incorrect password\n");
-		}
-	} else {
-		if (uid) {
-			cryptpass = crypt(pass, pw->pw_passwd);
-			if (!cryptpass)
-				eprintf("crypt:");
-			if (strcmp(cryptpass, pw->pw_passwd) != 0)
-				eprintf("login failed\n");
-		}
-	}
-
-dosu:
 	if (initgroups(usr, pw->pw_gid) < 0)
 		eprintf("initgroups:");
 	if (setgid(pw->pw_gid) < 0)

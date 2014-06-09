@@ -2,13 +2,13 @@
 .SH NAME
 \fBsu\fR - Run a command with a substitute user and group ID
 .SH SYNOPSIS
-\fBsu\fR [\fB-lp\fR] [\fIuser\fR]
+\fBsu\fR [\fB-lp\fR] [\fIusername\fR]
 .SH DESCRIPTION
 \fBsu\fR allows to run commands with a substitute user and group ID.
 When called without arguments, su defaults to running an interactive shell
 as root.  For backward compatibility su defaults to not change the current
 directory and to only set the environment variables \fBHOME\fR and \fBSHELL\fR
-(plus \fBUSER\fR and \fBLOGNAME\fR if target \fIuser\fR is not root).
+(plus \fBUSER\fR and \fBLOGNAME\fR if the target \fIusername\fR is not root).
 .SH OPTIONS
 .TP
 \fB-l\fR

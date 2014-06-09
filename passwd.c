@@ -15,7 +15,7 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s login\n", argv0);
+	eprintf("usage: %s username\n", argv0);
 }
 
 int

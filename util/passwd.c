@@ -17,11 +17,8 @@ pw_check(struct passwd *pw, const char *pass)
 	struct spwd *spw;
 
 	p = pw->pw_passwd;
-	switch (pw->pw_passwd[0]) {
-	case '!':
-	case '*':
+	if (p[0] == '!' || p[0] == '*')
 		eprintf("denied\n");
-	}
 
 	if (pw->pw_passwd[0] == '\0')
 		return pass[0] == '\0' ? 1 : 0;
@@ -33,12 +30,9 @@ pw_check(struct passwd *pw, const char *pass)
 			eprintf("getspnam: %:", pw->pw_name);
 		else if (!spw)
 			eprintf("who are you?\n");
-		switch (spw->sp_pwdp[0]) {
-		case '!':
-		case '*':
-			eprintf("denied\n");
-		}
 		p = spw->sp_pwdp;
+		if (p[0] == '!' || p[0] == '*')
+			eprintf("denied\n");
 	}
 
 	cryptpass = crypt(pass, p);

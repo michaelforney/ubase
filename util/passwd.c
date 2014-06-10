@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/resource.h>
+#include <sys/time.h>
 #include "../passwd.h"
 #include "../text.h"
 #include "../util.h"
@@ -104,6 +106,18 @@ pw_copy(int ffd, int tfd, const struct passwd *newpw)
 	}
 	fflush(to);
 	free(buf);
+	return 0;
+}
+
+int
+pw_init(void)
+{
+	struct rlimit rlim;
+
+	rlim.rlim_cur = 0;
+	rlim.rlim_max = 0;
+	if (setrlimit(RLIMIT_CORE, &rlim) < 0)
+		eprintf("setrlimit:");
 	return 0;
 }
 

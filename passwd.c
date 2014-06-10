@@ -39,6 +39,8 @@ main(int argc, char *argv[])
 	if (argc != 1)
 		usage();
 
+	pw_init();
+
 	errno = 0;
 	pw = getpwnam(argv[0]);
 	if (errno)

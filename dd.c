@@ -17,6 +17,8 @@
 #include <sys/ioctl.h>
 #include <sys/mount.h>
 #include <sys/stat.h>
+#include <sys/select.h>
+#include <sys/time.h>
 #include <sys/types.h>
 #include <sys/vfs.h>
 #include <time.h>
@@ -135,48 +137,60 @@ prepare_copy(struct dd_config *ddc, int *ifd, int *ofd)
 static int
 copy_splice(struct dd_config *ddc)
 {
-        int ifd, ofd, p[2] = {-1, -1};
-        ssize_t r = 0;
-        size_t n = 0;
-        if (prepare_copy(ddc, &ifd, &ofd) < 0)
-                return -1;
-        if (pipe(p) < 0) {
-                ddc->saved_errno = errno;
-                close(ifd); close(ofd);
-                close(p[0]); close(p[1]);
-                return -1;
-        }
+	int ifd, ofd, p[2] = {-1, -1};
+	ssize_t r = 0;
+	size_t n = 0;
+	fd_set rfd, wfd;
+
+	if (prepare_copy(ddc, &ifd, &ofd) < 0)
+		return -1;
+	if (pipe(p) < 0) {
+		ddc->saved_errno = errno;
+		close(ifd); close(ofd);
+		close(p[0]); close(p[1]);
+		return -1;
+	}
 #ifdef F_SETPIPE_SZ
-        for (n = 29; n >= 20; --n) {
-                if (fcntl(p[0], F_SETPIPE_SZ, 1<<n) != -1)
-                        break;
-        }
+	for (n = 29; n >= 20; --n) {
+		if (fcntl(p[0], F_SETPIPE_SZ, 1<<n) != -1)
+			break;
+	}
 #endif
-        n = ddc->bs;
-        for (;ddc->b_out != ddc->count && !sigint;) {
-                if (n > ddc->count - ddc->b_out)
-                        n = ddc->count - ddc->b_out;
-                r = splice(ifd, NULL, p[1], NULL, n, SPLICE_F_MORE);
-                if (r <= 0) {
-                        ddc->saved_errno = errno;
-                        break;
-                }
-                ++ddc->rec_in;
-                r = splice(p[0], NULL, ofd, NULL, r, SPLICE_F_MORE);
-                if (r <= 0) {
-                        ddc->saved_errno = errno;
-                        break;
-                }
-                ddc->b_out += r;
-                ++ddc->rec_out;
-        }
-        close(ifd);
-        close(ofd);
-        close(p[0]);
-        close(p[1]);
-        if (r < 0)
-                return -1;
-        return 0;
+	n = ddc->bs;
+	for (;ddc->b_out != ddc->count && !sigint;) {
+		if (n > ddc->count - ddc->b_out)
+			n = ddc->count - ddc->b_out;
+		FD_ZERO(&rfd);
+		FD_ZERO(&wfd);
+		FD_SET(ifd, &rfd);
+		FD_SET(ofd, &wfd);
+		if (select(ifd > ofd ? ifd + 1 : ofd + 1, &rfd, &wfd, NULL, NULL) < 0) {
+			ddc->saved_errno = errno;
+			break;
+		}
+		if (FD_ISSET(ifd, &rfd) == 1 && FD_ISSET(ofd, &wfd) == 1) {
+			r = splice(ifd, NULL, p[1], NULL, n, SPLICE_F_MORE);
+			if (r <= 0) {
+				ddc->saved_errno = errno;
+				break;
+			}
+			++ddc->rec_in;
+			r = splice(p[0], NULL, ofd, NULL, r, SPLICE_F_MORE);
+			if (r <= 0) {
+				ddc->saved_errno = errno;
+				break;
+			}
+			ddc->b_out += r;
+			++ddc->rec_out;
+		}
+	}
+	close(ifd);
+	close(ofd);
+	close(p[0]);
+	close(p[1]);
+	if (r < 0)
+		return -1;
+	return 0;
 }
 
 static int

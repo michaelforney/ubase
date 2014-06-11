@@ -1,0 +1,45 @@
+.TH DD 1 ubase-VERSION
+.SH NAME
+\fBdd\fR - Copy a file
+.SH SYNOPSIS
+\fBdd\fR [\fIoperand...\fR]
+.SH DESCRIPTION
+\fBdd\fR copies the standard input to the standard output.  By default input
+data is read and written in 64kB blocks.  When finished, \fBdd\fR displays the
+number of records read and written as well as the total number of bytes copied.
+\fBdd\fR syncs the filesystem once it is done copying.  If you want
+to disable that use the \fInosync\fR option.
+.SH OPERANDS
+.TP
+if=\fIfile\fR
+Read input from \fIfile\fR instead of the standard input.
+.TP
+of=\fIfile\fR
+Write output to \fIfile\fR instead of the standard output.  If an initial
+portion of the output \fIfile\fR is skipped using the seek operand, the output
+file is truncated at that point.
+.TP
+bs[=\fIN\fR]
+If bs is not specified, the default blocksize is 64kB.  If bs is specified
+without setting it to a specific value then an optimal value between the source
+and target filesystem will be selected.  If this process fails it will fallback
+to the system's pagesize.  Adjust \fIN\fR to set the block size of the transfers
+in bytes.
+.TP
+seek=\fIN\fR
+Seek \fIN\fR blocks from the beginning of the output before copying.
+.TP
+skip=\fIN\fR
+Skip \fIN\fR blocks from the beginning of the input before copying.
+.TP
+count=\fIN\fR
+Copy only \fIN\fR input blocks.
+.TP
+direct
+Use direct I/O for data.
+.TP
+quiet
+Enable quiet output.
+.TP
+nosync
+Do not sync the filesystem once we are done copying.

@@ -158,8 +158,6 @@ copy_splice(struct dd_config *ddc)
 #endif
 	n = ddc->bs;
 	for (;ddc->b_out != ddc->count && !sigint;) {
-		if (n > ddc->count - ddc->b_out)
-			n = ddc->count - ddc->b_out;
 		FD_ZERO(&rfd);
 		FD_ZERO(&wfd);
 		FD_SET(ifd, &rfd);
@@ -169,6 +167,8 @@ copy_splice(struct dd_config *ddc)
 			break;
 		}
 		if (FD_ISSET(ifd, &rfd) == 1 && FD_ISSET(ofd, &wfd) == 1) {
+			if (n > ddc->count - ddc->b_out)
+				n = ddc->count - ddc->b_out;
 			r = splice(ifd, NULL, p[1], NULL, n, SPLICE_F_MORE);
 			if (r <= 0) {
 				ddc->saved_errno = errno;

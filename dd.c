@@ -198,7 +198,7 @@ copy(struct dd_config *ddc)
 static void
 usage(void)
 {
-	eprintf("usage: %s [-h] [if=F1] [of=F2] [bsize] [skip=N] [count=N] [quiet] [nosync]\n", argv0);
+	eprintf("usage: %s [-h] [if=F1] [of=F2] [bs[=N]] [seek=N] [skip=N] [count=N] [direct] [quiet] [nosync]\n", argv0);
 }
 
 static void

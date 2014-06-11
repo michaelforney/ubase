@@ -2,12 +2,18 @@
 .SH NAME
 \fBid\fR - Print real and effective user and group IDs
 .SH SYNOPSIS
-\fBid\fR [\fB-G\fR] \fR[\fIuser\fR|\fIuid\fR]
+\fBid\fR [\fB-g\fR] [\fB-u\fR] [\fB-G\fR] \fR[\fIuser\fR|\fIuid\fR]
 .SH DESCRIPTION
 \fBid\fR prints user and group information of the calling process to standard output.
 If a login name or uid is specified, the user and group information of that
 user is displayed.
 .SH OPTIONS
+.TP
+\fB-g\fR
+Print only the effective group ID.
+.TP
+\fB-u\fR
+Print only the effective user ID.
 .TP
 \fB-G\fR
 Display group information as whitespace separated numbers, in no particular order.

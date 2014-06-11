@@ -18,7 +18,7 @@ static void usernam(const char *nam);
 static void
 usage(void)
 {
-	eprintf("usage: %s [-G] [user | uid]\n", argv0);
+	eprintf("usage: %s [-g] [-u] [-G] [user | uid]\n", argv0);
 }
 
 static int Gflag = 0;
@@ -27,6 +27,12 @@ int
 main(int argc, char *argv[])
 {
 	ARGBEGIN {
+	case 'g':
+		printf("%d\n", getegid());
+		return EXIT_SUCCESS;
+	case 'u':
+		printf("%d\n", geteuid());
+		return EXIT_SUCCESS;
 	case 'G':
 		Gflag = 1;
 		break;

@@ -162,7 +162,8 @@ copy_splice(struct dd_config *ddc)
 		FD_ZERO(&wfd);
 		FD_SET(ifd, &rfd);
 		FD_SET(ofd, &wfd);
-		if (select(ifd > ofd ? ifd + 1 : ofd + 1, &rfd, &wfd, NULL, NULL) < 0) {
+		r = select(ifd > ofd ? ifd + 1 : ofd + 1, &rfd, &wfd, NULL, NULL);
+		if (r < 0) {
 			ddc->saved_errno = errno;
 			break;
 		}

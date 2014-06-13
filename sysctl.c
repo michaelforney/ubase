@@ -108,68 +108,101 @@ setsysctl(char *variable, char *value)
 	return 0;
 }
 
+static int
+parsepair(char *pair)
+{
+	char *p;
+	char *variable;
+	char *value;
+
+	for (p = pair; *p; p++) {
+		if (p[0] == '.' && p[1] == '.') {
+			weprintf("malformed input: %s\n", pair);
+			return -1;
+		}
+	}
+	p = strchr(pair, '=');
+	if (p) {
+		if (p[1] == '\0') {
+			weprintf("malformed input: %s\n", pair);
+			return -1;
+		}
+		*p = '\0';
+		value = &p[1];
+	} else {
+		value = NULL;
+	}
+	variable = pair;
+	if (value) {
+		if (setsysctl(variable, value) < 0) {
+			weprintf("failed to set sysctl for %s\n", variable);
+			return -1;
+		}
+	} else {
+		if (getsysctl(variable, &value) < 0) {
+			weprintf("failed to get sysctl for %s\n", variable);
+			return -1;
+		}
+		printf("%s = %s\n", variable, value);
+		free(value);
+	}
+
+	return 0;
+}
+
 static void
 usage(void)
 {
-	eprintf("usage: %s variable[=value]...\n", argv0);
+	eprintf("usage: %s [-p file] variable[=value]...\n", argv0);
 }
 
 int
 main(int argc, char *argv[])
 {
-	char *variable;
-	char *value;
-	char *p;
+	FILE *fp;
+	char buf[BUFSIZ], *p;
+	char *file = NULL;
 	int i;
 	int r = EXIT_SUCCESS;
 
-	argv0 = argv[0];
-	argv++;
-	argc--;
+	ARGBEGIN {
+	case 'p':
+		file = EARGF(usage());
+		break;
+	default:
+		usage();
+	} ARGEND;
 
-	if (argc < 1)
+	if (!file && argc < 1)
 		usage();
 
-	for (i = 0; i < argc; i++) {
-		for (p = argv[i]; *p; p++) {
-			if (p[0] == '.' && p[1] == '.') {
+	if (!file) {
+		for (i = 0; i < argc; i++)
+			if (parsepair(argv[i]) < 0)
 				r = EXIT_FAILURE;
-				weprintf("malformed input: %s\n", argv[i]);
-				break;
-			}
-		}
-		if (*p != '\0')
-			continue;
-		p = strchr(argv[i], '=');
-		if (p) {
-			if (p[1] == '\0') {
-				r = EXIT_FAILURE;
-				weprintf("malformed input: %s\n", argv[i]);
+	} else {
+		fp = fopen(file, "r");
+		if (!fp)
+			eprintf("fopen %s:", file);
+		while (fgets(buf, sizeof(buf), fp)) {
+			p = buf;
+			for (p = buf; *p == ' ' || *p == '\t'; p++)
+				;
+			if (*p == '#' || *p == '\n')
 				continue;
+			for (p = buf; *p; p++) {
+				if (*p == '\n') {
+					*p = '\0';
+					break;
+				}
 			}
-			*p = '\0';
-			value = &p[1];
-		} else {
-			value = NULL;
-		}
-		variable = argv[i];
-
-		if (value) {
-			if (setsysctl(variable, value) < 0) {
+			p = buf;
+			if (parsepair(p) < 0)
 				r = EXIT_FAILURE;
-				weprintf("failed to set sysctl for %s\n", variable);
-				continue;
-			}
 		}
-		else {
-			if (getsysctl(variable, &value) < 0) {
-				r = EXIT_FAILURE;
-				weprintf("failed to get sysctl for %s\n", variable);
-				continue;
-			}
-			printf("%s = %s\n", variable, value);
-			free(value);
-		}
+		if (ferror(fp))
+			eprintf("%s: read error:", file);
+		fclose(fp);
 	}
 
 	return r;

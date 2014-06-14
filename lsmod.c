@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "text.h"
 #include "util.h"
 
 static void parse_modline(char *buf, char **name, char **size,
@@ -18,8 +19,9 @@ main(int argc, char *argv[])
 {
 	const char *modfile = "/proc/modules";
 	FILE *fp;
-	char buf[BUFSIZ];
+	char *buf = NULL;
 	char *name, *size, *refcount, *users;
+	size_t bufsize = 0;
 	size_t len;
 
 	ARGBEGIN {
@@ -35,7 +37,7 @@ main(int argc, char *argv[])
 	fp = fopen(modfile, "r");
 	if (!fp)
 		eprintf("fopen %s:", modfile);
-	while (fgets(buf, sizeof buf, fp)) {
+	while (agetline(&buf, &bufsize, fp) != -1) {
 		parse_modline(buf, &name, &size, &refcount, &users);
 		if (!name || !size || !refcount || !users)
 			eprintf("invalid format: %s\n", modfile);
@@ -47,6 +49,7 @@ main(int argc, char *argv[])
 	}
 	if (ferror(fp))
 		eprintf("%s: read error:", modfile);
+	free(buf);
 	fclose(fp);
 	return EXIT_SUCCESS;
 }

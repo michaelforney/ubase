@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "text.h"
 #include "util.h"
 
 static void
@@ -160,8 +161,9 @@ int
 main(int argc, char *argv[])
 {
 	FILE *fp;
-	char buf[BUFSIZ], *p;
+	char *buf = NULL, *p;
 	char *file = NULL;
+	size_t size = 0;
 	int i;
 	int r = EXIT_SUCCESS;
 
@@ -184,7 +186,7 @@ main(int argc, char *argv[])
 		fp = fopen(file, "r");
 		if (!fp)
 			eprintf("fopen %s:", file);
-		while (fgets(buf, sizeof(buf), fp)) {
+		while (agetline(&buf, &size, fp) != -1) {
 			p = buf;
 			for (p = buf; *p == ' ' || *p == '\t'; p++)
 				;
@@ -202,6 +204,7 @@ main(int argc, char *argv[])
 		}
 		if (ferror(fp))
 			eprintf("%s: read error:", file);
+		free(buf);
 		fclose(fp);
 	}
 

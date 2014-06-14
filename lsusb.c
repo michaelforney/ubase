@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include "text.h"
 #include "util.h"
 
 static void lsusb(const char *file);
@@ -30,7 +31,8 @@ lsusb(const char *file)
 	FILE *fp;
 	char *cwd;
 	char path[PATH_MAX];
-	char buf[BUFSIZ];
+	char *buf = NULL;
+	size_t size = 0;
 	unsigned int i = 0, busnum = 0, devnum = 0, pid = 0, vid = 0;
 
 	cwd = agetcwd();
@@ -38,7 +40,7 @@ lsusb(const char *file)
 	free(cwd);
 	if (!(fp = fopen(path, "r")))
 		return;
-	while (fgets(buf, sizeof(buf), fp)) {
+	while (agetline(&buf, &size, fp) != -1) {
 		if (sscanf(buf, "BUSNUM=%u\n", &busnum) ||
 		    sscanf(buf, "DEVNUM=%u\n", &devnum) ||
 		    sscanf(buf, "PRODUCT=%x/%x/", &pid, &vid))
@@ -51,6 +53,6 @@ lsusb(const char *file)
 	}
 	if (ferror(fp))
 		eprintf("%s: read error:", path);
+	free(buf);
 	fclose(fp);
 }
-

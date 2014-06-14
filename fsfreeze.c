@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include "util.h"
 
-#define FIFREEZE	_IOWR('X', 119, int	/* Freeze */
+#define FIFREEZE	_IOWR('X', 119, int)	/* Freeze */
 #define FITHAW		_IOWR('X', 120, int)	/* Thaw */
 
 static void

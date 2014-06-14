@@ -31,6 +31,7 @@ SRC = \
 	eject.c             \
 	fallocate.c         \
 	free.c              \
+	fsfreeze.c          \
 	getty.c             \
 	halt.c              \
 	hwclock.c           \

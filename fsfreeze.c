@@ -45,7 +45,8 @@ main(int argc, char *argv[])
 	fd = open(argv[0], O_RDONLY);
 	if (fd < 0)
 		eprintf("open: %s:", argv[0]);
-	ioctl(fd, fflag == 1 ? FIFREEZE : FITHAW, &p);
+	if (ioctl(fd, fflag == 1 ? FIFREEZE : FITHAW, &p) < 0)
+		eprintf("%s %s:", fflag == 1 ? "FIFREEZE" : "FITHAW", argv[0]);
 	close(fd);
 	return EXIT_SUCCESS;
 }

@@ -15,3 +15,12 @@ Tools to be implemented
  * rmgroup
  * ifconfig
  * hwclock
+ * partprobe
+ * readahead
+ * rfkill
+ * taskset
+ * acpi
+ * blkid
+ * lsattr
+ * pmap
+ * pwdx

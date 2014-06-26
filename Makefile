@@ -31,6 +31,7 @@ SRC = \
 	eject.c             \
 	fallocate.c         \
 	free.c              \
+	freeramdisk.c       \
 	fsfreeze.c          \
 	getty.c             \
 	halt.c              \
@@ -93,6 +94,7 @@ MAN1 = \
 
 MAN8 = \
 	ctrlaltdel.8        \
+	freeramdisk.8       \
 	fsfreeze.8          \
 	getty.8             \
 	halt.8              \

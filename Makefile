@@ -93,6 +93,7 @@ MAN1 = \
 
 MAN8 = \
 	ctrlaltdel.8        \
+	fsfreeze.8          \
 	getty.8             \
 	halt.8              \
 	hwclock.8           \

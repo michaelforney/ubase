@@ -1,0 +1,24 @@
+.TH FSFREEZE 8 ubase-VERSION
+.SH NAME
+\fBfsfreeze\fR - Suspend access to a filesystem
+.SH SYNOPSIS
+\fBfsfreeze\fR [\fB-f\fR] [\fB-u\fR] \fImountpoint\fR
+.SH DESCRIPTION
+\fBfsfreeze\fR suspends and resumes access to a filesystem.
+\fBfsfreeze\fR is intended to be used with hardware RAID
+devices that support the creation of snapshots.
+The \fImountpoint\fR argument is the pathname of the directory
+where the filesystem is mounted.  The filesystem must be mounted
+to be frozen.
+.SH OPTIONS
+.TP
+\fB-f\fR
+Freeze the filesystem mounted at \fImountpoint\fR.
+.TP
+\fB-u\fR
+Unfreeze the filesystem mounted at \fImountpoint\fR.
+.SH BUGS
+.TP
+Only works for ext3/4, reiserfs, jfs and xfs.
+.SH SEE ALSO
+mount(8)

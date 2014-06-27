@@ -17,42 +17,43 @@
 static void
 delete_content(const char *dir, dev_t curdevice)
 {
-	static char path[PATH_MAX];
+	char path[PATH_MAX];
 	DIR *d;
 	struct stat st;
 	struct dirent *dent;
 
 	/* don't dive into other filesystems */
-	if (lstat(dir, &st) || st.st_dev != curdevice)
+	if (lstat(dir, &st) < 0 || st.st_dev != curdevice)
 		return;
-	/* delete contents recursively */
-	if (S_ISDIR(st.st_mode)) {
-		d = opendir(dir);
-		if (d) {
-			for(; (dent = readdir(d)) ;) {
-				/* skip ".." and "." */
-				if (strcmp(dent->d_name, ".") == 0 ||
-				    strcmp(dent->d_name, "..") == 0)
-					continue;
+	if (!(d = opendir(dir)))
+		return;
+	while ((dent = readdir(d))) {
+		if (strcmp(dent->d_name, ".") == 0 ||
+		    strcmp(dent->d_name, "..") == 0)
+			continue;
 
-				/* build path and dive deeper */
-				if (strlcat(path, dir, sizeof(path)) >= sizeof(path))
-					eprintf("path too long\n");
-				if (strlcat(path, dent->d_name, sizeof(path)) >= sizeof(path))
-					eprintf("path too long\n");
+		/* build path and dive deeper */
+		if (strlcpy(path, dir, sizeof(path)) >= sizeof(path))
+			eprintf("path too long\n");
+		if (path[strlen(path) - 1] != '/')
+			if (strlcat(path, "/", sizeof(path)) >= sizeof(path))
+				eprintf("path too long\n");
+		if (strlcat(path, dent->d_name, sizeof(path)) >= sizeof(path))
+			eprintf("path too long\n");
 
-				delete_content(path, curdevice);
-				path[0] = 0;
-			}
-			closedir(d);
+		if (lstat(path, &st) < 0)
+			weprintf("lstat %s:", path);
 
-			/* remove now empty dir */
-			rmdir(dir);
+		if (S_ISDIR(st.st_mode)) {
+			delete_content(path, curdevice);
+			if (rmdir(path) < 0)
+				weprintf("rmdir %s:", path);
+		} else {
+			if (unlink(path) < 0)
+				weprintf("unlink %s:", path);
 		}
-	} else {
-		/* unlink non-directory */
-		unlink(dir);
 	}
+	closedir(d);
 }
 
 static void

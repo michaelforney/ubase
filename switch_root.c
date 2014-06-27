@@ -36,8 +36,10 @@ delete_content(const char *dir, dev_t curdevice)
 					continue;
 
 				/* build path and dive deeper */
-				strlcat(path, dir, sizeof(path));
-				strlcat(path, dent->d_name, sizeof(path));
+				if (strlcat(path, dir, sizeof(path)) >= sizeof(path))
+					eprintf("path too long\n");
+				if (strlcat(path, dent->d_name, sizeof(path)) >= sizeof(path))
+					eprintf("path too long\n");
 
 				delete_content(path, curdevice);
 				path[0] = 0;

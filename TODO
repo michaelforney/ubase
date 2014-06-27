@@ -16,7 +16,6 @@ Tools to be implemented
  * ifconfig
  * hwclock
  * partprobe
- * readahead
  * rfkill
  * taskset
  * acpi

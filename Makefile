@@ -51,6 +51,7 @@ SRC = \
 	pidof.c             \
 	pivot_root.c        \
 	ps.c                \
+	readahead.c         \
 	respawn.c           \
 	rmmod.c             \
 	stat.c              \

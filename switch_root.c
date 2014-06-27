@@ -17,7 +17,7 @@
 static void
 delete_content(const char *dir, dev_t curdevice)
 {
-	char path[PATH_MAX];
+	static char path[PATH_MAX];
 	DIR *d;
 	struct stat st;
 	struct dirent *dent;

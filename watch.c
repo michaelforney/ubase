@@ -1,5 +1,4 @@
 /* See LICENSE file for copyright and license details. */
-#include <sys/ioctl.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>

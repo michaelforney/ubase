@@ -27,6 +27,5 @@ Tools to be implemented
 Misc
 ====
 
- * Check all ioctl() calls for failure.
  * Decide what to do with 'bool vs int' debate.
  * Beautify passwd(1) + shadow support.

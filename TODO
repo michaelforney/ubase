@@ -23,6 +23,9 @@ Tools to be implemented
  * lsattr
  * pmap
  * pwdx
+ * setcap
+ * getcap
+ * capchroot
 
 Misc
 ====

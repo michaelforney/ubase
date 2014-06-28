@@ -24,7 +24,9 @@ config.mk depending on your system.
 
 You  can  also  build  ubase-box,  which  generates  a  single  binary
 containing  all  the  required  tools.    You  can  then  symlink  the
-individual tools to ubase-box.
+individual tools to ubase-box or run them directly as follows:
+
+  ubase-box cmd [args]
 
 Ideally you will  want to statically link ubase.   We highly recommend
 using musl-libc[2].

@@ -20,7 +20,7 @@ Building
 --------
 
 To  build ubase,  simply  type  make.  You  may  have  to fiddle  with
-config.mk depending on your system.
+config.mk and config.h depending on your system.
 
 You  can  also  build  ubase-box,  which  generates  a  single  binary
 containing  all  the  required  tools.    You  can  then  symlink  the

@@ -30,8 +30,7 @@ main(int argc, char *argv[])
 		usage();
 	} ARGEND;
 
-	if (argc > 0 || (hflag != 0 && sflag != 0) ||
-	    (hflag == 0 && sflag == 0))
+	if (argc > 0 || (hflag ^ sflag) == 0)
 		usage();
 
 	cmd = hflag ? LINUX_REBOOT_CMD_CAD_ON : LINUX_REBOOT_CMD_CAD_OFF;

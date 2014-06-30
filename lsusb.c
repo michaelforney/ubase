@@ -1,7 +1,7 @@
 /* See LICENSE file for copyright and license details. */
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
 #include "text.h"
 #include "util.h"
 
@@ -29,15 +29,16 @@ static void
 lsusb(const char *file)
 {
 	FILE *fp;
-	char *cwd;
 	char path[PATH_MAX];
 	char *buf = NULL;
 	size_t size = 0;
 	unsigned int i = 0, busnum = 0, devnum = 0, pid = 0, vid = 0;
 
-	cwd = agetcwd();
-	snprintf(path, sizeof(path), "%s/%s/uevent", cwd, file);
-	free(cwd);
+	if (strlcpy(path, file, sizeof(path)) >= sizeof(path))
+		eprintf("path too long\n");
+	if (strlcat(path, "/uevent", sizeof(path)) >= sizeof(path))
+		eprintf("path too long\n");
+
 	if (!(fp = fopen(path, "r")))
 		return;
 	while (agetline(&buf, &size, fp) != -1) {

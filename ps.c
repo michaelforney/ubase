@@ -1,14 +1,14 @@
 /* See LICENSE file for copyright and license details. */
-#include <sys/sysinfo.h>
-#include <sys/ioctl.h>
 #include <errno.h>
-#include <unistd.h>
+#include <limits.h>
+#include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <limits.h>
 #include <time.h>
-#include <pwd.h>
+#include <sys/ioctl.h>
+#include <sys/sysinfo.h>
+#include <unistd.h>
 #include "proc.h"
 #include "util.h"
 
@@ -169,12 +169,16 @@ psout(struct procstat *ps)
 static void
 psr(const char *file)
 {
+	char path[PATH_MAX], *p;
 	struct procstat ps;
 	pid_t pid;
 
-	if (!pidfile(file))
+	if (strlcpy(path, file, sizeof(path)) >= sizeof(path))
+		eprintf("path too long\n");
+	p = basename(path);
+	if (pidfile(p) == 0)
 		return;
-	pid = estrtol(file, 10);
+	pid = estrtol(p, 10);
 	if (parsestat(pid, &ps) < 0)
 		return;
 	psout(&ps);

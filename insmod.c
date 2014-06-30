@@ -1,11 +1,13 @@
 /* See LICENSE file for copyright and license details. */
-#include <sys/syscall.h>
 #include <sys/stat.h>
+#include <sys/syscall.h>
+
 #include <fcntl.h>
-#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+
 #include "util.h"
 
 static void

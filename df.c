@@ -1,9 +1,11 @@
 /* See LICENSE file for copyright and license details. */
+#include <sys/statvfs.h>
+
 #include <mntent.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/statvfs.h>
+
 #include "util.h"
 
 static void mnt_show(const char *fsname, const char *dir);

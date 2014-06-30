@@ -1,8 +1,10 @@
 /* See LICENSE file for copyright and license details. */
 #include <sys/syscall.h>
-#include <unistd.h>
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+
 #include "reboot.h"
 #include "util.h"
 

@@ -6,23 +6,25 @@
  * The original code is at https://github.com/stealth/odd.  This
  * version of the code has been modified by sin@2f30.org.
  */
+#include <sys/ioctl.h>
+#include <sys/mount.h>
+#include <sys/select.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/vfs.h>
+
 #include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
 #include <signal.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <sys/ioctl.h>
-#include <sys/mount.h>
-#include <sys/stat.h>
-#include <sys/select.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <sys/vfs.h>
+#include <string.h>
 #include <time.h>
 #include <unistd.h>
+
 #include "util.h"
 
 struct dd_config {

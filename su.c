@@ -1,14 +1,16 @@
 /* See LICENSE file for copyright and license details. */
 #include <sys/types.h>
-#include <unistd.h>
+
 #include <errno.h>
-#include <pwd.h>
 #include <grp.h>
+#include <pwd.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include "passwd.h"
+#include <string.h>
+#include <unistd.h>
+
 #include "config.h"
+#include "passwd.h"
 #include "util.h"
 
 extern char **environ;

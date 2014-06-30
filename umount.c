@@ -1,9 +1,11 @@
 /* See LICENSE file for copyright and license details. */
+#include <sys/mount.h>
+
 #include <mntent.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/mount.h>
+
 #include "util.h"
 
 static int umountall(int);

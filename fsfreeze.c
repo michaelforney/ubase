@@ -1,11 +1,13 @@
 /* See LICENSE file for copyright and license details. */
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
+
 #include "util.h"
 
 #define FIFREEZE	_IOWR('X', 119, int)	/* Freeze */

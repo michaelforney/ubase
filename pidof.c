@@ -1,12 +1,14 @@
 /* See LICENSE file for copyright and license details. */
 #include <sys/types.h>
-#include <unistd.h>
+
 #include <dirent.h>
 #include <libgen.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <limits.h>
+#include <unistd.h>
+
 #include "proc.h"
 #include "queue.h"
 #include "util.h"

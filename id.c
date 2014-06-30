@@ -1,13 +1,15 @@
 /* See LICENSE file for copyright and license details. */
 #include <sys/types.h>
+
+#include <ctype.h>
 #include <errno.h>
-#include <unistd.h>
-#include <pwd.h>
 #include <grp.h>
+#include <limits.h>
+#include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
-#include <ctype.h>
+#include <unistd.h>
+
 #include "util.h"
 
 static void groupid(struct passwd *pw);

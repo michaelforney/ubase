@@ -1,11 +1,13 @@
 /* See LICENSE file for copyright and license details. */
+#include <sys/ioctl.h>
+#include <sys/types.h>
+
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/ioctl.h>
-#include <sys/types.h>
 #include <unistd.h>
+
 #include "util.h"
 
 #define KDGKBTYPE	0x4B33	/* get keyboard type */

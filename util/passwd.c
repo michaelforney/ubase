@@ -1,4 +1,7 @@
 /* See LICENSE file for copyright and license details. */
+#include <sys/resource.h>
+#include <sys/time.h>
+
 #include <errno.h>
 #include <pwd.h>
 #include <shadow.h>
@@ -6,8 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/resource.h>
-#include <sys/time.h>
+
 #include "../passwd.h"
 #include "../text.h"
 #include "../util.h"

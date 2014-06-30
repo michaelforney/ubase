@@ -1,14 +1,16 @@
 /* See LICENSE file for copyright and license details. */
+#include <sys/mount.h>
+#include <sys/stat.h>
+#include <sys/vfs.h>
+
 #include <dirent.h>
 #include <fcntl.h>
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/mount.h>
-#include <sys/stat.h>
-#include <sys/vfs.h>
 #include <unistd.h>
+
 #include "util.h"
 
 #define RAMFS_MAGIC		0x858458f6	/* some random number */

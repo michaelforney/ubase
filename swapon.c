@@ -1,10 +1,12 @@
 /* See LICENSE file for copyright and license details. */
 #include <sys/swap.h>
-#include <mntent.h>
+
 #include <errno.h>
+#include <mntent.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "util.h"
 
 static void

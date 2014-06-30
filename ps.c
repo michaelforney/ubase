@@ -1,4 +1,7 @@
 /* See LICENSE file for copyright and license details. */
+#include <sys/ioctl.h>
+#include <sys/sysinfo.h>
+
 #include <errno.h>
 #include <limits.h>
 #include <pwd.h>
@@ -6,9 +9,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <sys/ioctl.h>
-#include <sys/sysinfo.h>
 #include <unistd.h>
+
 #include "proc.h"
 #include "util.h"
 

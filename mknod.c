@@ -1,11 +1,13 @@
 /* See LICENSE file for copyright and license details. */
+#include <sys/stat.h>
+#include <sys/types.h>
+
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <string.h>
+#include <unistd.h>
+
 #include "util.h"
 
 static void

@@ -117,6 +117,7 @@ MAN8 = \
 	mkswap.8            \
 	mount.8             \
 	pivot_root.8        \
+	readahead.8         \
 	rmmod.8             \
 	swapoff.8           \
 	swapon.8            \

@@ -61,7 +61,7 @@ main(int argc, char *argv[])
 	if (ioctl(fd, TIOCSCTTY, (void *)1) == 0)
 		vhangup();
 	else
-		fprintf(stderr, "could not set controlling tty\n");
+		weprintf("TIOCSCTTY: could not set controlling tty\n");
 
 	close(fd);
 	fd = open(tty, O_RDWR);

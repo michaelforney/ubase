@@ -2,11 +2,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include <errno.h>
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -50,8 +48,7 @@ main(int argc, char *argv[])
 
 	for (i = 0; i < argc; i++) {
 		if (fn(argv[i], &st) == -1) {
-			fprintf(stderr, "%s %s: %s\n", fnname,
-			        argv[i], strerror(errno));
+			weprintf("%s %s:", fnname, argv[i]);
 			ret = EXIT_FAILURE;
 			continue;
 		}

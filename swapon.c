@@ -1,7 +1,6 @@
 /* See LICENSE file for copyright and license details. */
 #include <sys/swap.h>
 
-#include <errno.h>
 #include <mntent.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,8 +50,7 @@ main(int argc, char *argv[])
 			if (strcmp(me->mnt_type, MNTTYPE_SWAP) == 0
 			    && (hasmntopt(me, MNTOPT_NOAUTO) == NULL)) {
 				if (swapon(me->mnt_fsname, flags) < 0) {
-					fprintf(stderr, "swapon %s: %s\n",
-						me->mnt_fsname, strerror(errno));
+					weprintf("swapon %s:", me->mnt_fsname);
 					ret = EXIT_FAILURE;
 				}
 			}
@@ -61,8 +59,7 @@ main(int argc, char *argv[])
 	} else {
 		for (i = 0; i < argc; i++) {
 			if (swapon(argv[i], flags) < 0) {
-				fprintf(stderr, "swapon %s: %s\n",
-					argv[i], strerror(errno));
+				weprintf("swapon %s:", argv[i]);
 				ret = EXIT_FAILURE;
 			}
 		}

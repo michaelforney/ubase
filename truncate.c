@@ -1,11 +1,9 @@
 /* See LICENSE file for copyright and license details. */
 #include <sys/stat.h>
 
-#include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 
 #include "util.h"
@@ -41,14 +39,12 @@ main(int argc, char *argv[])
 	for (i = 0; i < argc; i++) {
 		fd = open(argv[i], O_WRONLY | (cflag ? 0 : O_CREAT), 0644);
 		if (fd < 0) {
-			fprintf(stderr, "open: cannot open `%s' for writing: %s\n",
-			        argv[i], strerror(errno));
+			weprintf("open: cannot open `%s' for writing:", argv[i]);
 			ret = EXIT_FAILURE;
 			continue;
 		}
 		if (ftruncate(fd, size) < 0) {
-			fprintf(stderr, "truncate: cannot open `%s' for writing: %s\n",
-			        argv[i], strerror(errno));
+			weprintf("ftruncate: cannot open `%s' for writing:", argv[i]);
 			ret = EXIT_FAILURE;
 		}
 		close(fd);

@@ -1,7 +1,6 @@
 /* See LICENSE file for copyright and license details. */
 #include <sys/swap.h>
 
-#include <errno.h>
 #include <mntent.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,8 +42,7 @@ main(int argc, char *argv[])
 		while ((me = getmntent(fp)) != NULL) {
 			if (strcmp(me->mnt_type, MNTTYPE_SWAP) == 0) {
 				if (swapoff(me->mnt_fsname) < 0) {
-					fprintf(stderr, "swapoff %s: %s\n",
-						me->mnt_fsname, strerror(errno));
+					weprintf("swapoff %s:", me->mnt_fsname);
 					ret = EXIT_FAILURE;
 				}
 			}
@@ -53,8 +51,7 @@ main(int argc, char *argv[])
 	} else {
 		for (i = 0; i < argc; i++) {
 			if (swapoff(argv[i]) < 0) {
-				fprintf(stderr, "swapoff %s: %s\n",
-					argv[i], strerror(errno));
+				weprintf("swapoff %s:", argv[i]);
 				ret = EXIT_FAILURE;
 			}
 		}

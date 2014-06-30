@@ -13,16 +13,16 @@ char *agetcwd(void);
 /* apathmax.c */
 void apathmax(char **, long *);
 
-/* eprintf.c */
-void enprintf(int, const char *, ...);
-void eprintf(const char *, ...);
-void weprintf(const char *, ...);
-
 /* ealloc.c */
 void *ecalloc(size_t, size_t);
 void *emalloc(size_t size);
 void *erealloc(void *, size_t);
 char *estrdup(const char *);
+
+/* eprintf.c */
+void enprintf(int, const char *, ...);
+void eprintf(const char *, ...);
+void weprintf(const char *, ...);
 
 /* estrtol.c */
 long estrtol(const char *, int);

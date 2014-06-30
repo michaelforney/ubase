@@ -3,7 +3,17 @@ include config.mk
 .POSIX:
 .SUFFIXES: .c .o
 
-HDR = arg.h config.def.h passwd.h proc.h reboot.h rtc.h text.h util.h
+HDR = \
+	arg.h        \
+	config.def.h \
+	passwd.h     \
+	proc.h       \
+	queue.h      \
+	reboot.h     \
+	rtc.h        \
+	text.h       \
+	util.h
+
 LIB = \
 	util/agetcwd.o        \
 	util/agetline.o       \

@@ -8,6 +8,7 @@
 #include <string.h>
 #include <limits.h>
 #include "proc.h"
+#include "queue.h"
 #include "util.h"
 
 static void
@@ -16,10 +17,12 @@ usage(void)
 	eprintf("usage: %s [-o pid1,pid2,...pidN] [-s] [program...]\n", argv0);
 }
 
-static struct omit {
+struct pidentry {
 	pid_t pid;
-	struct omit *next;
-} *omithead;
+	TAILQ_ENTRY(pidentry) entry;
+};
+
+static TAILQ_HEAD(omitpid_head, pidentry) omitpid_head;
 
 int
 main(int argc, char *argv[])
@@ -31,7 +34,7 @@ main(int argc, char *argv[])
 	char cmdline[BUFSIZ], *cmd, *p, *arg = NULL;
 	int i, found = 0;
 	int sflag = 0, oflag = 0;
-	struct omit *onode, *tmp;
+	struct pidentry *pe, *tmp;
 
 	ARGBEGIN {
 	case 's':
@@ -48,14 +51,15 @@ main(int argc, char *argv[])
 	if (!argc)
 		return 1;
 
+	TAILQ_INIT(&omitpid_head);
+
 	for (p = strtok(arg, ","); p; p = strtok(NULL, ",")) {
-		onode = emalloc(sizeof(*onode));
+		pe = emalloc(sizeof(*pe));
 		if (strcmp(p, "%PPID") == 0)
-			onode->pid = getppid();
+			pe->pid = getppid();
 		else
-			onode->pid = estrtol(p, 10);
-		onode->next = omithead;
-		omithead = onode;
+			pe->pid = estrtol(p, 10);
+		TAILQ_INSERT_TAIL(&omitpid_head, pe, entry);
 	}
 
 	if (!(dp = opendir("/proc")))
@@ -66,10 +70,10 @@ main(int argc, char *argv[])
 			continue;
 		pid = estrtol(entry->d_name, 10);
 		if (oflag) {
-			for (onode = omithead; onode; onode = onode->next)
-				if (onode->pid == pid)
+			TAILQ_FOREACH(pe, &omitpid_head, entry)
+				if (pe->pid == pid)
 					break;
-			if (onode)
+			if (pe)
 				continue;
 		}
 		if (parsestat(pid, &ps) < 0)
@@ -101,11 +105,9 @@ out:
 
 	closedir(dp);
 
-	onode = omithead;
-	while (onode) {
-		tmp = onode->next;
-		free(onode);
-		onode = tmp;
+	for (pe = TAILQ_FIRST(&omitpid_head); pe; pe = tmp) {
+		tmp = TAILQ_NEXT(pe, entry);
+		free(pe);
 	}
 
 	return EXIT_SUCCESS;

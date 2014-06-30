@@ -7,6 +7,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "proc.h"
+#include "queue.h"
 #include "util.h"
 
 struct {
@@ -26,15 +27,17 @@ usage(void)
 	eprintf("usage: %s [-o pid1,pid2,..,pidN] [-s signal]\n", argv0);
 }
 
-static struct omit {
+struct pidentry {
 	pid_t pid;
-	struct omit *next;
-} *omithead;
+	TAILQ_ENTRY(pidentry) entry;
+};
+
+static TAILQ_HEAD(omitpid_head, pidentry) omitpid_head;
 
 int
 main(int argc, char *argv[])
 {
-	struct omit *onode, *tmp;
+	struct pidentry *pe, *tmp;
 	int oflag = 0;
 	char *p, *arg = NULL;
 	DIR *dp;
@@ -67,11 +70,12 @@ main(int argc, char *argv[])
 		usage();
 	} ARGEND;
 
+	TAILQ_INIT(&omitpid_head);
+
 	for (p = strtok(arg, ","); p; p = strtok(NULL, ",")) {
-		onode = emalloc(sizeof(*onode));
-		onode->pid = estrtol(p, 10);
-		onode->next = omithead;
-		omithead = onode;
+		pe = emalloc(sizeof(*pe));
+		pe->pid = estrtol(p, 10);
+		TAILQ_INSERT_TAIL(&omitpid_head, pe, entry);
 	}
 
 	if (sig != SIGSTOP && sig != SIGCONT)
@@ -87,10 +91,10 @@ main(int argc, char *argv[])
 		    getsid(pid) == getsid(0) || getsid(pid) == 0)
 			continue;
 		if (oflag == 1) {
-			for (onode = omithead; onode; onode = onode->next)
-				if (onode->pid == pid)
+			TAILQ_FOREACH(pe, &omitpid_head, entry)
+				if (pe->pid == pid)
 					break;
-			if (onode)
+			if (pe)
 				continue;
 		}
 		kill(pid, sig);
@@ -100,11 +104,9 @@ main(int argc, char *argv[])
 	if (sig != SIGSTOP && sig != SIGCONT)
 		kill(-1, SIGCONT);
 
-	onode = omithead;
-	while (onode) {
-		tmp = onode->next;
-		free(onode);
-		onode = tmp;
+	for (pe = TAILQ_FIRST(&omitpid_head); pe; pe = tmp) {
+		tmp = TAILQ_NEXT(pe, entry);
+		free(pe);
 	}
 
 	return EXIT_SUCCESS;

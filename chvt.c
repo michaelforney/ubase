@@ -41,7 +41,7 @@ main(int argc, char *argv[])
 	n = estrtol(argv[1], 10);
 	for (i = 0; i < LEN(vts); i++) {
 		fd = open(vts[i], O_RDONLY);
-		if (fd < 1)
+		if (fd < 0)
 			continue;
 		c = 0;
 		if (ioctl(fd, KDGKBTYPE, &c) == 0)

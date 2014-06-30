@@ -8,7 +8,7 @@
 
 #include "util.h"
 
-static int dmesg_show(int fd, const void *buf, size_t n);
+static void dmesg_show(int fd, const void *buf, size_t n);
 
 enum {
 	SYSLOG_ACTION_READ_ALL = 3,
@@ -60,9 +60,7 @@ main(int argc, char *argv[])
 	if (n < 0)
 		eprintf("klogctl:");
 
-	n = dmesg_show(STDOUT_FILENO, buf, n);
-	if (n < 0)
-		eprintf("dmesg_show:");
+	dmesg_show(STDOUT_FILENO, buf, n);
 
 	if (cflag && klogctl(SYSLOG_ACTION_CLEAR, NULL, 0) < 0)
 		eprintf("klogctl:");
@@ -71,16 +69,15 @@ main(int argc, char *argv[])
 	return EXIT_SUCCESS;
 }
 
-static int
+static void
 dmesg_show(int fd, const void *buf, size_t n)
 {
 	const char *p = buf;
 	ssize_t r;
 
 	r = write(fd, p, n);
-	if (r < 0 || (size_t)r != n)
-		return -1;
-	if (p[n - 1] != '\n')
+	if (r < 0)
+		eprintf("write:");
+	if (r > 0 && p[r - 1] != '\n')
 		putchar('\n');
-	return 0;
 }

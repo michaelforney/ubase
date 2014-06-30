@@ -27,7 +27,6 @@ main(int argc, char *argv[])
 	int n;
 	char *buf;
 	int cflag = 0;
-	int rflag = 0;
 	long level;
 
 	ARGBEGIN {
@@ -39,7 +38,6 @@ main(int argc, char *argv[])
 		cflag = 1;
 		break;
 	case 'r':
-		rflag = 1;
 		break;
 	case 'n':
 		level = estrtol(EARGF(usage()), 10);
@@ -60,14 +58,9 @@ main(int argc, char *argv[])
 	if (n < 0)
 		eprintf("klogctl:");
 
-	if (rflag) {
-		if (write(STDOUT_FILENO, buf, n) != n)
-			eprintf("write:");
-	} else {
-		n = dmesg_show(STDOUT_FILENO, buf, n);
-		if (n < 0)
-			eprintf("dmesg_show:");
-	}
+	n = dmesg_show(STDOUT_FILENO, buf, n);
+	if (n < 0)
+		eprintf("dmesg_show:");
 
 	if (cflag && klogctl(SYSLOG_ACTION_CLEAR, NULL, 0) < 0)
 		eprintf("klogctl:");
@@ -79,30 +72,13 @@ main(int argc, char *argv[])
 static int
 dmesg_show(int fd, const void *buf, size_t n)
 {
-	int last = '\n';
-	char *newbuf, *q;
 	const char *p = buf;
 	ssize_t r;
-	size_t i;
 
-	newbuf = calloc(n, sizeof(char));
-	q = newbuf;
-	for (i = 0; i < n; ) {
-		if (last == '\n' && p[i] == '<') {
-			i += 2;
-			if (i + 1 < n && p[i + 1] == '>')
-				i++;
-		} else {
-			*q++ = p[i];
-		}
-		last = p[i++];
-	}
-	r = write(fd, newbuf, n);
-	free(newbuf);
-	if(r < 0 || (size_t)r != n)
+	r = write(fd, p, n);
+	if (r < 0 || (size_t)r != n)
 		return -1;
-	if (last != '\n')
-		if (write(fd, "\n", 1) != 1)
-			return -1;
+	if (p[n - 1] != '\n')
+		putchar('\n');
 	return 0;
 }

@@ -88,9 +88,9 @@ main(int argc, char *argv[])
 	strlcpy(usr.ut_line, tty, sizeof(usr.ut_line));
 	usr.ut_tv.tv_sec = time(NULL);
 
-	fp = fopen("/var/run/utmp", "a");
+	fp = fopen(UTMP_PATH, "a");
 	if (!fp)
-		weprintf("fopen %s:", "/var/run/utmp");
+		weprintf("fopen %s:", UTMP_PATH);
 	fwrite(&usr, sizeof(usr), 1, fp);
 	fclose(fp);
 

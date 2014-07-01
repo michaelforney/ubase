@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <utmp.h>
 
+#include "config.h"
 #include "util.h"
 
 static void
@@ -43,8 +44,8 @@ main(int argc, char *argv[])
 	if (argc > 0)
 		usage();
 
-	if (!(ufp = fopen("/var/run/utmp", "r")))
-		eprintf("fopen: %s:", "/var/run/utmp");
+	if (!(ufp = fopen(UTMP_PATH, "r")))
+		eprintf("fopen: %s:", UTMP_PATH);
 
 	while(fread(&usr, sizeof(usr), 1, ufp) == 1) {
 		if (!*usr.ut_name || !*usr.ut_line ||

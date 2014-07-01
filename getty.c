@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <utmp.h>
 
+#include "config.h"
 #include "util.h"
 
 static void
@@ -89,7 +90,7 @@ main(int argc, char *argv[])
 		eprintf("chmod %s:", tty);
 
 	/* Clear all utmp entries for this tty */
-	fp = fopen("/var/run/utmp", "r+");
+	fp = fopen(UTMP_PATH, "r+");
 	if (fp) {
 		do {
 			pos = ftell(fp);
@@ -105,7 +106,7 @@ main(int argc, char *argv[])
 				break;
 		} while (1);
 		if (ferror(fp))
-			weprintf("%s: I/O error:", "/var/run/utmp");
+			weprintf("%s: I/O error:", UTMP_PATH);
 		fclose(fp);
 	}
 

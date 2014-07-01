@@ -7,6 +7,7 @@
 #include <time.h>
 #include <utmpx.h>
 
+#include "config.h"
 #include "util.h"
 
 static void
@@ -49,7 +50,7 @@ main(int argc, char *argv[])
 	else
 		printf("%d min, ", minutes);
 
-	if ((ufp = fopen("/var/run/utmp", "r"))) {
+	if ((ufp = fopen(UTMP_PATH, "r"))) {
 		while ((n = fread(&utx, sizeof(utx), 1, ufp)) > 0) {
 			if (!utx.ut_user[0])
 				continue;

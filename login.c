@@ -8,7 +8,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
+#include <utmp.h>
 
 #include "config.h"
 #include "passwd.h"
@@ -26,7 +28,10 @@ int
 main(int argc, char *argv[])
 {
 	struct passwd *pw;
+	struct utmp usr;
+	FILE *fp;
 	char *pass;
+	char *tty;
 	uid_t uid;
 	gid_t gid;
 	int pflag = 0;
@@ -70,6 +75,24 @@ main(int argc, char *argv[])
 		eprintf("setgid:");
 	if (setuid(uid) < 0)
 		eprintf("setuid:");
+
+	/* Write utmp entry */
+	memset(&usr, 0, sizeof(usr));
+
+	tty = ttyname(STDIN_FILENO);
+	if (!tty)
+		tty = "?";
+	usr.ut_type = USER_PROCESS;
+	usr.ut_pid = getpid();
+	strlcpy(usr.ut_user, argv[0], sizeof(usr.ut_user));
+	strlcpy(usr.ut_line, tty, sizeof(usr.ut_line));
+	usr.ut_tv.tv_sec = time(NULL);
+
+	fp = fopen("/var/run/utmp", "a");
+	if (!fp)
+		weprintf("fopen %s:", "/var/run/utmp");
+	fwrite(&usr, sizeof(usr), 1, fp);
+	fclose(fp);
 
 	return dologin(pw, pflag);
 }

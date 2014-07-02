@@ -91,7 +91,9 @@ main(int argc, char *argv[])
 	fp = fopen(UTMP_PATH, "a");
 	if (!fp)
 		weprintf("fopen %s:", UTMP_PATH);
-	fwrite(&usr, sizeof(usr), 1, fp);
+	if (fwrite(&usr, sizeof(usr), 1, fp) != 1)
+		if (ferror(fp))
+			weprintf("%s: write error:", UTMP_PATH);
 	fclose(fp);
 
 	return dologin(pw, pflag);

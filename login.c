@@ -81,7 +81,7 @@ main(int argc, char *argv[])
 
 	tty = ttyname(STDIN_FILENO);
 	if (!tty)
-		tty = "?";
+		eprintf("ttyname:");
 	usr.ut_type = USER_PROCESS;
 	usr.ut_pid = getpid();
 	strlcpy(usr.ut_user, argv[0], sizeof(usr.ut_user));

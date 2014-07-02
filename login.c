@@ -89,12 +89,14 @@ main(int argc, char *argv[])
 	usr.ut_tv.tv_sec = time(NULL);
 
 	fp = fopen(UTMP_PATH, "a");
-	if (!fp)
+	if (fp) {
+		if (fwrite(&usr, sizeof(usr), 1, fp) != 1)
+			if (ferror(fp))
+				weprintf("%s: write error:", UTMP_PATH);
+		fclose(fp);
+	} else {
 		weprintf("fopen %s:", UTMP_PATH);
-	if (fwrite(&usr, sizeof(usr), 1, fp) != 1)
-		if (ferror(fp))
-			weprintf("%s: write error:", UTMP_PATH);
-	fclose(fp);
+	}
 
 	return dologin(pw, pflag);
 }

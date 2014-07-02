@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <utmp.h>
 
 #include "util.h"
 
@@ -25,12 +26,15 @@ static char *defaultterm = "linux";
 int
 main(int argc, char *argv[])
 {
-	int fd;
-	struct sigaction sa;
 	char term[128], logname[LOGIN_NAME_MAX], c;
 	char hostname[HOST_NAME_MAX + 1];
+	struct utmp usr;
+	struct sigaction sa;
+	FILE *fp;
+	int fd;
 	unsigned int i = 0;
 	ssize_t n;
+	long pos;
 
 	ARGBEGIN {
 	default:
@@ -83,6 +87,27 @@ main(int argc, char *argv[])
 		eprintf("fchown %s:", tty);
 	if (fchmod(fd, 0600) < 0)
 		eprintf("chmod %s:", tty);
+
+	/* Clear all utmp entries for this tty */
+	fp = fopen("/var/run/utmp", "r+");
+	if (fp) {
+		do {
+			pos = ftell(fp);
+			if (fread(&usr, sizeof(usr), 1, fp) != 1)
+				break;
+			if (usr.ut_line[0] == '\0')
+				continue;
+			if (strcmp(usr.ut_line, tty) != 0)
+				continue;
+			memset(&usr, 0, sizeof(usr));
+			fseek(fp, pos, SEEK_SET);
+			if (fwrite(&usr, sizeof(usr), 1, fp) != 1)
+				break;
+		} while (1);
+		if (ferror(fp))
+			weprintf("%s: I/O error:", "/var/run/utmp");
+		fclose(fp);
+	}
 
 	if (argc > 2)
 		return execvp(argv[2], argv + 2);

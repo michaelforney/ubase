@@ -107,6 +107,7 @@ main(int argc, char *argv[])
 
 	for (pe = TAILQ_FIRST(&omitpid_head); pe; pe = tmp) {
 		tmp = TAILQ_NEXT(pe, entry);
+		TAILQ_REMOVE(&omitpid_head, pe, entry);
 		free(pe);
 	}
 

@@ -33,11 +33,12 @@ main(int argc, char *argv[])
 	if (argc > 0)
 		usage();
 
-	printf("%-23s Size  Used by\n", "Module");
-
 	fp = fopen(modfile, "r");
 	if (!fp)
 		eprintf("fopen %s:", modfile);
+
+	printf("%-23s Size  Used by\n", "Module");
+
 	while (agetline(&buf, &bufsize, fp) != -1) {
 		parse_modline(buf, &name, &size, &refcount, &users);
 		if (!name || !size || !refcount || !users)

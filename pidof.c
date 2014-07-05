@@ -33,7 +33,7 @@ main(int argc, char *argv[])
 	struct dirent *entry;
 	pid_t pid;
 	struct procstat ps;
-	char cmdline[BUFSIZ], *cmd, *p, *arg = NULL;
+	char cmdline[BUFSIZ], *cmd, *cmdbase = NULL, *p, *arg = NULL;
 	int i, found = 0;
 	int sflag = 0, oflag = 0;
 	struct pidentry *pe, *tmp;
@@ -83,16 +83,19 @@ main(int argc, char *argv[])
 		if (parsecmdline(ps.pid, cmdline,
 				 sizeof(cmdline)) < 0) {
 			cmd = ps.comm;
+			cmdbase = cmd;
 		} else {
 			if ((p = strchr(cmdline, ' ')))
 				*p = '\0';
-			cmd = basename(cmdline);
+			cmd = cmdline;
+			cmdbase = basename(cmdline);
 		}
 		/* Workaround for login shells */
 		if (cmd[0] == '-')
 			cmd++;
 		for (i = 0; i < argc; i++) {
-			if (strcmp(cmd, argv[i]) == 0) {
+			if (strcmp(cmd, argv[i]) == 0 ||
+			    strcmp(cmdbase, argv[0]) == 0) {
 				putword(entry->d_name);
 				found++;
 				if (sflag)

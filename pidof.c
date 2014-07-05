@@ -95,7 +95,7 @@ main(int argc, char *argv[])
 			cmd++;
 		for (i = 0; i < argc; i++) {
 			if (strcmp(cmd, argv[i]) == 0 ||
-			    strcmp(cmdbase, argv[0]) == 0) {
+			    strcmp(cmdbase, argv[i]) == 0) {
 				putword(entry->d_name);
 				found++;
 				if (sflag)

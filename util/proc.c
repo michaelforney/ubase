@@ -43,6 +43,7 @@ parsestat(pid_t pid, struct procstat *ps)
 {
 	char path[PATH_MAX];
 	FILE *fp;
+	size_t len;
 
 	snprintf(path, sizeof(path), "/proc/%d/stat", pid);
 	if (!(fp = fopen(path, "r")))
@@ -58,8 +59,10 @@ parsestat(pid_t pid, struct procstat *ps)
 	       &ps->num_threads, &ps->itrealvalue, &ps->starttime,
 	       &ps->vsize, &ps->rss, &ps->rsslim);
 	/* Filter out '(' and ')' from comm */
-	ps->comm[strlen(ps->comm) - 1] = '\0';
-	memmove(ps->comm, ps->comm + 1, strlen(ps->comm));
+	if((len = strlen(ps->comm)) > 0)
+		len--;
+	ps->comm[len] = '\0';
+	memmove(ps->comm, ps->comm + 1, len);
 	fclose(fp);
 	return 0;
 }

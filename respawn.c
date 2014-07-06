@@ -7,11 +7,21 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
 #include "util.h"
+
+static void
+sigterm(int sig)
+{
+	if (sig == SIGTERM) {
+		kill(0, SIGTERM);
+		_exit(EXIT_SUCCESS);
+	}
+}
 
 static void
 usage(void)
@@ -48,6 +58,8 @@ main(int argc, char *argv[])
 	if (fifo && delay > 0)
 		usage();
 
+	signal(SIGTERM, sigterm);
+
 	if (fifo) {
 		fd = open(fifo, O_RDWR | O_NONBLOCK);
 		if (fd < 0)
@@ -74,8 +86,6 @@ main(int argc, char *argv[])
 			eprintf("fork:");
 		switch (pid) {
 		case 0:
-			if (setsid() < 0)
-				eprintf("setsid:");
 			execvp(argv[0], argv);
 			savederrno = errno;
 			weprintf("execvp %s:", argv[0]);

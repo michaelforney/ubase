@@ -58,6 +58,8 @@ main(int argc, char *argv[])
 	if (fifo && delay > 0)
 		usage();
 
+	setsid();
+
 	signal(SIGTERM, sigterm);
 
 	if (fifo) {

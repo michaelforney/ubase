@@ -24,13 +24,36 @@ usage(void)
 	eprintf("usage: %s [-p] username\n", argv0);
 }
 
+/* Write utmp entry */
+static void
+writeutmp(const char *user, const char *tty) {
+	struct utmp usr;
+	FILE *fp;
+
+	memset(&usr, 0, sizeof(usr));
+
+	usr.ut_type = USER_PROCESS;
+	usr.ut_pid = getpid();
+	strlcpy(usr.ut_user, user, sizeof(usr.ut_user));
+	strlcpy(usr.ut_line, tty, sizeof(usr.ut_line));
+	usr.ut_tv.tv_sec = time(NULL);
+
+	fp = fopen(UTMP_PATH, "a");
+	if (fp) {
+		if (fwrite(&usr, sizeof(usr), 1, fp) != 1)
+			if (ferror(fp))
+				weprintf("%s: write error:", UTMP_PATH);
+		fclose(fp);
+	} else {
+		weprintf("fopen %s:", UTMP_PATH);
+	}
+}
+
 int
 main(int argc, char *argv[])
 {
 	struct passwd *pw;
-	struct utmp usr;
-	FILE *fp;
-	char *pass;
+	char *pass, *user;
 	char *tty;
 	uid_t uid;
 	gid_t gid;
@@ -51,9 +74,10 @@ main(int argc, char *argv[])
 		eprintf("stdin is not a tty\n");
 
 	errno = 0;
-	pw = getpwnam(argv[0]);
+	user = argv[0];
+	pw = getpwnam(user);
 	if (errno)
-		eprintf("getpwnam: %s:", argv[0]);
+		eprintf("getpwnam: %s:", user);
 	else if (!pw)
 		eprintf("who are you?\n");
 
@@ -69,34 +93,18 @@ main(int argc, char *argv[])
 	if (pw_check(pw, pass) <= 0)
 		exit(EXIT_FAILURE);
 
-	if (initgroups(argv[0], gid) < 0)
+	tty = ttyname(STDIN_FILENO);
+	if (!tty)
+		eprintf("ttyname:");
+
+	writeutmp(user, tty);
+
+	if (initgroups(user, gid) < 0)
 		eprintf("initgroups:");
 	if (setgid(gid) < 0)
 		eprintf("setgid:");
 	if (setuid(uid) < 0)
 		eprintf("setuid:");
-
-	/* Write utmp entry */
-	memset(&usr, 0, sizeof(usr));
-
-	tty = ttyname(STDIN_FILENO);
-	if (!tty)
-		eprintf("ttyname:");
-	usr.ut_type = USER_PROCESS;
-	usr.ut_pid = getpid();
-	strlcpy(usr.ut_user, argv[0], sizeof(usr.ut_user));
-	strlcpy(usr.ut_line, tty, sizeof(usr.ut_line));
-	usr.ut_tv.tv_sec = time(NULL);
-
-	fp = fopen(UTMP_PATH, "a");
-	if (fp) {
-		if (fwrite(&usr, sizeof(usr), 1, fp) != 1)
-			if (ferror(fp))
-				weprintf("%s: write error:", UTMP_PATH);
-		fclose(fp);
-	} else {
-		weprintf("fopen %s:", UTMP_PATH);
-	}
 
 	return dologin(pw, pflag);
 }

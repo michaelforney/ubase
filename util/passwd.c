@@ -38,11 +38,11 @@ pw_check(struct passwd *pw, const char *pass)
 	if (pw->pw_passwd[0] == 'x' && pw->pw_passwd[1] == '\0') {
 		errno = 0;
 		spw = getspnam(pw->pw_name);
-		if (errno) {
-			weprintf("getspnam: %s:", pw->pw_name);
-			return -1;
-		} else if (!spw) {
-			weprintf("who are you?\n");
+		if (!spw) {
+			if (errno)
+				weprintf("getspnam: %s:", pw->pw_name);
+			else
+				weprintf("who are you?\n");
 			return -1;
 		}
 		p = spw->sp_pwdp;

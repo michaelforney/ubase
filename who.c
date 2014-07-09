@@ -47,7 +47,7 @@ main(int argc, char *argv[])
 	if (!(ufp = fopen(UTMP_PATH, "r")))
 		eprintf("fopen: %s:", UTMP_PATH);
 
-	while(fread(&usr, sizeof(usr), 1, ufp) == 1) {
+	while (fread(&usr, sizeof(usr), 1, ufp) == 1) {
 		if (!*usr.ut_name || !*usr.ut_line ||
 		    usr.ut_line[0] == '~')
 			continue;

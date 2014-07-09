@@ -26,7 +26,8 @@ usage(void)
 
 /* Write utmp entry */
 static void
-writeutmp(const char *user, const char *tty) {
+writeutmp(const char *user, const char *tty)
+{
 	struct utmp usr;
 	FILE *fp;
 

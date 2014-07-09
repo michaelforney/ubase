@@ -41,26 +41,26 @@ parseopts(char *popts, unsigned long *flags, char *data, size_t datasiz)
 	char *name;
 
 	data[0] = '\0';
-	for(name = strtok(popts, ","); name; name = strtok(NULL, ",")) {
+	for (name = strtok(popts, ","); name; name = strtok(NULL, ",")) {
 		validopt = 0;
-		for(i = 0; optnames[i].opt; i++) {
-			if(optnames[i].opt && strcmp(name, optnames[i].opt) == 0) {
+		for (i = 0; optnames[i].opt; i++) {
+			if (optnames[i].opt && strcmp(name, optnames[i].opt) == 0) {
 				*flags |= optnames[i].v;
 				validopt = 1;
 				break;
 			}
-			if(optnames[i].notopt && strcmp(name, optnames[i].notopt) == 0) {
+			if (optnames[i].notopt && strcmp(name, optnames[i].notopt) == 0) {
 				*flags &= ~optnames[i].v;
 				validopt = 1;
 				break;
 			}
 		}
-		if(!validopt) {
+		if (!validopt) {
 			/* unknown option, pass as data option to mount() */
-			if((optlen = strlen(name))) {
-				if(dlen + optlen + 2 >= datasiz)
+			if ((optlen = strlen(name))) {
+				if (dlen + optlen + 2 >= datasiz)
 					return; /* prevent overflow */
-				if(dlen)
+				if (dlen)
 					data[dlen++] = ',';
 				memcpy(&data[dlen], name, optlen);
 				dlen += optlen;
@@ -110,9 +110,9 @@ catfile(FILE *in, FILE *out)
 	char buf[BUFSIZ];
 	size_t bytesread;
 
-	while(!feof(in)) {
+	while (!feof(in)) {
 		bytesread = fread(buf, 1, sizeof(buf), in);
-		if(ferror(in))
+		if (ferror(in))
 			return 0;
 		fwrite(buf, 1, bytesread, out);
 	}
@@ -157,10 +157,10 @@ main(int argc, char *argv[])
 		usage();
 	} ARGEND;
 
-	if(argc < 1 && aflag == 0) {
-		if(!(fp = fopen(files[0], "r")))
+	if (argc < 1 && aflag == 0) {
+		if (!(fp = fopen(files[0], "r")))
 			eprintf("fopen %s:", files[0]);
-		if(catfile(fp, stdout) != 1) {
+		if (catfile(fp, stdout) != 1) {
 			weprintf("error while reading %s:", files[0]);
 			status = EXIT_FAILURE;
 		}
@@ -168,38 +168,38 @@ main(int argc, char *argv[])
 		return status;
 	}
 
-	if(aflag == 1)
+	if (aflag == 1)
 		goto mountall;
 
 	source = argv[0];
 	target = argv[1];
 
-	if(!target) {
+	if (!target) {
 		target = argv[0];
 		source = NULL;
-		if(!(resolvpath = realpath(target, NULL)))
+		if (!(resolvpath = realpath(target, NULL)))
 			eprintf("realpath %s:", target);
 		target = resolvpath;
 	}
 
-	for(i = 0; files[i]; i++) {
-		if(!(fp = setmntent(files[i], "r"))) {
+	for (i = 0; files[i]; i++) {
+		if (!(fp = setmntent(files[i], "r"))) {
 			if (strcmp(files[i], "/proc/mounts") != 0)
 				weprintf("setmntent %s:", files[i]);
 			continue;
 		}
-		while((me = getmntent(fp))) {
-			if(strcmp(me->mnt_dir, target) == 0 ||
+		while ((me = getmntent(fp))) {
+			if (strcmp(me->mnt_dir, target) == 0 ||
 			   strcmp(me->mnt_fsname, target) == 0 ||
 			   (source && strcmp(me->mnt_dir, source) == 0) ||
 			   (source && strcmp(me->mnt_fsname, source) == 0)) {
-				if(!source) {
+				if (!source) {
 					target = me->mnt_dir;
 					source = me->mnt_fsname;
 				}
-				if(!oflag)
+				if (!oflag)
 					parseopts(me->mnt_opts, &flags, data, datasiz);
-				if(!types)
+				if (!types)
 					types = me->mnt_type;
 				goto mountsingle;
 			}
@@ -207,27 +207,27 @@ main(int argc, char *argv[])
 		endmntent(fp);
 		fp = NULL;
 	}
-	if(!source)
+	if (!source)
 		eprintf("can't find %s in /etc/fstab\n", target);
 
 mountsingle:
-	if(mount(source, target, types, flags, data) < 0) {
+	if (mount(source, target, types, flags, data) < 0) {
 		weprintf("mount: %s:", source);
 		status = EXIT_FAILURE;
 	}
-	if(fp)
+	if (fp)
 		endmntent(fp);
 	free(resolvpath);
 	return status;
 
 mountall:
-	if(!(fp = setmntent("/etc/fstab", "r")))
+	if (!(fp = setmntent("/etc/fstab", "r")))
 		eprintf("setmntent %s:", "/etc/fstab");
-	while((me = getmntent(fp))) {
+	while ((me = getmntent(fp))) {
 		flags = 0;
 		parseopts(me->mnt_opts, &flags, data, datasiz);
-		if(mount(me->mnt_fsname, me->mnt_dir, me->mnt_type, flags, data) < 0) {
-			if(mounted(me->mnt_dir) == 0) {
+		if (mount(me->mnt_fsname, me->mnt_dir, me->mnt_type, flags, data) < 0) {
+			if (mounted(me->mnt_dir) == 0) {
 				weprintf("mount: %s:", me->mnt_fsname);
 				status = EXIT_FAILURE;
 			}

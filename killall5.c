@@ -52,15 +52,15 @@ main(int argc, char *argv[])
 	case 's':
 		v = EARGF(usage());
 		sig = strtol(v, &end, 0);
-		if(*end == '\0')
+		if (*end == '\0')
 			break;
-		for(i = 0; i < LEN(sigs); i++) {
-			if(strcasecmp(v, sigs[i].name) == 0) {
+		for (i = 0; i < LEN(sigs); i++) {
+			if (strcasecmp(v, sigs[i].name) == 0) {
 				sig = sigs[i].sig;
 				break;
 			}
 		}
-		if(i == LEN(sigs))
+		if (i == LEN(sigs))
 			eprintf("%s: unknown signal\n", v);
 		break;
 	case 'o':

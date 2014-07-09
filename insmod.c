@@ -42,7 +42,7 @@ main(int argc, char *argv[])
 	buf = emalloc(blen);
 
 	n = read(fd, buf, blen);
-	if(n < 0 || (size_t)n != blen)
+	if (n < 0 || (size_t)n != blen)
 		eprintf("read:");
 
 	argc--;

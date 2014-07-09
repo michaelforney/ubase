@@ -85,7 +85,7 @@ usernam(const char *nam)
 
 	errno = 0;
 	pw = getpwnam(nam);
-	if(!pw) {
+	if (!pw) {
 		if (errno)
 			eprintf("getpwnam %s:", nam);
 		else
@@ -104,7 +104,7 @@ userid(uid_t id)
 
 	errno = 0;
 	pw = getpwuid(id);
-	if(!pw) {
+	if (!pw) {
 		if (errno)
 			eprintf("getpwuid %d:", id);
 		else

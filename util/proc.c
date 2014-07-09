@@ -59,7 +59,7 @@ parsestat(pid_t pid, struct procstat *ps)
 	       &ps->num_threads, &ps->itrealvalue, &ps->starttime,
 	       &ps->vsize, &ps->rss, &ps->rsslim);
 	/* Filter out '(' and ')' from comm */
-	if((len = strlen(ps->comm)) > 0)
+	if ((len = strlen(ps->comm)) > 0)
 		len--;
 	ps->comm[len] = '\0';
 	memmove(ps->comm, ps->comm + 1, len);

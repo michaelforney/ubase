@@ -30,16 +30,16 @@ main(int argc, char *argv[])
 		usage();
 	} ARGEND;
 
-	if(argc != 4)
+	if (argc != 4)
 		usage();
 
-	if(strlen(argv[1]) != 1 || !strchr("ucb", argv[1][0]))
+	if (strlen(argv[1]) != 1 || !strchr("ucb", argv[1][0]))
 		eprintf("mknod: '%s': invalid type\n", argv[1]);
 	type = (argv[1][0] == 'b') ? S_IFBLK : S_IFCHR;
 
 	dev = makedev(estrtol(argv[2], 0), estrtol(argv[3], 0));
 
-	if(mknod(argv[0], type|mode, dev) == -1)
+	if (mknod(argv[0], type|mode, dev) == -1)
 		eprintf("mknod: '%s':", argv[0]);
 	return EXIT_SUCCESS;
 }

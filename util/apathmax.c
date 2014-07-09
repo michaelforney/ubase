@@ -11,8 +11,8 @@ apathmax(char **p, long *size)
 {
 	errno = 0;
 
-	if((*size = pathconf("/", _PC_PATH_MAX)) == -1) {
-		if(errno == 0) {
+	if ((*size = pathconf("/", _PC_PATH_MAX)) == -1) {
+		if (errno == 0) {
 			*size = BUFSIZ;
 		} else {
 			eprintf("pathconf:");

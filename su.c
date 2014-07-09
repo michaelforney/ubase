@@ -55,7 +55,7 @@ main(int argc, char *argv[])
 
 	errno = 0;
 	pw = getpwnam(usr);
-	if(!pw) {
+	if (!pw) {
 		if (errno)
 			eprintf("getpwnam: %s:", usr);
 		else

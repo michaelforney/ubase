@@ -52,7 +52,7 @@ main(int argc, char *argv[])
 		usage();
 	} ARGEND;
 
-	if(argc < 1)
+	if (argc < 1)
 		usage();
 
 	if (fifo && delay > 0)

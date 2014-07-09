@@ -118,7 +118,7 @@ main(int argc, char *argv[])
 	/* if -c is set, redirect stdin/stdout/stderr to console */
 	if (console) {
 		close(STDIN_FILENO);
-		if(open(console, O_RDWR) == -1)
+		if (open(console, O_RDWR) == -1)
 			eprintf("open %s:", console);
 		if (dup2(STDIN_FILENO, STDOUT_FILENO) != STDOUT_FILENO)
 			eprintf("dup2 %s:", "stdin,stdout");

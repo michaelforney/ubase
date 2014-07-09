@@ -55,10 +55,12 @@ main(int argc, char *argv[])
 
 	errno = 0;
 	pw = getpwnam(usr);
-	if (errno)
-		eprintf("getpwnam: %s:", usr);
-	else if (!pw)
-		eprintf("who are you?\n");
+	if(!pw) {
+		if (errno)
+			eprintf("getpwnam: %s:", usr);
+		else
+			eprintf("who are you?\n");
+	}
 
 	uid = getuid();
 	if (uid) {

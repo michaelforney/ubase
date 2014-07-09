@@ -42,7 +42,6 @@ main(int argc, char *argv[])
 		usage();
 	} ARGEND;
 
-	errno = 0;
 	switch (argc) {
 	case 0:
 		userid(getuid());
@@ -86,10 +85,12 @@ usernam(const char *nam)
 
 	errno = 0;
 	pw = getpwnam(nam);
-	if (errno != 0)
-		eprintf("getpwnam %s:", nam);
-	else if (!pw)
-		eprintf("getpwnam %s: no such user\n", nam);
+	if(!pw) {
+		if (errno)
+			eprintf("getpwnam %s:", nam);
+		else
+			eprintf("getpwnam %s: no such user\n", nam);
+	}
 	if (Gflag)
 		groupid(pw);
 	else
@@ -103,10 +104,12 @@ userid(uid_t id)
 
 	errno = 0;
 	pw = getpwuid(id);
-	if (errno != 0)
-		eprintf("getpwuid %d:", id);
-	else if (!pw)
-		eprintf("getpwuid %d: no such user\n", id);
+	if(!pw) {
+		if (errno)
+			eprintf("getpwuid %d:", id);
+		else
+			eprintf("getpwuid %d: no such user\n", id);
+	}
 	if (Gflag)
 		groupid(pw);
 	else

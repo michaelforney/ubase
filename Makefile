@@ -18,6 +18,7 @@ LIB = \
 	util/agetcwd.o        \
 	util/agetline.o       \
 	util/apathmax.o       \
+	util/concat.o         \
 	util/ealloc.o         \
 	util/eprintf.o        \
 	util/estrtol.o        \

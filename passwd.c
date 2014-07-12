@@ -209,7 +209,6 @@ newpass:
 		r = pw_copy(tfd, ffd, NULL);
 		if (r < 0)
 			goto cleanup;
-		close(ffd);
 	}
 	status = EXIT_SUCCESS;
 

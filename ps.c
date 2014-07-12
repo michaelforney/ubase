@@ -136,12 +136,8 @@ psout(struct procstat *ps)
 	} else {
 		errno = 0;
 		pw = getpwuid(pstatus.uid);
-		if (!pw) {
-			if (errno)
-				eprintf("getpwuid %d:", pstatus.uid);
-			else
-				eprintf("getpwuid %d: no such user\n", pstatus.uid);
-		}
+		if (!pw)
+			eprintf("getpwuid %d:", pstatus.uid);
 
 		if (sysinfo(&info) < 0)
 			eprintf("sysinfo:");

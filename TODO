@@ -27,6 +27,7 @@ Tools to be implemented
  * getcap
  * capchroot
  * fakeroot
+ * less or pg
 
 Misc
 ====

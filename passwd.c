@@ -5,19 +5,18 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <pwd.h>
+#include <shadow.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
-#include <limits.h>
-#include <shadow.h>
-
 #include "config.h"
 #include "passwd.h"
-#include "util.h"
 #include "text.h"
+#include "util.h"
 
 static void
 usage(void)

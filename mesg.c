@@ -39,9 +39,9 @@ main(int argc, char *argv[])
 		return EXIT_SUCCESS;
 	}
 
-	if (argv[0][0] == 'y')
+	if (argv[0][0] == 'y' && argv[0][1] == '\0')
 		mode = sb.st_mode | S_IWGRP | S_IWOTH;
-	else if (argv[0][0] == 'n')
+	else if (argv[0][0] == 'n' && argv[0][1] == '\0')
 		mode = sb.st_mode & ~(S_IWGRP | S_IWOTH);
 	else
 		usage();

@@ -28,6 +28,7 @@ Tools to be implemented
  * capchroot
  * fakeroot
  * less or pg
+ * ionice
 
 Misc
 ====

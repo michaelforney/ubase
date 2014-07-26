@@ -53,6 +53,7 @@ SRC = \
 	login.c             \
 	lsmod.c             \
 	lsusb.c             \
+	mesg.c              \
 	mknod.c             \
 	mkswap.c            \
 	mount.c             \

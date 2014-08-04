@@ -28,7 +28,7 @@ main(int argc, char *argv[])
 	if (argc > 1)
 		usage();
 
-	if (isatty(STDIN_FILENO) == 0)
+	if (isatty(STDERR_FILENO) == 0)
 		eprintf("stdin: not a tty\n");
 
 	if (fstat(STDIN_FILENO, &sb) < 0)

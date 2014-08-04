@@ -1,0 +1,19 @@
+.TH MESG 1 ubase-VERSION
+.SH NAME
+\fBmesg\fR - Display (do not display) messages from other users
+.SH SYNOPSIS
+\fBmesg\fR [\fBn\fR|\fBy\fR]
+.SH DESCRIPTION
+\fBmesg\fR controls write access others have to the terminal device associated
+with standard error output.  If write access is allowed, then programs such as \fBtalk\fR(1)
+and \fBwrite\fR(1) may display messages on the terminal.
+.SH OPTIONS
+.TP
+\fBn\fR
+Disallow messages.
+.TP
+\fBy\fR
+Allow messages.
+.SH SEE ALSO
+.TP
+write(1)

@@ -29,10 +29,10 @@ main(int argc, char *argv[])
 		usage();
 
 	if (isatty(STDERR_FILENO) == 0)
-		eprintf("stdin: not a tty\n");
+		eprintf("stderr: not a tty\n");
 
-	if (fstat(STDIN_FILENO, &sb) < 0)
-		eprintf("fstat stdin:");
+	if (fstat(STDERR_FILENO, &sb) < 0)
+		eprintf("fstat stderr:");
 
 	if (argc == 0) {
 		puts(sb.st_mode & (S_IWGRP | S_IWOTH) ? "is y" : "is n");
@@ -46,8 +46,8 @@ main(int argc, char *argv[])
 	else
 		usage();
 
-	if (fchmod(STDIN_FILENO, mode) < 0)
-		eprintf("fchmod stdin:");
+	if (fchmod(STDERR_FILENO, mode) < 0)
+		eprintf("fchmod stderr:");
 
 	return EXIT_SUCCESS;
 }

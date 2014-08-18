@@ -33,6 +33,7 @@ LIB = \
 	util/tty.o
 
 SRC = \
+	lastlog.c           \
 	chvt.c              \
 	clear.c             \
 	ctrlaltdel.c        \
@@ -115,6 +116,7 @@ MAN8 = \
 	hwclock.8           \
 	insmod.8            \
 	killall5.8          \
+	lastlog.8           \
 	lsmod.8             \
 	lsusb.8             \
 	mkswap.8            \

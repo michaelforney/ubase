@@ -1,4 +1,5 @@
 /* See LICENSE file for copyright and license details. */
+#include <errno.h>
 #include <paths.h>
 #include <pwd.h>
 #include <stdio.h>
@@ -6,6 +7,8 @@
 #include <string.h>
 #include <time.h>
 #include <utmp.h>
+
+#include "util.h"
 
 #define PASSWD   "/etc/passwd"
 
@@ -18,18 +21,20 @@ lastlog(char *user)
 	struct lastlog ll;
 	time_t lltime;
 
+	errno = 0;
 	if ((pwd = getpwnam(user)) == NULL) {
-		fprintf(stderr, "unknown user: %s\n", user);
+		if (errno)
+			weprintf("getpwnam %s:", user);
+		else
+			weprintf("unknown user: %s\n", user);
 		return;
 	}
 
 	fseek(last, pwd->pw_uid * sizeof(struct lastlog), 0);
 	fread(&ll, sizeof(struct lastlog), 1, last);
 
-	if (ferror(last)) {
-		perror("error reading lastlog");
-		exit(EXIT_FAILURE);
-	}
+	if (ferror(last))
+		eprintf("error reading lastlog\n");
 
 	/* on glibc `ll_time' can be an int32_t with compat32
 	 * avoid compiler warning when calling ctime() */
@@ -44,29 +49,23 @@ main(int argc, char **argv)
 	FILE *fp;
 	char line[512], *p;
 
-	if ((last = fopen(_PATH_LASTLOG, "r")) == NULL) {
-	    perror(_PATH_LASTLOG);
-	    exit(EXIT_FAILURE);
-	}
+	if ((last = fopen(_PATH_LASTLOG, "r")) == NULL)
+		eprintf("fopen %s:", _PATH_LASTLOG);
 
 	if (argc > 1) {
 		while (*++argv)
 			lastlog(*argv);
 	} else {
-		if ((fp = fopen(PASSWD, "r")) == NULL) {
-			perror(PASSWD);
-			exit(EXIT_FAILURE);
-		}
+		if ((fp = fopen(PASSWD, "r")) == NULL)
+			eprintf("fopen %s:", PASSWD);
 		while ((fgets(line, sizeof(line), fp)) != NULL) {
-			if ((p = strchr(line, ':')) == NULL) {
-				fputs("incorrect password file", stderr);
-				exit(-1);
-			}
+			if ((p = strchr(line, ':')) == NULL)
+				eprintf("invalid passwd entry\n");
 			*p = '\0';
 			lastlog(line);
 		}
 		if (fclose(fp))
-			perror(PASSWD);
+			weprintf("fclose %s:", PASSWD);
 	}
 
 	fclose(last);

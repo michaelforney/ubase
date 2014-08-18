@@ -79,7 +79,7 @@ main(int argc, char *argv[])
 	pw = getpwnam(user);
 	if (!pw) {
 		if (errno)
-			eprintf("getpwnam: %s:", user);
+			eprintf("getpwnam %s:", user);
 		else
 			eprintf("who are you?\n");
 	}

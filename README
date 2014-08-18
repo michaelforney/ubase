@@ -23,6 +23,7 @@ hwclock
 id
 insmod
 killall5
+lastlog
 login
 lsmod
 lsusb

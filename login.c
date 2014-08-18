@@ -74,13 +74,15 @@ main(int argc, char *argv[])
 	if (isatty(STDIN_FILENO) == 0)
 		eprintf("stdin is not a tty\n");
 
-	errno = 0;
 	user = argv[0];
+	errno = 0;
 	pw = getpwnam(user);
-	if (errno)
-		eprintf("getpwnam: %s:", user);
-	else if (!pw)
-		eprintf("who are you?\n");
+	if (!pw) {
+		if (errno)
+			eprintf("getpwnam: %s:", user);
+		else
+			eprintf("who are you?\n");
+	}
 
 	uid = pw->pw_uid;
 	gid = pw->pw_gid;

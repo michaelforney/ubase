@@ -8,6 +8,7 @@
 #include <time.h>
 #include <utmp.h>
 
+#include "text.h"
 #include "util.h"
 
 #define PASSWD   "/etc/passwd"
@@ -34,7 +35,7 @@ lastlog(char *user)
 	fread(&ll, sizeof(struct lastlog), 1, last);
 
 	if (ferror(last))
-		eprintf("error reading lastlog\n");
+		eprintf("%s: read error:", _PATH_LASTLOG);
 
 	/* on glibc `ll_time' can be an int32_t with compat32
 	 * avoid compiler warning when calling ctime() */
@@ -47,7 +48,8 @@ int
 main(int argc, char **argv)
 {
 	FILE *fp;
-	char line[512], *p;
+	char *line = NULL, *p;
+	size_t sz = 0;
 
 	if ((last = fopen(_PATH_LASTLOG, "r")) == NULL)
 		eprintf("fopen %s:", _PATH_LASTLOG);
@@ -58,17 +60,19 @@ main(int argc, char **argv)
 	} else {
 		if ((fp = fopen(PASSWD, "r")) == NULL)
 			eprintf("fopen %s:", PASSWD);
-		while ((fgets(line, sizeof(line), fp)) != NULL) {
+		while (agetline(&line, &sz, fp) != -1) {
 			if ((p = strchr(line, ':')) == NULL)
 				eprintf("invalid passwd entry\n");
 			*p = '\0';
 			lastlog(line);
 		}
 		if (fclose(fp))
-			weprintf("fclose %s:", PASSWD);
+			eprintf("fclose %s:", PASSWD);
+		free(line);
 	}
 
-	fclose(last);
+	if (fclose(last))
+		eprintf("fclose %s:", _PATH_LASTLOG);
 
 	return EXIT_SUCCESS;
 }

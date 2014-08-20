@@ -19,13 +19,16 @@ parsecmdline(pid_t pid, char *buf, size_t siz)
 	char path[PATH_MAX];
 	ssize_t n, i;
 
-	snprintf(path, sizeof(path), "/proc/%d/cmdline", pid);
+	snprintf(path, sizeof(path), "/proc/%ld/cmdline", (long)pid);
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
 		return -1;
-	n = read(fd, buf, siz - 1);
-	if (n < 0)
-		eprintf("read %s:", path);
+	n = read(fd, buf, siz > 0 ? siz - 1 : 0);
+	if (n < 0) {
+		weprintf("read %s:", path);
+		close(fd);
+		return -1;
+	}
 	if (!n) {
 		close(fd);
 		return -1;

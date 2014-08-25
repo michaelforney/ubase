@@ -31,10 +31,13 @@ main(int argc, char *argv[])
 	if (argc < 1)
 		usage();
 
-	strlcpy(cmd, argv[0], sizeof(cmd));
+	if (strlcpy(cmd, argv[0], sizeof(cmd)) >= sizeof(cmd))
+		eprintf("command too long\n");
 	for (i = 1; i < argc; i++) {
-		strlcat(cmd, " ", sizeof(cmd));
-		strlcat(cmd, argv[i], sizeof(cmd));
+		if (strlcat(cmd, " ", sizeof(cmd)) >= sizeof(cmd))
+			eprintf("command too long\n");
+		if (strlcat(cmd, argv[i], sizeof(cmd)) >= sizeof(cmd))
+			eprintf("command too long\n");
 	}
 
 	for (;;) {

@@ -90,7 +90,7 @@ main(int argc, char *argv[])
 	/* Flush pending input */
 	ioctl(STDIN_FILENO, TCFLSH, (void *)0);
 
-	pass = getpass("Password: "); putchar('\n');
+	pass = getpass("Password: ");
 	if (!pass)
 		eprintf("getpass:");
 	if (pw_check(pw, pass) <= 0)

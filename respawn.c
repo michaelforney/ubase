@@ -63,6 +63,7 @@ main(int argc, char *argv[])
 	signal(SIGTERM, sigterm);
 
 	if (fifo) {
+		/* TODO: we should use O_RDONLY and re-open the fd on EOF */
 		fd = open(fifo, O_RDWR | O_NONBLOCK);
 		if (fd < 0)
 			eprintf("open %s:", fifo);

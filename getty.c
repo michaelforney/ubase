@@ -126,7 +126,7 @@ main(int argc, char *argv[])
 		if (n < 0)
 			eprintf("read:");
 		if (n == 0)
-			return EXIT_FAILURE;
+			return 1;
 		if (i >= sizeof(logname) - 1)
 			eprintf("login name too long\n");
 		if (c == '\n' || c == '\r')
@@ -136,6 +136,6 @@ main(int argc, char *argv[])
 	if (logname[0] == '-')
 		eprintf("login name cannot start with '-'\n");
 	if (logname[0] == '\0')
-		return EXIT_FAILURE;
+		return 1;
 	return execlp("/bin/login", "login", "-p", logname, NULL);
 }

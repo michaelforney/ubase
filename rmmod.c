@@ -46,5 +46,5 @@ main(int argc, char *argv[])
 			eprintf("delete_module:");
 	}
 
-	return EXIT_SUCCESS;
+	return 0;
 }

@@ -51,7 +51,7 @@ main(int argc, char *argv[])
 	} ARGEND;
 
 	if (!argc)
-		return EXIT_FAILURE;
+		return 1;
 
 	TAILQ_INIT(&omitpid_head);
 
@@ -116,5 +116,5 @@ out:
 		free(pe);
 	}
 
-	return EXIT_SUCCESS;
+	return 0;
 }

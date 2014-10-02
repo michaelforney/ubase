@@ -15,7 +15,7 @@ usage(void)
 {
 	weprintf("usage: %s [-lfn] target...\n", argv0);
 	weprintf("usage: %s -a [-lfn]\n", argv0);
-	exit(EXIT_FAILURE);
+	exit(1);
 }
 
 int
@@ -24,7 +24,7 @@ main(int argc, char *argv[])
 	int i;
 	int aflag = 0;
 	int flags = 0;
-	int ret = EXIT_SUCCESS;
+	int ret = 0;
 
 	ARGBEGIN {
 	case 'a':
@@ -51,7 +51,7 @@ main(int argc, char *argv[])
 	for (i = 0; i < argc; i++) {
 		if (umount2(argv[i], flags) < 0) {
 			weprintf("umount2 %s:", argv[i]);
-			ret = EXIT_FAILURE;
+			ret = 1;
 		}
 	}
 	return ret;
@@ -79,7 +79,7 @@ umountall(int flags)
 	while (--len >= 0) {
 		if (umount2(mntdirs[len], flags) < 0) {
 			weprintf("umount2 %s:", mntdirs[len]);
-			ret = EXIT_FAILURE;
+			ret = 1;
 		}
 		free(mntdirs[len]);
 	}

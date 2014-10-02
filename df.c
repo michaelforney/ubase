@@ -48,7 +48,7 @@ main(int argc, char *argv[])
 	}
 	endmntent(fp);
 
-	return EXIT_SUCCESS;
+	return 0;
 }
 
 static void

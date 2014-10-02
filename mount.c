@@ -122,7 +122,7 @@ catfile(FILE *in, FILE *out)
 int
 main(int argc, char *argv[])
 {
-	int aflag = 0, oflag = 0, status = EXIT_SUCCESS, i;
+	int aflag = 0, oflag = 0, status = 0, i;
 	unsigned long flags = 0;
 	char *types = NULL, data[512] = "", *resolvpath = NULL;
 	char *files[] = { "/proc/mounts", "/etc/fstab", NULL };
@@ -162,7 +162,7 @@ main(int argc, char *argv[])
 			eprintf("fopen %s:", files[0]);
 		if (catfile(fp, stdout) != 1) {
 			weprintf("error while reading %s:", files[0]);
-			status = EXIT_FAILURE;
+			status = 1;
 		}
 		fclose(fp);
 		return status;
@@ -213,7 +213,7 @@ main(int argc, char *argv[])
 mountsingle:
 	if (mount(source, target, types, flags, data) < 0) {
 		weprintf("mount: %s:", source);
-		status = EXIT_FAILURE;
+		status = 1;
 	}
 	if (fp)
 		endmntent(fp);
@@ -229,7 +229,7 @@ mountall:
 		if (mount(me->mnt_fsname, me->mnt_dir, me->mnt_type, flags, data) < 0) {
 			if (mounted(me->mnt_dir) == 0) {
 				weprintf("mount: %s:", me->mnt_fsname);
-				status = EXIT_FAILURE;
+				status = 1;
 			}
 		}
 	}

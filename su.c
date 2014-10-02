@@ -68,7 +68,7 @@ main(int argc, char *argv[])
 		if (!pass)
 			eprintf("getpass:");
 		if (pw_check(pw, pass) <= 0)
-			exit(EXIT_FAILURE);
+			exit(1);
 	}
 
 	if (initgroups(usr, pw->pw_gid) < 0)
@@ -101,7 +101,7 @@ main(int argc, char *argv[])
 		weprintf("execve %s:", shell);
 		return (errno == ENOENT) ? 127 : 126;
 	}
-	return EXIT_SUCCESS;
+	return 0;
 }
 
 static int

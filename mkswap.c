@@ -84,5 +84,5 @@ main(int argc, char *argv[])
 	close(fd);
 	free(buf);
 
-	return EXIT_SUCCESS;
+	return 0;
 }

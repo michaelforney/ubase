@@ -18,7 +18,7 @@ int
 main(int argc, char *argv[])
 {
 	int i;
-	int ret = EXIT_SUCCESS;
+	int ret = 0;
 	int all = 0;
 
 	ARGBEGIN {
@@ -43,7 +43,7 @@ main(int argc, char *argv[])
 			if (strcmp(me->mnt_type, MNTTYPE_SWAP) == 0) {
 				if (swapoff(me->mnt_fsname) < 0) {
 					weprintf("swapoff %s:", me->mnt_fsname);
-					ret = EXIT_FAILURE;
+					ret = 1;
 				}
 			}
 		}
@@ -52,7 +52,7 @@ main(int argc, char *argv[])
 		for (i = 0; i < argc; i++) {
 			if (swapoff(argv[i]) < 0) {
 				weprintf("swapoff %s:", argv[i]);
-				ret = EXIT_FAILURE;
+				ret = 1;
 			}
 		}
 	}

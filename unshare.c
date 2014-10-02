@@ -50,5 +50,5 @@ main(int argc, char *argv[])
 	if (execvp(argv[0], argv) < 0)
 		eprintf("execvp:");
 
-	return EXIT_SUCCESS;
+	return 0;
 }

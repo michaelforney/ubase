@@ -18,7 +18,7 @@ int
 main(int argc, char *argv[])
 {
 	int cflag = 0, sflag = 0;
-	int fd, i, ret = EXIT_SUCCESS;
+	int fd, i, ret = 0;
 	long size = 0;
 
 	ARGBEGIN {
@@ -40,12 +40,12 @@ main(int argc, char *argv[])
 		fd = open(argv[i], O_WRONLY | (cflag ? 0 : O_CREAT), 0644);
 		if (fd < 0) {
 			weprintf("open: cannot open `%s' for writing:", argv[i]);
-			ret = EXIT_FAILURE;
+			ret = 1;
 			continue;
 		}
 		if (ftruncate(fd, size) < 0) {
 			weprintf("ftruncate: cannot open `%s' for writing:", argv[i]);
-			ret = EXIT_FAILURE;
+			ret = 1;
 		}
 		close(fd);
 	}

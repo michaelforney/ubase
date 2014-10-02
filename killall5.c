@@ -111,5 +111,5 @@ main(int argc, char *argv[])
 		free(pe);
 	}
 
-	return EXIT_SUCCESS;
+	return 0;
 }

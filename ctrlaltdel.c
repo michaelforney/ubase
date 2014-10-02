@@ -40,5 +40,5 @@ main(int argc, char *argv[])
 	if (syscall(__NR_reboot, LINUX_REBOOT_MAGIC1,
 		    LINUX_REBOOT_MAGIC2, cmd, NULL) < 0)
 		eprintf("reboot:");
-	return EXIT_SUCCESS;
+	return 0;
 }

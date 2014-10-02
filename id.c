@@ -31,10 +31,10 @@ main(int argc, char *argv[])
 	ARGBEGIN {
 	case 'g':
 		printf("%d\n", getegid());
-		return EXIT_SUCCESS;
+		return 0;
 	case 'u':
 		printf("%d\n", geteuid());
-		return EXIT_SUCCESS;
+		return 0;
 	case 'G':
 		Gflag = 1;
 		break;
@@ -57,7 +57,7 @@ main(int argc, char *argv[])
 		usage();
 	}
 
-	return EXIT_SUCCESS;
+	return 0;
 }
 
 static void

@@ -74,5 +74,5 @@ main(int argc, char **argv)
 	if (fclose(last))
 		eprintf("fclose %s:", _PATH_LASTLOG);
 
-	return EXIT_SUCCESS;
+	return 0;
 }

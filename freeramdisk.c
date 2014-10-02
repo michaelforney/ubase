@@ -35,5 +35,5 @@ main(int argc, char *argv[])
 	if (ioctl(fd, BLKFLSBUF, dev) < 0)
 		eprintf("BLKFLSBUF %s:", dev);
 	close(fd);
-	return EXIT_SUCCESS;
+	return 0;
 }

@@ -52,5 +52,5 @@ main(int argc, char *argv[])
 			eprintf("ioctl:");
 	}
 	close(fd);
-	return EXIT_SUCCESS;
+	return 0;
 }

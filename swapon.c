@@ -18,7 +18,7 @@ int
 main(int argc, char *argv[])
 {
 	int i;
-	int ret = EXIT_SUCCESS;
+	int ret = 0;
 	int flags = 0;
 	int all = 0;
 
@@ -51,7 +51,7 @@ main(int argc, char *argv[])
 			    && (hasmntopt(me, MNTOPT_NOAUTO) == NULL)) {
 				if (swapon(me->mnt_fsname, flags) < 0) {
 					weprintf("swapon %s:", me->mnt_fsname);
-					ret = EXIT_FAILURE;
+					ret = 1;
 				}
 			}
 		}
@@ -60,7 +60,7 @@ main(int argc, char *argv[])
 		for (i = 0; i < argc; i++) {
 			if (swapon(argv[i], flags) < 0) {
 				weprintf("swapon %s:", argv[i]);
-				ret = EXIT_FAILURE;
+				ret = 1;
 			}
 		}
 	}

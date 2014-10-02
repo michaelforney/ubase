@@ -53,7 +53,7 @@ main(int argc, char *argv[])
 		eprintf("%s: read error:", modfile);
 	free(buf);
 	fclose(fp);
-	return EXIT_SUCCESS;
+	return 0;
 }
 
 static void

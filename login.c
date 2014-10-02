@@ -94,7 +94,7 @@ main(int argc, char *argv[])
 	if (!pass)
 		eprintf("getpass:");
 	if (pw_check(pw, pass) <= 0)
-		exit(EXIT_FAILURE);
+		exit(1);
 
 	tty = ttyname(STDIN_FILENO);
 	if (!tty)

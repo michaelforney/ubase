@@ -27,5 +27,5 @@ main(int argc, char *argv[])
 	if (syscall(SYS_pivot_root, argv[0], argv[1]) < 0)
 		eprintf("pivot_root:");
 
-	return EXIT_SUCCESS;
+	return 0;
 }

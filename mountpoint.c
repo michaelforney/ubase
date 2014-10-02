@@ -51,7 +51,7 @@ main(int argc, char *argv[])
 				argv[0]);
 		printf("%u:%u\n", major(st1.st_rdev),
 		       minor(st1.st_rdev));
-		return EXIT_SUCCESS;
+		return 0;
 	}
 
 	if (!S_ISDIR(st1.st_mode))
@@ -60,7 +60,7 @@ main(int argc, char *argv[])
 	if (dflag) {
 		printf("%u:%u\n", major(st1.st_dev),
 		       minor(st1.st_dev));
-		return EXIT_SUCCESS;
+		return 0;
 	}
 
 	fp = setmntent("/proc/mounts", "r");

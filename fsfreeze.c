@@ -50,5 +50,5 @@ main(int argc, char *argv[])
 	if (ioctl(fd, fflag == 1 ? FIFREEZE : FITHAW, &p) < 0)
 		eprintf("%s %s:", fflag == 1 ? "FIFREEZE" : "FITHAW", argv[0]);
 	close(fd);
-	return EXIT_SUCCESS;
+	return 0;
 }

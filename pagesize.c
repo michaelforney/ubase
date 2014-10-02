@@ -28,5 +28,5 @@ main(int argc, char *argv[])
 			eprintf("can't determine pagesize\n");
 	}
 	printf("%ld\n", pagesz);
-	return EXIT_SUCCESS;
+	return 0;
 }

@@ -57,5 +57,5 @@ VTfound:
 		eprintf("VT_WAITACTIVE %d:", n);
 	close(fd);
 
-	return EXIT_SUCCESS;
+	return 0;
 }

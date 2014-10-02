@@ -129,5 +129,5 @@ main(int argc, char *argv[])
 	/* execute init */
 	execv(argv[1], argv);
 	eprintf("can't execute '%s'\n", argv[1]);
-	return EXIT_FAILURE;
+	return 1;
 }

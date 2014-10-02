@@ -34,5 +34,5 @@ main(int argc, char *argv[])
 			weprintf("readahead %s:", argv[0]);
 		fclose(fp);
 	}
-	return EXIT_SUCCESS;
+	return 0;
 }

@@ -42,5 +42,5 @@ main(int argc, char *argv[])
 		eprintf("posix_fallocate:");
 
 	close(fd);
-	return EXIT_SUCCESS;
+	return 0;
 }

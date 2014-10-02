@@ -141,7 +141,7 @@ main(int argc, char *argv[])
 	struct passwd *pw;
 	struct spwd *spw = NULL;
 	FILE *fp = NULL;
-	int r = -1, status = EXIT_FAILURE;
+	int r = -1, status = 1;
 
 	ARGBEGIN {
 	default:
@@ -245,7 +245,7 @@ newpass:
 			weprintf("fopen:");
 	}
 	if (!r)
-		status = EXIT_SUCCESS;
+		status = 0;
 
 	if (fp)
 		fclose(fp);

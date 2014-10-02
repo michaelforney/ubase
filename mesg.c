@@ -36,7 +36,7 @@ main(int argc, char *argv[])
 
 	if (argc == 0) {
 		puts(sb.st_mode & (S_IWGRP | S_IWOTH) ? "is y" : "is n");
-		return EXIT_SUCCESS;
+		return 0;
 	}
 
 	if (argv[0][0] == 'y' && argv[0][1] == '\0')
@@ -49,5 +49,5 @@ main(int argc, char *argv[])
 	if (fchmod(STDERR_FILENO, mode) < 0)
 		eprintf("fchmod stderr:");
 
-	return EXIT_SUCCESS;
+	return 0;
 }

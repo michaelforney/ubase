@@ -166,7 +166,7 @@ main(int argc, char *argv[])
 	char *file = NULL;
 	size_t size = 0;
 	int i;
-	int r = EXIT_SUCCESS;
+	int r = 0;
 
 	ARGBEGIN {
 	case 'p':
@@ -182,7 +182,7 @@ main(int argc, char *argv[])
 	if (!file) {
 		for (i = 0; i < argc; i++)
 			if (parsepair(argv[i]) < 0)
-				r = EXIT_FAILURE;
+				r = 1;
 	} else {
 		fp = fopen(file, "r");
 		if (!fp)
@@ -201,7 +201,7 @@ main(int argc, char *argv[])
 			}
 			p = buf;
 			if (parsepair(p) < 0)
-				r = EXIT_FAILURE;
+				r = 1;
 		}
 		if (ferror(fp))
 			eprintf("%s: read error:", file);

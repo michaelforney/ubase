@@ -6,5 +6,5 @@ int
 main(void)
 {
 	printf("\x1b[2J\x1b[H");
-	return EXIT_SUCCESS;
+	return 0;
 }

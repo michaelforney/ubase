@@ -69,5 +69,5 @@ main(int argc, char *argv[])
 	       info.loads[1] / 65536.0f,
 	       info.loads[2] / 65536.0f);
 
-	return EXIT_SUCCESS;
+	return 0;
 }

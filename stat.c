@@ -23,7 +23,7 @@ int
 main(int argc, char *argv[])
 {
 	struct stat st;
-	int i, ret = EXIT_SUCCESS;
+	int i, ret = 0;
 	int (*fn)(const char *, struct stat *) = lstat;
 	char *fnname = "lstat";
 	void (*showstat)(const char *, struct stat *) = show_stat;
@@ -49,7 +49,7 @@ main(int argc, char *argv[])
 	for (i = 0; i < argc; i++) {
 		if (fn(argv[i], &st) == -1) {
 			weprintf("%s %s:", fnname, argv[i]);
-			ret = EXIT_FAILURE;
+			ret = 1;
 			continue;
 		}
 		showstat(argv[i], &st);

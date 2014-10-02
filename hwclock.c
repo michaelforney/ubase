@@ -69,7 +69,7 @@ main(int argc, char *argv[])
 	else if (wflag == 1)
 		systohc(dev);
 
-	return EXIT_SUCCESS;
+	return 0;
 }
 
 static void

@@ -19,7 +19,7 @@ sigterm(int sig)
 {
 	if (sig == SIGTERM) {
 		kill(0, SIGTERM);
-		_exit(EXIT_SUCCESS);
+		_exit(0);
 	}
 }
 
@@ -102,5 +102,5 @@ main(int argc, char *argv[])
 			sleep(delay);
 	}
 	/* not reachable */
-	return EXIT_SUCCESS;
+	return 0;
 }

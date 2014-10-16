@@ -163,7 +163,7 @@ config.h:
 
 util.a: $(LIB)
 	@echo AR $@
-	@$(AR) -r -c $@ $(LIB)
+	@$(AR) -r -c $@ $?
 	@ranlib $@
 
 lastb: last

@@ -33,6 +33,7 @@ LIB = \
 	util/tty.o
 
 SRC = \
+	last.c              \
 	lastlog.c           \
 	chvt.c              \
 	clear.c             \
@@ -131,7 +132,7 @@ MAN8 = \
 	umount.8
 
 OBJ = $(SRC:.c=.o) $(LIB)
-BIN = $(SRC:.c=)
+BIN = $(SRC:.c=) lastb
 
 all: options binlib
 
@@ -164,6 +165,9 @@ util.a: $(LIB)
 	@echo AR $@
 	@$(AR) -r -c $@ $(LIB)
 	@ranlib $@
+
+lastb: last
+	ln -f last lastb
 
 install: all
 	@echo installing executables to $(DESTDIR)$(PREFIX)/bin

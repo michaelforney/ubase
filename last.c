@@ -12,11 +12,10 @@
 #include "config.h"
 #include "util.h"
 
-void
+static void
 usage(void)
 {
-	fputs("last [user]\n", stderr);
-	exit(1);
+	eprintf("usage: %s [user]\n", argv0);
 }
 
 int
@@ -27,18 +26,23 @@ main(int argc, char **argv)
 	char *user, *file, *prog;
 	time_t t;
 
+	ARGBEGIN {
+	default:
+		usage();
+	} ARGEND;
+
 	switch (argc) {
-	case 1:
+	case 0:
 		user = NULL;
 		break;
-	case 2:
-		user = argv[1];
+	case 1:
+		user = argv[0];
 		break;
 	default:
 		usage();
 	}
 
-	prog = basename(argv[0]);
+	prog = basename(argv0);
 	file = (!strcmp(prog, "last")) ? WTMP_PATH : BTMP_PATH;
 	if ((fp = fopen(file, "r")) == NULL)
                 eprintf("fopen %s:", file);

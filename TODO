@@ -29,6 +29,7 @@ Tools to be implemented
  * fakeroot
  * less or pg
  * ionice
+ * fuser
 
 Misc
 ====

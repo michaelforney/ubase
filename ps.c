@@ -3,6 +3,7 @@
 #include <sys/sysinfo.h>
 
 #include <errno.h>
+#include <libgen.h>
 #include <limits.h>
 #include <pwd.h>
 #include <stdio.h>

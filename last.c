@@ -1,5 +1,6 @@
 /* See LICENSE file for copyright and license details. */
 #include <errno.h>
+#include <libgen.h>
 #include <paths.h>
 #include <pwd.h>
 #include <stdio.h>

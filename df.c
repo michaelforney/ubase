@@ -8,6 +8,11 @@
 
 #include "util.h"
 
+static long blksize = 512;
+static int aflag = 0;
+static int hflag = 0;
+static int kflag = 0;
+
 static void mnt_show(const char *fsname, const char *dir);
 
 static void
@@ -21,21 +26,34 @@ main(int argc, char *argv[])
 {
 	struct mntent *me = NULL;
 	FILE *fp;
-	int aflag = 0;
 
 	ARGBEGIN {
 	case 'a':
 		aflag = 1;
 		break;
-	case 's':
 	case 'h':
+		hflag = 1;
+		break;
+	case 'k':
+		kflag = 1;
+		blksize = 1024;
+		break;
+	case 's':
 	case 'i':
 		eprintf("not implemented\n");
 	default:
 		usage();
 	} ARGEND;
 
-	printf("Filesystem  512-blocks      Used     Avail Capacity  Mounted on\n");
+	if (kflag && hflag)
+		hflag = 0;
+
+	if (hflag)
+		printf("Filesystem         Size       Used      "
+		       "Avail Capacity   Mounted on\n");
+	else
+		printf("Filesystem  %ld-blocks      Used     "
+		       "Avail Capacity  Mounted on\n", blksize);
 
 	fp = setmntent("/proc/mounts", "r");
 	if (!fp)
@@ -51,6 +69,45 @@ main(int argc, char *argv[])
 	return 0;
 }
 
+#define CALC_POWER(n, power, base, i) do { \
+	while (n > power) {                \
+		power = power * base;      \
+		i++;                       \
+	}                                  \
+} while(0)
+
+static void
+print_human(
+	const char         *fsname,
+	unsigned long long total,
+	unsigned long long used,
+	unsigned long long avail,
+	int                capacity,
+	const char         *dir)
+{
+	long base = 1024;
+	unsigned long long power_total = base;
+	unsigned long long power_used = base;
+	unsigned long long power_avail = base;
+	char postfixes[] = {'B', 'K', 'M', 'G', 'T', 'P', 'E'};
+	int i = 0, j = 0, k = 0;
+
+	total = total * blksize;
+	used = used * blksize;
+	avail = avail * blksize;
+
+	CALC_POWER(total, power_total, base, i);
+	CALC_POWER(used, power_used, base, j);
+	CALC_POWER(avail, power_avail, base, k);
+
+	total = i ? total / (power_total / base) : total;
+	used = j ? used / (power_used / base) : used;
+	avail = k ? avail / (power_avail / base) : avail;
+	printf("%-12s %9llu%c %9llu%c %9llu%c %7d%%  %s\n",
+	       fsname, total, postfixes[i], used, postfixes[j],
+	       avail, postfixes[k], capacity, dir);
+}
+
 static void
 mnt_show(const char *fsname, const char *dir)
 {
@@ -61,7 +118,7 @@ mnt_show(const char *fsname, const char *dir)
 
 	statvfs(dir, &s);
 
-	bs = s.f_frsize / 512;
+	bs = s.f_frsize / blksize;
 	total = s.f_blocks * bs;
 	avail = s.f_bfree * bs;
 	used = total - avail;
@@ -72,7 +129,9 @@ mnt_show(const char *fsname, const char *dir)
 			capacity++;
 	}
 
-	printf("%-12s %9llu %9llu %9llu %7d%%  %s\n",
-	       fsname, total, used, avail, capacity,
-	       dir);
+	if (hflag)
+		print_human(fsname, total, used, avail, capacity, dir);
+	else
+		printf("%-12s %9llu %9llu %9llu %7d%%  %s\n",
+		       fsname, total, used, avail, capacity, dir);
 }

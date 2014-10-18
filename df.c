@@ -33,9 +33,11 @@ main(int argc, char *argv[])
 		break;
 	case 'h':
 		hflag = 1;
+		kflag = 0;
 		break;
 	case 'k':
 		kflag = 1;
+		hflag = 0;
 		blksize = 1024;
 		break;
 	case 's':
@@ -44,9 +46,6 @@ main(int argc, char *argv[])
 	default:
 		usage();
 	} ARGEND;
-
-	if (kflag && hflag)
-		hflag = 0;
 
 	if (hflag)
 		printf("Filesystem         Size       Used      "

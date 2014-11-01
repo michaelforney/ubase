@@ -13,7 +13,6 @@ Tools to be implemented
  * rmuser
  * rmgroup
  * ifconfig
- * hwclock
  * partprobe
  * rfkill
  * taskset

@@ -1,37 +1,37 @@
-Tools to be implemented
-=======================
+Tools
+=====
 
- * vmstat(8)
- * top(1)
- * Better ps(1) support
- * swaplabel(8)
- * losetup(8)
- * lspci
- * mkswap [-L]
- * adduser
- * addgroup
- * rmuser
- * rmgroup
- * ifconfig
- * partprobe
- * rfkill
- * taskset
- * acpi
- * blkid
- * lsattr
- * pmap
- * pwdx
- * setcap
- * getcap
- * capchroot
- * fakeroot
- * less or pg
- * ionice
- * fuser
+vmstat
+top
+Better ps support
+swaplabel
+losetup
+lspci
+mkswap [-L]
+adduser
+addgroup
+rmuser
+rmgroup
+ifconfig
+partprobe
+rfkill
+taskset
+acpi
+blkid
+lsattr
+pmap
+pwdx
+setcap
+getcap
+capchroot
+fakeroot
+less or pg
+ionice
+fuser
 
 Misc
 ====
 
- * Decide what to do with 'bool vs int' debate.
- * Beautify passwd(1).
- * last(1) manpage.
+Decide what to do with 'bool vs int' debate.
+Beautify passwd(1).
+last(1) manpage.

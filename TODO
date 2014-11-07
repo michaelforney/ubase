@@ -34,3 +34,4 @@ Misc
 
  * Decide what to do with 'bool vs int' debate.
  * Beautify passwd(1).
+ * last(1) manpage.

@@ -210,7 +210,7 @@ ubase-box: config.h $(SRC) util.a
 	@echo '#include "util.h"'   >> build/$@.c
 	@for f in $(SRC); do echo "int `basename $$f .c`_main(int, char **);" >> build/$@.c; done
 	@echo 'int main(int argc, char *argv[]) { char *s = basename(argv[0]); if(!strcmp(s,"ubase-box")) { argc--; argv++; s = basename(argv[0]); } if(0) ;' >> build/$@.c
-	@for f in $(SRC); do echo "else if(!strcmp(s, \"`basename $$f .c`\")) `basename $$f .c`_main(argc, argv);" >> build/$@.c; done
+	@for f in $(SRC); do echo "else if(!strcmp(s, \"`basename $$f .c`\")) return `basename $$f .c`_main(argc, argv);" >> build/$@.c; done
 	@echo 'else {' >> build/$@.c
 	@for f in $(SRC); do echo "printf(\"`basename $$f .c`\"); putchar(' ');" >> build/$@.c; done
 	@echo "putchar(0xa); }; return 0; }" >> build/$@.c

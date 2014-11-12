@@ -63,31 +63,30 @@ main(int argc, char *argv[])
 		eprintf("open %s:", tty);
 	if (isatty(fd) == 0)
 		eprintf("%s is not a tty\n", tty);
-	if (ioctl(fd, TIOCSCTTY, (void *)1) == 0)
-		vhangup();
-	else
-		weprintf("TIOCSCTTY: could not set controlling tty\n");
 
+	/* steal the controlling terminal if necessary */
+	if (ioctl(fd, TIOCSCTTY, (void *)1) != 0)
+		weprintf("TIOCSCTTY: could not set controlling tty\n");
+	vhangup();
 	close(fd);
+
 	fd = open(tty, O_RDWR);
 	if (fd < 0)
 		eprintf("open %s:", tty);
-	if (dup2(fd, STDIN_FILENO) != STDIN_FILENO)
-		eprintf("dup2:");
-	if (dup2(fd, STDOUT_FILENO) != STDOUT_FILENO)
-		eprintf("dup2:");
-	if (dup2(fd, STDERR_FILENO) != STDERR_FILENO)
-		eprintf("dup2:");
+	dup2(fd, STDIN_FILENO);
+	dup2(fd, STDOUT_FILENO);
+	dup2(fd, STDERR_FILENO);
+	if (fchown(fd, 0, 0) < 0)
+		weprintf("fchown %s:", tty);
+	if (fchmod(fd, 0600) < 0)
+		weprintf("fchmod %s:", tty);
+	if (fd > 2)
+		close(fd);
 
 	sa.sa_handler = SIG_DFL;
 	sa.sa_flags = 0;
 	sigemptyset(&sa.sa_mask);
 	sigaction(SIGHUP, &sa, NULL);
-
-	if (fchown(fd, 0, 0) < 0)
-		eprintf("fchown %s:", tty);
-	if (fchmod(fd, 0600) < 0)
-		eprintf("chmod %s:", tty);
 
 	/* Clear all utmp entries for this tty */
 	fp = fopen(UTMP_PATH, "r+");

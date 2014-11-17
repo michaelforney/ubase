@@ -18,6 +18,5 @@ apathmax(char **p, long *size)
 			eprintf("pathconf:");
 		}
 	}
-
 	*p = emalloc(*size);
 }

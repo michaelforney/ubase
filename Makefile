@@ -70,6 +70,7 @@ SRC = \
 	rmmod.c             \
 	stat.c              \
 	su.c                \
+	swaplabel.c         \
 	swapoff.c           \
 	swapon.c            \
 	switch_root.c       \
@@ -125,6 +126,7 @@ MAN8 = \
 	pivot_root.8        \
 	readahead.8         \
 	rmmod.8             \
+	swaplabel.8         \
 	swapoff.8           \
 	swapon.8            \
 	switch_root.8       \

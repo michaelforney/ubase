@@ -4,7 +4,6 @@ Tools
 vmstat
 top
 Better ps support
-swaplabel
 losetup
 lspci
 mkswap [-L]

@@ -15,22 +15,22 @@ HDR = \
 	util.h
 
 LIB = \
-	util/agetcwd.o        \
-	util/agetline.o       \
-	util/apathmax.o       \
-	util/concat.o         \
-	util/ealloc.o         \
-	util/eprintf.o        \
-	util/estrtol.o        \
-	util/estrtoul.o       \
-	util/explicit_bzero.o \
-	util/passwd.o         \
-	util/proc.o           \
-	util/putword.o        \
-	util/recurse.o        \
-	util/strlcat.o        \
-	util/strlcpy.o        \
-	util/tty.o
+	libutil/agetcwd.o        \
+	libutil/agetline.o       \
+	libutil/apathmax.o       \
+	libutil/concat.o         \
+	libutil/ealloc.o         \
+	libutil/eprintf.o        \
+	libutil/estrtol.o        \
+	libutil/estrtoul.o       \
+	libutil/explicit_bzero.o \
+	libutil/passwd.o         \
+	libutil/proc.o           \
+	libutil/putword.o        \
+	libutil/recurse.o        \
+	libutil/strlcat.o        \
+	libutil/strlcpy.o        \
+	libutil/tty.o
 
 SRC = \
 	last.c              \
@@ -144,7 +144,7 @@ options:
 	@echo "LDFLAGS  = $(LDFLAGS)"
 	@echo "CC       = $(CC)"
 
-binlib: util.a
+binlib: libutil.a
 	$(MAKE) bin
 
 bin: $(BIN)
@@ -157,13 +157,13 @@ config.h:
 
 .o:
 	@echo LD $@
-	@$(LD) -o $@ $< util.a $(LDFLAGS)
+	@$(LD) -o $@ $< libutil.a $(LDFLAGS)
 
 .c.o:
 	@echo CC $<
 	@$(CC) -c -o $@ $< $(CFLAGS)
 
-util.a: $(LIB)
+libutil.a: $(LIB)
 	@echo AR $@
 	@$(AR) -r -c $@ $?
 	@ranlib $@
@@ -194,12 +194,12 @@ uninstall:
 dist: clean
 	@echo creating dist tarball
 	@mkdir -p ubase-$(VERSION)
-	@cp -r LICENSE Makefile config.mk TODO $(SRC) $(MAN) util $(HDR) ubase-$(VERSION)
+	@cp -r LICENSE Makefile config.mk TODO $(SRC) $(MAN) libutil $(HDR) ubase-$(VERSION)
 	@tar -cf ubase-$(VERSION).tar ubase-$(VERSION)
 	@gzip ubase-$(VERSION).tar
 	@rm -rf ubase-$(VERSION)
 
-ubase-box: config.h $(SRC) util.a
+ubase-box: config.h $(SRC) libutil.a
 	@echo creating box binary
 	@mkdir -p build
 	@cp $(HDR) build
@@ -217,9 +217,9 @@ ubase-box: config.h $(SRC) util.a
 	@for f in $(SRC); do echo "printf(\"`basename $$f .c`\"); putchar(' ');" >> build/$@.c; done
 	@echo "putchar(0xa); }; return 0; }" >> build/$@.c
 	@echo LD $@
-	@$(LD) -o $@ build/*.c util.a $(CFLAGS) $(LDFLAGS)
+	@$(LD) -o $@ build/*.c libutil.a $(CFLAGS) $(LDFLAGS)
 	@rm -r build
 
 clean:
 	@echo cleaning
-	@rm -f $(BIN) $(OBJ) $(LIB) util.a ubase-box
+	@rm -f $(BIN) $(OBJ) $(LIB) libutil.a ubase-box

@@ -26,10 +26,10 @@ int
 main(int argc, char *argv[])
 {
 	int setlabel = 0;
-	int fd = -1;
-	char magic[10] = { 0 };
-	char *label = NULL;
-	char *device = NULL;
+	int fd;
+	char magic[SWAP_MAGIC_LENGTH];
+	char *label;
+	char *device;
 	int i;
 
 	ARGBEGIN {

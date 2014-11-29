@@ -4,56 +4,6 @@ ubase - suckless linux base utils
 ubase is  a collection of  tools similar  in spirit to  util-linux but
 much simpler.
 
-The following programs are currently implemented:
-
-chvt
-clear
-ctrlaltdel
-dd
-df
-dmesg
-eject
-fallocate
-free
-freeramdisk
-fsfreeze
-getty
-halt
-hwclock
-id
-insmod
-killall5
-last
-lastlog
-login
-lsmod
-lsusb
-mesg
-mknod
-mkswap
-mount
-mountpoint
-pagesize
-passwd
-pidof
-pivot_root
-ps
-readahead
-respawn
-rmmod
-stat
-su
-swapoff
-swapon
-switch_root
-sysctl
-truncate
-umount
-unshare
-uptime
-watch
-who
-
 The complement  of ubase  is sbase[1] which  mostly follows  POSIX and
 provides all the portable tools.  Together they are intended to form a
 base system similar to busybox but much smaller and suckless.

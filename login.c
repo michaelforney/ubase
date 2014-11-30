@@ -71,8 +71,8 @@ main(int argc, char *argv[])
 	if (argc < 1)
 		usage();
 
-	if (isatty(STDIN_FILENO) == 0)
-		eprintf("stdin is not a tty\n");
+	if (isatty(0) == 0 || isatty(1) == 0 || isatty(2) == 0)
+		eprintf("no tty");
 
 	user = argv[0];
 	errno = 0;

@@ -176,7 +176,7 @@ main(int argc, char *argv[])
 	}
 
 	/* Flush pending input */
-	ioctl(STDIN_FILENO, TCFLSH, (void *)0);
+	ioctl(0, TCFLSH, (void *)0);
 
 	if (getuid() == 0) {
 		goto newpass;
@@ -220,7 +220,7 @@ newpass:
 		eprintf("password left unchanged\n");
 
 	/* Flush pending input */
-	ioctl(STDIN_FILENO, TCFLSH, (void *)0);
+	ioctl(0, TCFLSH, (void *)0);
 
 	inpass = getpass("Retype new password: ");
 	if (!inpass)

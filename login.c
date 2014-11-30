@@ -88,7 +88,7 @@ main(int argc, char *argv[])
 	gid = pw->pw_gid;
 
 	/* Flush pending input */
-	ioctl(STDIN_FILENO, TCFLSH, (void *)0);
+	ioctl(0, TCFLSH, (void *)0);
 
 	pass = getpass("Password: ");
 	if (!pass)
@@ -96,7 +96,7 @@ main(int argc, char *argv[])
 	if (pw_check(pw, pass) <= 0)
 		exit(1);
 
-	tty = ttyname(STDIN_FILENO);
+	tty = ttyname(0);
 	if (!tty)
 		eprintf("ttyname:");
 

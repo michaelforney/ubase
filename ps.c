@@ -104,7 +104,7 @@ psout(struct procstat *ps)
 	 * the same controlling terminal as the invoker and the same
 	 * euid as the current user */
 	if (!(flags & (PS_aflag | PS_Aflag | PS_dflag))) {
-		myttystr = ttyname(STDIN_FILENO);
+		myttystr = ttyname(0);
 		if (myttystr) {
 			if (strcmp(myttystr + strlen("/dev/"), ttystr)) {
 				free(ttystr);
@@ -125,7 +125,7 @@ psout(struct procstat *ps)
 
 	sutime = (ps->stime + ps->utime) / sysconf(_SC_CLK_TCK);
 
-	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+	ioctl(1, TIOCGWINSZ, &w);
 	if (!(flags & PS_fflag)) {
 		snprintf(buf, sizeof(buf), "%5d %-6s   %02u:%02u:%02u %s", ps->pid, ttystr,
 			 sutime / 3600, (sutime % 3600) / 60, sutime % 60,

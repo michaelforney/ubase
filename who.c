@@ -28,7 +28,7 @@ main(int argc, char *argv[])
 	ARGBEGIN {
 	case 'm':
 		mflag = 1;
-		tty = ttyname(STDIN_FILENO);
+		tty = ttyname(0);
 		if (!tty)
 			eprintf("ttyname: stdin:");
 		if ((ttmp = strrchr(tty, '/')))

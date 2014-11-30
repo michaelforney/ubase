@@ -28,10 +28,10 @@ main(int argc, char *argv[])
 	if (argc > 1)
 		usage();
 
-	if (isatty(STDERR_FILENO) == 0)
+	if (isatty(2) == 0)
 		eprintf("stderr: not a tty\n");
 
-	if (fstat(STDERR_FILENO, &sb) < 0)
+	if (fstat(2, &sb) < 0)
 		eprintf("fstat stderr:");
 
 	if (argc == 0) {
@@ -46,7 +46,7 @@ main(int argc, char *argv[])
 	else
 		usage();
 
-	if (fchmod(STDERR_FILENO, mode) < 0)
+	if (fchmod(2, mode) < 0)
 		eprintf("fchmod stderr:");
 
 	return 0;

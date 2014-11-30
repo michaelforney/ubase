@@ -41,7 +41,7 @@ main(int argc, char *argv[])
 	} ARGEND;
 
 	if (argc == 0) {
-		if (fstat(STDIN_FILENO, &st) < 0)
+		if (fstat(0, &st) < 0)
 			eprintf("stat <stdin>:");
 		show_stat("<stdin>", &st);
 	}

@@ -73,9 +73,9 @@ main(int argc, char *argv[])
 	fd = open(tty, O_RDWR);
 	if (fd < 0)
 		eprintf("open %s:", tty);
-	dup2(fd, STDIN_FILENO);
-	dup2(fd, STDOUT_FILENO);
-	dup2(fd, STDERR_FILENO);
+	dup2(fd, 0);
+	dup2(fd, 1);
+	dup2(fd, 2);
 	if (fchown(fd, 0, 0) < 0)
 		weprintf("fchown %s:", tty);
 	if (fchmod(fd, 0600) < 0)
@@ -118,10 +118,10 @@ main(int argc, char *argv[])
 	fflush(stdout);
 
 	/* Flush pending input */
-	ioctl(STDIN_FILENO, TCFLSH, (void *)0);
+	ioctl(0, TCFLSH, (void *)0);
 	memset(logname, 0, sizeof(logname));
 	while (1) {
-		n = read(STDIN_FILENO, &c, 1);
+		n = read(0, &c, 1);
 		if (n < 0)
 			eprintf("read:");
 		if (n == 0)

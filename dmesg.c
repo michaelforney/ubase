@@ -60,7 +60,7 @@ main(int argc, char *argv[])
 	if (n < 0)
 		eprintf("klogctl:");
 
-	dmesg_show(STDOUT_FILENO, buf, n);
+	dmesg_show(1, buf, n);
 
 	if (cflag && klogctl(SYSLOG_ACTION_CLEAR, NULL, 0) < 0)
 		eprintf("klogctl:");

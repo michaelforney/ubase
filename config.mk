@@ -5,9 +5,11 @@ VERSION = 0.1
 PREFIX = /usr/local
 MANPREFIX = $(PREFIX)/share/man
 
-#CC = gcc
-#CC = musl-gcc
+CC = cc
 LD = $(CC)
+AR = ar
+RANLIB = ranlib
+
 CPPFLAGS = -D_XOPEN_SOURCE -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64
-CFLAGS   = -std=c99 -Wall -Wextra $(CPPFLAGS)
+CFLAGS   = -std=c99 -Wall -Wextra
 LDFLAGS  = -s -lcrypt # -static

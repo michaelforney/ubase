@@ -1,4 +1,5 @@
 /* See LICENSE file for copyright and license details. */
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -15,14 +16,19 @@ int
 main(int argc, char *argv[])
 {
 	char cmd[BUFSIZ];
-	int i, interval = 2;
+	char *end;
+	useconds_t interval = 2 * 1E6;
+	float period;
+	int i;
 
 	ARGBEGIN {
 	case 't':
 		break;
 	case 'n':
-		/* Only whole seconds for now */
-		interval = estrtol(EARGF(usage()), 10);
+		period = strtof(EARGF(usage()), &end);
+		if (*end != '\0' || errno != 0)
+			eprintf("invalid interval\n");
+		interval = period * 1E6;
 		break;
 	default:
 		usage();
@@ -44,7 +50,7 @@ main(int argc, char *argv[])
 		printf("\x1b[2J\x1b[H"); /* clear */
 		fflush(NULL);
 		system(cmd);
-		sleep(interval);
+		usleep(interval);
 	}
 	return 0;
 }

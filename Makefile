@@ -150,7 +150,7 @@ config.h:
 	cp config.def.h $@
 
 .o:
-	$(LD) $(LDFLAGS) -o $@ $< $(LIB)
+	$(LD) $(LDFLAGS) -o $@ $< $(LIB) $(LDLIBS)
 
 .c.o:
 	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
@@ -198,7 +198,7 @@ ubase-box: $(LIB) $(SRC)
 	echo 'else {' >> build/$@.c
 	for f in $(SRC); do echo "printf(\"`basename $$f .c`\"); putchar(' ');" >> build/$@.c; done
 	echo "putchar(0xa); }; return 0; }" >> build/$@.c
-	$(LD) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@ build/*.c $(LIB)
+	$(LD) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@ build/*.c $(LIB) $(LDLIBS)
 	rm -r build
 
 clean:

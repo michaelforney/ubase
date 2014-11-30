@@ -12,4 +12,5 @@ RANLIB = ranlib
 
 CPPFLAGS = -D_XOPEN_SOURCE -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64
 CFLAGS   = -std=c99 -Wall -Wextra
-LDFLAGS  = -s -lcrypt # -static
+LDLIBS   = -lcrypt
+LDFLAGS  = -s

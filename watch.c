@@ -28,6 +28,8 @@ main(int argc, char *argv[])
 		period = strtof(EARGF(usage()), &end);
 		if (*end != '\0' || errno != 0)
 			eprintf("invalid interval\n");
+		if (period < 0)
+			period = 0.1f;
 		interval = period * 1E6;
 		break;
 	default:

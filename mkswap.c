@@ -9,8 +9,9 @@
 
 #include "util.h"
 
-enum { SWAP_UUID_LENGTH = 16, SWAP_LABEL_LENGTH = 16 };
-enum { SWAP_MIN_PAGES = 10 };
+#define SWAP_UUID_LENGTH 16
+#define SWAP_LABEL_LENGTH 16
+#define SWAP_MIN_PAGES 10
 
 struct swap_hdr {
 	char	      bootbits[1024];

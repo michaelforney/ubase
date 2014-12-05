@@ -110,6 +110,7 @@ MAN1 = \
 	truncate.1          \
 	unshare.1           \
 	uptime.1            \
+	vtallow.1           \
 	watch.1             \
 	who.1
 

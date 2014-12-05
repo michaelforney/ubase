@@ -82,6 +82,7 @@ BIN = \
 	umount            \
 	unshare           \
 	uptime            \
+	vtallow           \
 	watch             \
 	who
 

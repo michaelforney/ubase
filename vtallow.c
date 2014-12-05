@@ -46,7 +46,7 @@ main(int argc, char *argv[])
 		eprintf("open %s:", CONSOLE);
 	if (ioctl(fd, allow ? VT_UNLOCKSWITCH : VT_LOCKSWITCH) < 0)
 		eprintf("cannot %s VT switch:",
-			allow ? "enable" : "disable");
+			allow ? "unlock" : "lock");
 	close(fd);
 	return 0;
 }

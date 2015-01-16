@@ -70,7 +70,7 @@ psout(struct procstat *ps)
 	struct procstatus pstatus;
 	char cmdline[BUFSIZ], *cmd;
 	char buf[BUFSIZ];
-	char ttystr[PATH_MAX], *myttystr;
+	char ttystr[TTY_NAME_MAX], *myttystr;
 	int tty_maj, tty_min;
 	uid_t myeuid;
 	unsigned sutime;

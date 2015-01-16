@@ -27,6 +27,7 @@ ttytostr(int tty_maj, int tty_min, char *str, size_t n)
 	DIR *dirp;
 	char path[PATH_MAX];
 	int fd;
+	int r = 0;
 
 	switch (tty_maj) {
 	case 136:
@@ -54,16 +55,19 @@ ttytostr(int tty_maj, int tty_min, char *str, size_t n)
 
 		if (strlcpy(path, "/dev/", sizeof(path)) >= sizeof(path)) {
 			weprintf("path too long\n");
-			return -1;
+			r = -1;
+			goto err0;
 		}
 		if (strlcat(path, dp->d_name, sizeof(path)) >= sizeof(path)) {
 			weprintf("path too long\n");
-			return -1;
+			r = -1;
+			goto err0;
 		}
 
 		if (stat(path, &sb) < 0) {
 			weprintf("stat %s:", path);
-			return -1;
+			r = -1;
+			goto err0;
 		}
 
 		if ((int)major(sb.st_rdev) == tty_maj &&
@@ -75,15 +79,19 @@ ttytostr(int tty_maj, int tty_min, char *str, size_t n)
 				strlcpy(str, dp->d_name, n);
 				close(fd);
 				break;
+			} else {
+				close(fd);
+				r = -1;
+				goto err0;
 			}
-			close(fd);
 		}
 	}
 
+err0:
 	if (closedir(dirp) < 0) {
 		weprintf("closedir /dev:");
-		return -1;
+		r = -1;
 	}
 
-	return 0;
+	return r;
 }

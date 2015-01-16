@@ -2,6 +2,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include <fcntl.h>
 #include <dirent.h>
 #include <limits.h>
 #include <stdio.h>
@@ -25,6 +26,7 @@ ttytostr(int tty_maj, int tty_min, char *str, size_t n)
 	struct dirent *dp;
 	DIR *dirp;
 	char path[PATH_MAX];
+	int fd;
 
 	switch (tty_maj) {
 	case 136:
@@ -60,14 +62,21 @@ ttytostr(int tty_maj, int tty_min, char *str, size_t n)
 		}
 
 		if (stat(path, &sb) < 0) {
-			weprintf("stat %s:", dp->d_name);
+			weprintf("stat %s:", path);
 			return -1;
 		}
 
 		if ((int)major(sb.st_rdev) == tty_maj &&
 		    (int)minor(sb.st_rdev) == tty_min) {
-			strlcpy(str, dp->d_name, n);
-			break;
+			fd = open(path, O_RDONLY);
+			if (fd < 0)
+				continue;
+			if (isatty(fd)) {
+				strlcpy(str, dp->d_name, n);
+				close(fd);
+				break;
+			}
+			close(fd);
 		}
 	}
 

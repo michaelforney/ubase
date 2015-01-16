@@ -72,7 +72,7 @@ ttytostr(int tty_maj, int tty_min, char *str, size_t n)
 
 		if ((int)major(sb.st_rdev) == tty_maj &&
 		    (int)minor(sb.st_rdev) == tty_min) {
-			fd = open(path, O_RDONLY);
+			fd = open(path, O_RDONLY | O_NONBLOCK);
 			if (fd < 0)
 				continue;
 			if (isatty(fd)) {

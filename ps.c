@@ -70,7 +70,7 @@ psout(struct procstat *ps)
 	struct procstatus pstatus;
 	char cmdline[BUFSIZ], *cmd;
 	char buf[BUFSIZ];
-	char *ttystr, *myttystr;
+	char ttystr[PATH_MAX], *myttystr;
 	int tty_maj, tty_min;
 	uid_t myeuid;
 	unsigned sutime;
@@ -86,16 +86,13 @@ psout(struct procstat *ps)
 			return;
 
 	devtotty(ps->tty_nr, &tty_maj, &tty_min);
-	ttystr = ttytostr(tty_maj, tty_min);
+	ttytostr(tty_maj, tty_min, ttystr, sizeof(ttystr));
 
 	/* Only print processes that are associated with
 	 * a terminal and they are not session leaders */
-	if (flags & PS_aflag) {
-		if (ps->pid == ps->sid || ttystr[0] == '?') {
-			free(ttystr);
+	if (flags & PS_aflag)
+		if (ps->pid == ps->sid || ttystr[0] == '?')
 			return;
-		}
-	}
 
 	if (parsestatus(ps->pid, &pstatus) < 0)
 		return;
@@ -106,10 +103,8 @@ psout(struct procstat *ps)
 	if (!(flags & (PS_aflag | PS_Aflag | PS_dflag))) {
 		myttystr = ttyname(0);
 		if (myttystr) {
-			if (strcmp(myttystr + strlen("/dev/"), ttystr)) {
-				free(ttystr);
+			if (strcmp(myttystr + strlen("/dev/"), ttystr))
 				return;
-			}
 		} else {
 			/* The invoker has no controlling terminal - just
 			 * go ahead and print the processes anyway */
@@ -117,10 +112,8 @@ psout(struct procstat *ps)
 			ttystr[1] = '\0';
 		}
 		myeuid = geteuid();
-		if (myeuid != pstatus.euid) {
-			free(ttystr);
+		if (myeuid != pstatus.euid)
 			return;
-		}
 	}
 
 	sutime = (ps->stime + ps->utime) / sysconf(_SC_CLK_TCK);
@@ -166,7 +159,6 @@ psout(struct procstat *ps)
 		else
 			printf("%s\n", buf);
 	}
-	free(ttystr);
 }
 
 static void

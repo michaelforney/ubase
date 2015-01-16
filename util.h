@@ -50,4 +50,4 @@ size_t strlcpy(char *, const char *, size_t);
 
 /* tty.c */
 void devtotty(int, int *, int *);
-char *ttytostr(int, int);
+int ttytostr(int, int, char *, size_t);

@@ -13,7 +13,7 @@ static int aflag = 0;
 static int hflag = 0;
 static int kflag = 0;
 
-static void mnt_show(const char *fsname, const char *dir);
+static int mnt_show(const char *fsname, const char *dir);
 
 static void
 usage(void)
@@ -26,6 +26,7 @@ main(int argc, char *argv[])
 {
 	struct mntent *me = NULL;
 	FILE *fp;
+	int ret = 0;
 
 	ARGBEGIN {
 	case 'a':
@@ -61,11 +62,12 @@ main(int argc, char *argv[])
 		if (aflag == 0)
 			if (strcmp(me->mnt_type, "rootfs") == 0)
 				continue;
-		mnt_show(me->mnt_fsname, me->mnt_dir);
+		if (mnt_show(me->mnt_fsname, me->mnt_dir) < 0)
+			ret = 1;
 	}
 	endmntent(fp);
 
-	return 0;
+	return ret;
 }
 
 #define CALC_POWER(n, power, base, i) do { \
@@ -107,7 +109,7 @@ print_human(
 	       avail, postfixes[k], capacity, dir);
 }
 
-static void
+static int
 mnt_show(const char *fsname, const char *dir)
 {
 	struct statvfs s;
@@ -115,7 +117,10 @@ mnt_show(const char *fsname, const char *dir)
 	int capacity = 0;
 	int bs;
 
-	statvfs(dir, &s);
+	if (statvfs(dir, &s) < 0) {
+		weprintf("statvfs %s:", dir);
+		return -1;
+	}
 
 	bs = s.f_frsize / blksize;
 	total = s.f_blocks * bs;
@@ -133,4 +138,6 @@ mnt_show(const char *fsname, const char *dir)
 	else
 		printf("%-12s %9llu %9llu %9llu %7d%%  %s\n",
 		       fsname, total, used, avail, capacity, dir);
+
+	return 0;
 }

@@ -12,7 +12,7 @@
 static void
 usage(void)
 {
-	eprintf("usage: who [-ml]\n");
+	eprintf("usage: %s [-ml]\n", argv0);
 }
 
 int

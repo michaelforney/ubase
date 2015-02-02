@@ -18,7 +18,7 @@
 static void
 usage(void)
 {
-	eprintf("usage: vtallow n | y\n");
+	eprintf("usage: %s n | y\n", argv0);
 }
 
 int

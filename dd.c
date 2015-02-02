@@ -213,12 +213,6 @@ copy(struct dd_config *ddc)
 }
 
 static void
-usage(void)
-{
-	eprintf("usage: %s [-h] [if=infile] [of=outfile] [bs[=N]] [seek=N] [skip=N] [count=N] [direct] [quiet] [nosync]\n", argv0);
-}
-
-static void
 print_stat(const struct dd_config *ddc)
 {
 	if (ddc->quiet)
@@ -239,6 +233,13 @@ sig_int(int unused)
 	(void) unused;
 	fprintf(stderr, "SIGINT! Aborting ...\n");
 	sigint = 1;
+}
+
+static void
+usage(void)
+{
+	eprintf("usage: %s [-h] [if=infile] [of=outfile] [bs[=N]] [seek=N] "
+	        "[skip=N] [count=N] [direct] [quiet] [nosync]\n", argv0);
 }
 
 int

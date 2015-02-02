@@ -292,6 +292,6 @@ main(int argc, char *argv[])
 	print_stat(&config);
 
 	if (config.nosync == 0)
-		sync(); sync();
+		sync();
 	return config.saved_errno;
 }

@@ -1,11 +1,17 @@
-.TH SWAPOFF 8 ubase-VERSION
-.SH NAME
-\fBswapoff\fR - disable devices and files for paging and swapping
-.SH SYNOPSIS
-\fBswapoff\fR [\fB-a\fI device\fR]
-.SH DESCRIPTION
-\fBswapoff\fR disables swapping on the specified devices and files.
-.SH OPTIONS
-.TP
-\fB-a\fR
+.Dd February 2, 2015
+.Dt SWAPOFF 8
+.Os ubase
+.Sh NAME
+.Nm swapoff
+.Nd disable devices and files for paging and swapping
+.Sh SYNOPSIS
+.Nm
+.Fl a | Ar device
+.Sh DESCRIPTION
+.Nm
+disables swapping on the specified devices and files.
+.Sh OPTIONS
+.Bl -tag -width Ds
+.It Fl a
 Disable swapping on all known swap devices and files as found in /etc/fstab.
+.El

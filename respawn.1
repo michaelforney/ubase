@@ -1,18 +1,32 @@
-.TH RESPAWN 1 ubase-VERSION
-.SH NAME
-\fBrespawn\fR - Spawn the given command repeatedly
-.SH SYNOPSIS
-\fBrespawn\fR [\fB-l\fI fifo\fR] [\fB-d\fI N\fR] \fIcmd\fR [\fIargs...\fR]
-.SH DESCRIPTION
-\fBrespawn\fR spawns the given \fIcmd\fR in a new session
-repeatedly.
-.SH OPTIONS
-.TP
-\fB-d\fR
+.Dd February 2, 2015
+.Dt RESPAWN 1
+.Os ubase
+.Sh NAME
+.Nm respawn
+.Nd spawn the given command repeatedly
+.Sh SYNOPSIS
+.Nm
+.Op Fl l Ar fifo
+.Op Fl d Ar N
+.Ar cmd Op Ar args...
+.Sh DESCRIPTION
+.Nm
+spawns the given
+.Ar cmd
+in a new session repeatedly.
+.Sh OPTIONS
+.Bl -tag -width Ds
+.It Fl d
 Set the delay between invocations of \fIcmd\fR.  It defaults to 0.
-.TP
-\fB-l\fR
-Listen on the specified \fIfifo\fR for writes.  For each write
-spawn a new instance of \fIcmd\fR.  This can be used in conjunction
-with a process supervisor to restart a particular program.  The \fB-l\fR
-and \fB-d\fR options are incompatible.  All writes are discarded.
+.It Fl l
+Listen on the specified
+.Ar fifo
+for writes. For each write spawn a new instance of
+.Ar cmd .
+This can be used in conjunction with a process supervisor to restart a
+particular program. The
+.Fl l
+and
+.Fl d
+options are incompatible. All writes are discarded.
+.El

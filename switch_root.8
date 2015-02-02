@@ -1,15 +1,31 @@
-.TH SWITCH_ROOT 8 ubase-VERSION
-.SH NAME
-\fBswitch_root\fR - Switch to another filesystem as the root of the mount tree
-.SH SYNOPSIS
-\fBswitch_root\fR [\fB-c \fIconsole\fR] \fInewroot init
-.SH DESCRIPTION
-\fBswitch_root\fR removes all files and directories on the current root filesystem and overmounts it with \fInewroot\fR.
-If a \fIconsole\fR is specified, redirect stdio and stderr to it.
-After the switch, execute \fIinit\fR.
-.TP
-\fBswitch_root\fR can only be run as PID 1 in an initramfs or tmpfs with a regular and executable /init.
-.SH OPTIONS
-.TP
-\fB-c\fR
-Redirect stdio and stderr to \fIconsole\fR after switching to \fInewroot\fR.
+.Dd February 2, 2015
+.Dt SWITCH_ROOT 8
+.Os ubase
+.Sh NAME
+.Nm switch_root
+.Nd switch to another filesystem as the root of the mount tree
+.Sh SYNOPSIS
+.Nm
+.Op Fl c Ar console
+.Ar newroot init
+.Sh DESCRIPTION
+.Nm
+removes all files and directories on the current root filesystem and
+overmounts it with
+.Ar newroot .
+If a
+.Ar console
+is specified, redirect stdio and stderr to it. After the switch, execute
+.Ar init .
+.Pp
+.Nm
+can only be run as PID 1 in an initramfs or tmpfs with a regular and
+executable /sbin/init.
+.Sh OPTIONS
+.Bl -tag -width Ds
+.It Fl c
+Redirect stdio and stderr to
+.Ar console
+after switching to
+.Ar newroot .
+.El

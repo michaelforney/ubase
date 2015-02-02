@@ -1,8 +1,14 @@
-.TH CHVT 1 ubase-VERSION
-.SH NAME
-\fBchvt\fR - Change foreground virtual terminal
-.SH SYNOPSIS
-\fBchvt\fI N
-.SH DESCRIPTION
-\fBchvt\fR brings /dev/ttyN to the foreground. This has the
-same effect as Ctrl-Alt-FN.
+.Dd February 2, 2015
+.Dt CHVT 1
+.Os ubase
+.Sh NAME
+.Nm chvt
+.Nd change foreground virtual terminal
+.Sh SYNOPSIS
+.Nm
+.Ar N
+.Sh DESCRIPTION
+.Nm
+brings
+.Pf /dev/tty Ar N
+to the foreground. This has the same effect as Ctrl-Alt-FN.

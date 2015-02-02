@@ -1,21 +1,28 @@
-.TH ID 1 ubase-VERSION
-.SH NAME
-\fBid\fR - Print real and effective user and group IDs
-.SH SYNOPSIS
-\fBid\fR [\fB-g\fR] [\fB-u\fR] [\fB-G\fR] \fR[\fIuser\fR|\fIuid\fR]
-.SH DESCRIPTION
-\fBid\fR prints user and group information of the calling process to standard output.
+.Dd February 2, 2015
+.Dt ID 1
+.Os ubase
+.Sh NAME
+.Nm id
+.Nd print real and effective user and group IDs
+.Sh SYNOPSIS
+.Nm
+.Op Fl g
+.Op Fl u
+.Op Fl G
+.Op Ar user | uid
+.Sh DESCRIPTION
+.Nm
+prints user and group information of the calling process to standard output.
 If a login name or uid is specified, the user and group information of that
 user is displayed.
-.SH OPTIONS
-.TP
-\fB-g\fR
+.Sh OPTIONS
+.Bl -tag -width Ds
+.It Fl g
 Print only the effective group ID.
-.TP
-\fB-u\fR
+.It Fl u
 Print only the effective user ID.
-.TP
-\fB-G\fR
+.It Fl G
 Display group information as whitespace separated numbers, in no particular order.
-.SH SEE ALSO
-who(1)
+.El
+.Sh SEE ALSO
+.Xr who 1

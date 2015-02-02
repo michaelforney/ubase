@@ -1,22 +1,32 @@
-.TH MOUNTPOINT 1 ubase-VERSION
-.SH NAME
-\fBmountpoint\fR - Check if a directory is a mountpoint
-.SH SYNOPSIS
-\fBmountpoint\fR [\fB-dq\fR] \fIdirectory\fR
-.TP
-\fBmountpoint\fR \fB-x\fR \fIdevice\fR
-.SH DESCRIPTION
-\fBmountpoint\fR checks if the \fIdirectory\fR is mentioned in the
-/proc/mounts file.
-.SH OPTIONS
-.TP
-\fB-d\fR
+.Dd February 2, 2015
+.Dt MOUNTPOINT 1
+.Os ubase
+.Sh NAME
+.Nm mountpoint
+.Nd check if a directory is a mountpoint
+.Sh SYNOPSIS
+.Nm
+.Op Fl dq
+.Ar directory
+.Nm
+.Fl x Ar device
+.Sh DESCRIPTION
+.Nm
+checks if the
+.Ar directory
+is mentioned in the
+.Pa /proc/mounts
+file.
+.Sh OPTIONS
+.Bl -tag -width Ds
+.It Fl d
 Print the major/minor device number of the filesystem on stdout.
-.TP
-\fB-q\fR
+.It Fl q
 Be quiet, don't print anything.
-.TP
-\fB-x\fR
-Print the major/minor device number of the \fIdevice\fR on stdout.
-.SH SEE ALSO
-mount(8)
+.It Fl x
+Print the major/minor device number of the
+.Ar device
+on stdout.
+.El
+.Sh SEE ALSO
+.Xr mount 8

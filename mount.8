@@ -1,33 +1,45 @@
-.TH MOUNT 8 ubase-VERSION
-.SH NAME
-\fBmount\fR - Mount a filesystem
-.SH SYNOPSIS
-\fBmount\fR [\fB-BMRan\fR] [\fB-t\fI fstype\fR] [\fB-o\fI options\fR] [\fIsource\fR] [\fItarget\fR]
-.SH DESCRIPTION
-\fBmount\fR attaches the filesystem specified to the filesystem hierarchy.  The \fBumount(8)\fR command will detach it again.
-.SH OPTIONS
-.TP
-\fB-B\fR
-Remount a subtree somewhere else (so that its contents are
-visible in both places).
-.TP
-\fB-M\fR
+.Dd February 2, 2015
+.Dt MOUNT 8
+.Os ubase
+.Sh NAME
+.Nm mount
+.Nd mount a filesystem
+.Sh SYNOPSIS
+.Nm
+.Op Fl BMRan
+.Op Fl o Ar options
+.Op Fl t Ar fstype
+.Op Ar source
+.Op Ar target
+.Sh DESCRIPTION
+.Nm
+attaches the filesystem specified to the filesystem hierarchy. The
+.Xr umount 8
+command will detach it again.
+.Sh OPTIONS
+.Bl -tag -width Ds
+.It Fl B
+Remount a subtree somewhere else (so that its contents are visible in both
+places).
+.It Fl M
 Move a subtree to some other place.
-.TP
-\fB-R\fR
-Remount a subtree and all possible submounts somewhere else (so
-that its contents are available in both places).
-.TP
-\fB-a\fR
-Mount all filesystems mentioned in /etc/fstab.
-.TP
-\fB-n\fR
-Mount without writing in /etc/mtab.  This is the default action.
-.TP
-\fB-t\fR
-Set the filesystem type.
-.TP
-\fB-o\fR
+.It Fl R
+Remount a subtree and all possible submounts somewhere else (so that its
+contents are available in both places).
+.It Fl a
+Mount all filesystems mentioned in
+.Pa /etc/fstab .
+.It Fl n
+Mount without writing in
+.Pa /etc/mtab .
+This is the default action.
+.It Fl o Ar options
 Specify a comma separated string of filesystem specific options.
-.SH SEE ALSO
-mount(2), umount(2), umount(8), swapon(8)
+.It Fl t Ar fstype
+Set the filesystem type.
+.El
+.Sh SEE ALSO
+.Xr mount 2 ,
+.Xr umount 2 ,
+.Xr swapon 8 ,
+.Xr umount 8

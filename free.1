@@ -1,21 +1,24 @@
-.TH FREE 1 ubase-VERSION
-.SH NAME
-\fBfree\fR - Display amount of free and used memory in the system
-.SH SYNOPSIS
-\fBfree\fR [\fB-bkmg\fR]
-.SH DESCRIPTION
-\fBfree\fR displays the total amount of free and used physical and swap
-memory in the system, as well as the buffers used by the kernel.
-.SH OPTIONS
-.TP
-\fB-b\fR
-Display the amount of memory in bytes.  This is the default.
-.TP
-\fB-k\fR
-Display the amount of memory in kilobytes.
-.TP
-\fB-m\fR
-Display the amount of memory in megabytes.
-.TP
-\fB-g\fR
+.Dd February 2, 2015
+.Dt FREE 1
+.Os ubase
+.Sh NAME
+.Nm free
+.Nd display amount of free and used memory in the system
+.Sh SYNOPSIS
+.Nm
+.Op Fl bgkm
+.Sh DESCRIPTION
+.Nm
+displays the total amount of free and used physical and swap memory in the
+system, as well as the buffers used by the kernel.
+.Sh OPTIONS
+.Bl -tag -width Ds
+.It Fl b
+Display the amount of memory in bytes. This is the default.
+.It Fl g
 Display the amount of memory in gigabytes.
+.It Fl k
+Display the amount of memory in kilobytes.
+.It Fl m
+Display the amount of memory in megabytes.
+.El

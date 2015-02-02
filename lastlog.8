@@ -1,11 +1,18 @@
-.TH LASTLOG 8 ubase-VERSION
-.SH NAME
-\fBlastlog\fR - Show last login of users
-.SH SYPNOSIS
-\fBlastlog\fI [user ...]
-.SH DESCRIPTION
-\fBlastlog\fR Show time, tty, and host (if it was a remote
-connection) of last login of users. If some user names are passed
-as parameter then information about last login of these users is
-shown, otherwise is shown for all the users in /etc/passwd in the
-order they appear in it.
+.Dd February 2, 2015
+.Dt LASTLOG 8
+.Os ubase
+.Sh NAME
+.Nm lastlog
+.Nd show last login of users
+.Sh SYNOPSIS
+.Nm
+.Op Ar user...
+.Sh DESCRIPTION
+.Nm
+shows the time, tty and host (if it was a remote connection) of the last
+login of the users. If one or more
+.Ar user
+names are passed as a parameter then information about the last login of these
+users are shown, otherwise the users in
+.Pa /etc/passwd
+will be used and shown in order of appearance.

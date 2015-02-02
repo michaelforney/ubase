@@ -1,23 +1,27 @@
-.TH DF 1 ubase-VERSION
-.SH NAME
-\fBdf\fR - Show file system usage
-.SH SYNOPSIS
-\fBdf\fR [\fB-ahsi\fR]
-.SH DESCRIPTION
-\fBdf\fR displays the amount of disk space available on a file system.
-If no arguments are given, df shows all the file systems using 512-byte
-blocks.
-.SH OPTIONS
-.TP
-\fB-a\fR
+.Dd February 2, 2015
+.Dt DF 1
+.Os ubase
+.Sh NAME
+.Nm df
+.Nd show file system usage
+.Sh SYNOPSIS
+.Nm
+.Op Fl ahis
+.Sh DESCRIPTION
+.Nm
+displays the amount of disk space available on a file system.
+If no arguments are given,
+.Nm
+shows all the file systems using 512-byte blocks.
+.Sh OPTIONS
+.Bl -tag -width Ds
+.It Fl a
 Show all file systems including dummy ones. This is the default
 option.
-.TP
-\fB-h\fR
+.It Fl h
 Not implemented.
-.TP
-\fB-s\fR
+.It Fl i
 Not implemented.
-.TP
-\fB-i\fR
+.It Fl s
 Not implemented.
+.El

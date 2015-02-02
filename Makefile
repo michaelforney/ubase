@@ -166,9 +166,9 @@ install: all
 	cp -f $(BIN) $(DESTDIR)$(PREFIX)/bin
 	cd $(DESTDIR)$(PREFIX)/bin && chmod 755 $(BIN)
 	mkdir -p $(DESTDIR)$(MANPREFIX)/man1
-	for m in $(MAN1); do sed "s/VERSION/$(VERSION)/g" < "$$m" > $(DESTDIR)$(MANPREFIX)/man1/"$$m"; done
+	for m in $(MAN1); do sed "s/^\.Os ubase/.Os ubase $(VERSION)/g" < "$$m" > $(DESTDIR)$(MANPREFIX)/man1/"$$m"; done
 	mkdir -p $(DESTDIR)$(MANPREFIX)/man8
-	for m in $(MAN8); do sed "s/VERSION/$(VERSION)/g" < "$$m" > $(DESTDIR)$(MANPREFIX)/man8/"$$m"; done
+	for m in $(MAN8); do sed "s/^\.Os ubase/.Os ubase $(VERSION)/g" < "$$m" > $(DESTDIR)$(MANPREFIX)/man8/"$$m"; done
 	cd $(DESTDIR)$(MANPREFIX)/man1 && chmod 644 $(MAN1)
 	cd $(DESTDIR)$(MANPREFIX)/man8 && chmod 644 $(MAN8)
 

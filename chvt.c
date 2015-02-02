@@ -25,7 +25,7 @@ static char *vts[] = {
 static void
 usage(void)
 {
-	eprintf("usage: chvt N\n");
+	eprintf("usage: %s N\n", argv0);
 }
 
 int
@@ -34,6 +34,9 @@ main(int argc, char *argv[])
 	unsigned int n, i;
 	int fd;
 	char c;
+
+	ARGBEGIN {
+	} ARGEND;
 
 	if (argc != 2 || strspn(argv[1], "1234567890") != strlen(argv[1]))
 		usage();

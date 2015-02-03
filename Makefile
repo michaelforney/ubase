@@ -158,7 +158,7 @@ config.h:
 	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
 
 $(LIBUTIL): $(LIBUTILOBJ)
-	$(AR) -r -c $@ $?
+	$(AR) rc $@ $?
 	$(RANLIB) $@
 
 install: all

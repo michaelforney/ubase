@@ -8,8 +8,6 @@
 
 #include "util.h"
 
-static void dmesg_show(const void *buf, size_t n);
-
 enum {
 	SYSLOG_ACTION_READ_ALL = 3,
 	SYSLOG_ACTION_CLEAR = 5,
@@ -18,9 +16,22 @@ enum {
 };
 
 static void
+dmesg_show(const void *buf, size_t n)
+{
+	const char *p = buf;
+	ssize_t r;
+
+	r = write(1, p, n);
+	if (r < 0)
+		eprintf("write:");
+	if (r > 0 && p[r - 1] != '\n')
+		putchar('\n');
+}
+
+static void
 usage(void)
 {
-	eprintf("usage: [-Ccr] [-n level] %s\n", argv0);
+	eprintf("usage: %s [-Ccr] [-n level]\n", argv0);
 }
 
 int
@@ -67,17 +78,4 @@ main(int argc, char *argv[])
 
 	free(buf);
 	return 0;
-}
-
-static void
-dmesg_show(const void *buf, size_t n)
-{
-	const char *p = buf;
-	ssize_t r;
-
-	r = write(1, p, n);
-	if (r < 0)
-		eprintf("write:");
-	if (r > 0 && p[r - 1] != '\n')
-		putchar('\n');
 }

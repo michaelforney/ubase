@@ -11,7 +11,7 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s [-dp] [-a] device\n", argv0);
+	eprintf("usage: %s [-dp] -a | device\n", argv0);
 }
 
 int
@@ -21,6 +21,8 @@ main(int argc, char *argv[])
 	int ret = 0;
 	int flags = 0;
 	int all = 0;
+	struct mntent *me;
+	FILE *fp;
 
 	ARGBEGIN {
 	case 'a':
@@ -36,13 +38,10 @@ main(int argc, char *argv[])
 		usage();
 	} ARGEND;
 
-	if (!all && argc < 1)
+	if ((!all && argc < 1) || (all && argc > 0))
 		usage();
 
 	if (all) {
-		struct mntent *me = NULL;
-		FILE *fp;
-
 		fp = setmntent("/etc/fstab", "r");
 		if (!fp)
 			eprintf("setmntent %s:", "/etc/fstab");

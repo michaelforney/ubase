@@ -26,7 +26,7 @@ sigterm(int sig)
 static void
 usage(void)
 {
-	eprintf("usage: respawn [-l fifo] [-d N] cmd [args...]\n");
+	eprintf("usage: %s [-l fifo] [-d N] cmd [args...]\n", argv0);
 }
 
 int

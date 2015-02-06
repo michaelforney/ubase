@@ -13,63 +13,6 @@ static int aflag = 0;
 static int hflag = 0;
 static int kflag = 0;
 
-static int mnt_show(const char *fsname, const char *dir);
-
-static void
-usage(void)
-{
-	eprintf("usage: %s [-a]\n", argv0);
-}
-
-int
-main(int argc, char *argv[])
-{
-	struct mntent *me = NULL;
-	FILE *fp;
-	int ret = 0;
-
-	ARGBEGIN {
-	case 'a':
-		aflag = 1;
-		break;
-	case 'h':
-		hflag = 1;
-		kflag = 0;
-		break;
-	case 'k':
-		kflag = 1;
-		hflag = 0;
-		blksize = 1024;
-		break;
-	case 's':
-	case 'i':
-		eprintf("not implemented\n");
-	default:
-		usage();
-	} ARGEND;
-
-	if (hflag)
-		printf("Filesystem         Size       Used      "
-		       "Avail Capacity   Mounted on\n");
-	else
-		printf("Filesystem  %ld-blocks      Used     "
-		       "Avail Capacity  Mounted on\n", blksize);
-
-	fp = setmntent("/proc/mounts", "r");
-	if (!fp)
-		eprintf("setmntent %s:", "/proc/mounts");
-	while ((me = getmntent(fp)) != NULL) {
-		if (aflag == 0)
-			if (strcmp(me->mnt_type, "rootfs") == 0)
-				continue;
-		if (mnt_show(me->mnt_fsname, me->mnt_dir) < 0)
-			ret = 1;
-	}
-	endmntent(fp);
-
-	return ret;
-}
-
 #define CALC_POWER(n, power, base, i) do { \
 	while (n > power) {                \
 		power = power * base;      \
@@ -140,4 +83,59 @@ mnt_show(const char *fsname, const char *dir)
 		       fsname, total, used, avail, capacity, dir);
 
 	return 0;
+}
+
+static void
+usage(void)
+{
+	eprintf("usage: %s [-a]\n", argv0);
+}
+
+int
+main(int argc, char *argv[])
+{
+	struct mntent *me = NULL;
+	FILE *fp;
+	int ret = 0;
+
+	ARGBEGIN {
+	case 'a':
+		aflag = 1;
+		break;
+	case 'h':
+		hflag = 1;
+		kflag = 0;
+		break;
+	case 'k':
+		kflag = 1;
+		hflag = 0;
+		blksize = 1024;
+		break;
+	case 's':
+	case 'i':
+		eprintf("not implemented\n");
+	default:
+		usage();
+	} ARGEND;
+
+	if (hflag)
+		printf("Filesystem         Size       Used      "
+		       "Avail Capacity   Mounted on\n");
+	else
+		printf("Filesystem  %ld-blocks      Used     "
+		       "Avail Capacity  Mounted on\n", blksize);
+
+	fp = setmntent("/proc/mounts", "r");
+	if (!fp)
+		eprintf("setmntent %s:", "/proc/mounts");
+	while ((me = getmntent(fp)) != NULL) {
+		if (aflag == 0)
+			if (strcmp(me->mnt_type, "rootfs") == 0)
+				continue;
+		if (mnt_show(me->mnt_fsname, me->mnt_dir) < 0)
+			ret = 1;
+	}
+	endmntent(fp);
+
+	return ret;
 }

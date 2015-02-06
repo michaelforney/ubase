@@ -15,14 +15,14 @@
 #include "config.h"
 #include "util.h"
 
+static char *tty = "/dev/tty1";
+static char *defaultterm = "linux";
+
 static void
 usage(void)
 {
 	eprintf("usage: %s [tty] [term] [cmd] [args...]\n", argv0);
 }
-
-static char *tty = "/dev/tty1";
-static char *defaultterm = "linux";
 
 int
 main(int argc, char *argv[])

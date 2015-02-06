@@ -25,13 +25,13 @@ enum {
 	PS_fflag = 1 << 3
 };
 
+static int flags;
+
 static void
 usage(void)
 {
 	eprintf("usage: [-aAdef] %s\n", argv0);
 }
-
-static int flags;
 
 int
 main(int argc, char *argv[])

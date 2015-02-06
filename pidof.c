@@ -13,18 +13,18 @@
 #include "queue.h"
 #include "util.h"
 
-static void
-usage(void)
-{
-	eprintf("usage: %s [-o pid1,pid2,...pidN] [-s] [program...]\n", argv0);
-}
-
 struct pidentry {
 	pid_t pid;
 	TAILQ_ENTRY(pidentry) entry;
 };
 
 static TAILQ_HEAD(omitpid_head, pidentry) omitpid_head;
+
+static void
+usage(void)
+{
+	eprintf("usage: %s [-o pid1,pid2,...pidN] [-s] [program...]\n", argv0);
+}
 
 int
 main(int argc, char *argv[])

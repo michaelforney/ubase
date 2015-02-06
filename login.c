@@ -16,14 +16,6 @@
 #include "passwd.h"
 #include "util.h"
 
-static int dologin(struct passwd *, int);
-
-static void
-usage(void)
-{
-	eprintf("usage: %s [-p] username\n", argv0);
-}
-
 /* Write utmp entry */
 static void
 writeutmp(const char *user, const char *tty)
@@ -48,6 +40,31 @@ writeutmp(const char *user, const char *tty)
 	} else {
 		weprintf("fopen %s:", UTMP_PATH);
 	}
+}
+
+static int
+dologin(struct passwd *pw, int preserve)
+{
+	char *shell = pw->pw_shell[0] == '\0' ? "/bin/sh" : pw->pw_shell;
+
+	if (preserve == 0)
+		clearenv();
+	setenv("HOME", pw->pw_dir, 1);
+	setenv("SHELL", shell, 1);
+	setenv("USER", pw->pw_name, 1);
+	setenv("LOGNAME", pw->pw_name, 1);
+	setenv("PATH", ENV_PATH, 1);
+	if (chdir(pw->pw_dir) < 0)
+		eprintf("chdir %s:", pw->pw_dir);
+	execlp(shell, shell, "-l", NULL);
+	weprintf("execlp %s:", shell);
+	return (errno == ENOENT) ? 127 : 126;
+}
+
+static void
+usage(void)
+{
+	eprintf("usage: %s [-p] username\n", argv0);
 }
 
 int
@@ -110,23 +127,4 @@ main(int argc, char *argv[])
 		eprintf("setuid:");
 
 	return dologin(pw, pflag);
-}
-
-static int
-dologin(struct passwd *pw, int preserve)
-{
-	char *shell = pw->pw_shell[0] == '\0' ? "/bin/sh" : pw->pw_shell;
-
-	if (preserve == 0)
-		clearenv();
-	setenv("HOME", pw->pw_dir, 1);
-	setenv("SHELL", shell, 1);
-	setenv("USER", pw->pw_name, 1);
-	setenv("LOGNAME", pw->pw_name, 1);
-	setenv("PATH", ENV_PATH, 1);
-	if (chdir(pw->pw_dir) < 0)
-		eprintf("chdir %s:", pw->pw_dir);
-	execlp(shell, shell, "-l", NULL);
-	weprintf("execlp %s:", shell);
-	return (errno == ENOENT) ? 127 : 126;
 }

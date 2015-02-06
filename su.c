@@ -15,16 +15,36 @@
 
 extern char **environ;
 
-static int dologin(struct passwd *);
+static int lflag = 0;
+static int pflag = 0;
+
+static int
+dologin(struct passwd *pw)
+{
+	char *shell = pw->pw_shell[0] == '\0' ? "/bin/sh" : pw->pw_shell;
+	char *term = getenv("TERM");
+	clearenv();
+	setenv("HOME", pw->pw_dir, 1);
+	setenv("SHELL", shell, 1);
+	setenv("USER", pw->pw_name, 1);
+	setenv("LOGNAME", pw->pw_name, 1);
+	setenv("TERM", term ? term : "linux", 1);
+	if (strcmp(pw->pw_name, "root") == 0)
+		setenv("PATH", ENV_SUPATH, 1);
+	else
+		setenv("PATH", ENV_PATH, 1);
+	if (chdir(pw->pw_dir) < 0)
+		eprintf("chdir %s:", pw->pw_dir);
+	execlp(shell, shell, "-l", NULL);
+	weprintf("execlp %s:", shell);
+	return (errno == ENOENT) ? 127 : 126;
+}
 
 static void
 usage(void)
 {
 	eprintf("usage: %s [-lp] [username]\n", argv0);
 }
-
-static int lflag = 0;
-static int pflag = 0;
 
 int
 main(int argc, char *argv[])
@@ -102,26 +122,4 @@ main(int argc, char *argv[])
 		return (errno == ENOENT) ? 127 : 126;
 	}
 	return 0;
-}
-
-static int
-dologin(struct passwd *pw)
-{
-	char *shell = pw->pw_shell[0] == '\0' ? "/bin/sh" : pw->pw_shell;
-	char *term = getenv("TERM");
-	clearenv();
-	setenv("HOME", pw->pw_dir, 1);
-	setenv("SHELL", shell, 1);
-	setenv("USER", pw->pw_name, 1);
-	setenv("LOGNAME", pw->pw_name, 1);
-	setenv("TERM", term ? term : "linux", 1);
-	if (strcmp(pw->pw_name, "root") == 0)
-		setenv("PATH", ENV_SUPATH, 1);
-	else
-		setenv("PATH", ENV_PATH, 1);
-	if (chdir(pw->pw_dir) < 0)
-		eprintf("chdir %s:", pw->pw_dir);
-	execlp(shell, shell, "-l", NULL);
-	weprintf("execlp %s:", shell);
-	return (errno == ENOENT) ? 127 : 126;
 }

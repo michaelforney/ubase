@@ -22,12 +22,6 @@ struct {
 #undef SIG
 };
 
-static void
-usage(void)
-{
-	eprintf("usage: %s [-o pid1,pid2,..,pidN] [-s signal]\n", argv0);
-}
-
 struct pidentry {
 	pid_t pid;
 	TAILQ_ENTRY(pidentry) entry;
@@ -35,15 +29,21 @@ struct pidentry {
 
 static TAILQ_HEAD(omitpid_head, pidentry) omitpid_head;
 
+static void
+usage(void)
+{
+	eprintf("usage: %s [-o pid1,pid2,..,pidN] [-s signal]\n", argv0);
+}
+
 int
 main(int argc, char *argv[])
 {
 	struct pidentry *pe, *tmp;
-	int oflag = 0;
-	char *p, *arg = NULL;
-	DIR *dp;
 	struct dirent *entry;
+	DIR *dp;
+	char *p, *arg = NULL;
 	char *end, *v;
+	int oflag = 0;
 	int sig = SIGTERM;
 	pid_t pid;
 	size_t i;

@@ -97,13 +97,6 @@ mounted(const char *dir)
 	return 0;
 }
 
-static void
-usage(void)
-{
-	eprintf("usage: %s [-BMRan] [-t fstype] [-o options] [source] [target]\n",
-		argv0);
-}
-
 static int
 catfile(FILE *in, FILE *out)
 {
@@ -117,6 +110,13 @@ catfile(FILE *in, FILE *out)
 		fwrite(buf, 1, bytesread, out);
 	}
 	return 1;
+}
+
+static void
+usage(void)
+{
+	eprintf("usage: %s [-BMRan] [-t fstype] [-o options] [source] [target]\n",
+		argv0);
 }
 
 int

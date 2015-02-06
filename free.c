@@ -6,12 +6,6 @@
 
 #include "util.h"
 
-static void
-usage(void)
-{
-	eprintf("usage: %s [-bkmg]\n", argv0);
-}
-
 static unsigned int mem_unit = 1;
 static unsigned int unit_shift;
 
@@ -19,6 +13,12 @@ static unsigned long long
 scale(unsigned long long v)
 {
 	return (v * mem_unit) >> unit_shift;
+}
+
+static void
+usage(void)
+{
+	eprintf("usage: %s [-bkmg]\n", argv0);
 }
 
 int

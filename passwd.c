@@ -18,12 +18,6 @@
 #include "text.h"
 #include "util.h"
 
-static void
-usage(void)
-{
-	eprintf("usage: %s [username]\n", argv0);
-}
-
 static FILE *
 spw_get_file(const char *user)
 {
@@ -131,6 +125,12 @@ cleanup:
 	if (tfp)
 		fclose(tfp);
 	return r;
+}
+
+static void
+usage(void)
+{
+	eprintf("usage: %s [username]\n", argv0);
 }
 
 int

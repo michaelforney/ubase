@@ -8,7 +8,35 @@
 
 #include "util.h"
 
-static int umountall(int);
+static int
+umountall(int flags)
+{
+	FILE *fp;
+	struct mntent *me;
+	int ret;
+	char **mntdirs = NULL;
+	int len = 0;
+
+	fp = setmntent("/proc/mounts", "r");
+	if (!fp)
+		eprintf("setmntent %s:", "/proc/mounts");
+	while ((me = getmntent(fp))) {
+		if (strcmp(me->mnt_type, "proc") == 0)
+			continue;
+		mntdirs = erealloc(mntdirs, ++len * sizeof(*mntdirs));
+		mntdirs[len - 1] = estrdup(me->mnt_dir);
+	}
+	endmntent(fp);
+	while (--len >= 0) {
+		if (umount2(mntdirs[len], flags) < 0) {
+			weprintf("umount2 %s:", mntdirs[len]);
+			ret = 1;
+		}
+		free(mntdirs[len]);
+	}
+	free(mntdirs);
+	return ret;
+}
 
 static void
 usage(void)
@@ -54,35 +82,5 @@ main(int argc, char *argv[])
 			ret = 1;
 		}
 	}
-	return ret;
-}
-
-static int
-umountall(int flags)
-{
-	FILE *fp;
-	struct mntent *me;
-	int ret;
-	char **mntdirs = NULL;
-	int len = 0;
-
-	fp = setmntent("/proc/mounts", "r");
-	if (!fp)
-		eprintf("setmntent %s:", "/proc/mounts");
-	while ((me = getmntent(fp))) {
-		if (strcmp(me->mnt_type, "proc") == 0)
-			continue;
-		mntdirs = erealloc(mntdirs, ++len * sizeof(*mntdirs));
-		mntdirs[len - 1] = estrdup(me->mnt_dir);
-	}
-	endmntent(fp);
-	while (--len >= 0) {
-		if (umount2(mntdirs[len], flags) < 0) {
-			weprintf("umount2 %s:", mntdirs[len]);
-			ret = 1;
-		}
-		free(mntdirs[len]);
-	}
-	free(mntdirs);
 	return ret;
 }

@@ -13,7 +13,7 @@
 static void
 usage(void)
 {
-	eprintf("usage: mknod [-m mode] name type major minor\n");
+	eprintf("usage: %s [-m mode] name type major minor\n", argv0);
 }
 
 int

@@ -17,48 +17,7 @@ static void user(struct passwd *pw);
 static void userid(uid_t id);
 static void usernam(const char *nam);
 
-static void
-usage(void)
-{
-	eprintf("usage: %s [-g] [-u] [-G] [user | uid]\n", argv0);
-}
-
 static int Gflag = 0;
-
-int
-main(int argc, char *argv[])
-{
-	ARGBEGIN {
-	case 'g':
-		printf("%d\n", getegid());
-		return 0;
-	case 'u':
-		printf("%d\n", geteuid());
-		return 0;
-	case 'G':
-		Gflag = 1;
-		break;
-	default:
-		usage();
-	} ARGEND;
-
-	switch (argc) {
-	case 0:
-		userid(getuid());
-		break;
-	case 1:
-		/* user names can't begin [0-9] */
-		if (isdigit(argv[0][0]))
-			userid(estrtol(argv[0], 0));
-		else
-			usernam(argv[0]);
-		break;
-	default:
-		usage();
-	}
-
-	return 0;
-}
 
 static void
 groupid(struct passwd *pw)
@@ -74,6 +33,32 @@ groupid(struct passwd *pw)
 		printf("%u", gid);
 		if (i < ngroups - 1)
 			putchar(' ');
+	}
+	putchar('\n');
+}
+
+static void
+user(struct passwd *pw)
+{
+	struct group *gr;
+	gid_t gid, groups[NGROUPS_MAX];
+	int ngroups;
+	int i;
+
+	printf("uid=%u(%s)", pw->pw_uid, pw->pw_name);
+	printf(" gid=%u", pw->pw_gid);
+	if (!(gr = getgrgid(pw->pw_gid)))
+		eprintf("getgrgid:");
+	printf("(%s)", gr->gr_name);
+
+	ngroups = NGROUPS_MAX;
+	getgrouplist(pw->pw_name, pw->pw_gid, groups, &ngroups);
+	for (i = 0; i < ngroups; i++) {
+		gid = groups[i];
+		printf("%s%u", !i ? " groups=" : ",", gid);
+		if (!(gr = getgrgid(gid)))
+			eprintf("getgrgid:");
+		printf("(%s)", gr->gr_name);
 	}
 	putchar('\n');
 }
@@ -117,27 +102,42 @@ userid(uid_t id)
 }
 
 static void
-user(struct passwd *pw)
+usage(void)
 {
-	struct group *gr;
-	gid_t gid, groups[NGROUPS_MAX];
-	int ngroups;
-	int i;
+	eprintf("usage: %s [-g] [-u] [-G] [user | uid]\n", argv0);
+}
 
-	printf("uid=%u(%s)", pw->pw_uid, pw->pw_name);
-	printf(" gid=%u", pw->pw_gid);
-	if (!(gr = getgrgid(pw->pw_gid)))
-		eprintf("getgrgid:");
-	printf("(%s)", gr->gr_name);
+int
+main(int argc, char *argv[])
+{
+	ARGBEGIN {
+	case 'g':
+		printf("%d\n", getegid());
+		return 0;
+	case 'u':
+		printf("%d\n", geteuid());
+		return 0;
+	case 'G':
+		Gflag = 1;
+		break;
+	default:
+		usage();
+	} ARGEND;
 
-	ngroups = NGROUPS_MAX;
-	getgrouplist(pw->pw_name, pw->pw_gid, groups, &ngroups);
-	for (i = 0; i < ngroups; i++) {
-		gid = groups[i];
-		printf("%s%u", !i ? " groups=" : ",", gid);
-		if (!(gr = getgrgid(gid)))
-			eprintf("getgrgid:");
-		printf("(%s)", gr->gr_name);
+	switch (argc) {
+	case 0:
+		userid(getuid());
+		break;
+	case 1:
+		/* user names can't begin [0-9] */
+		if (isdigit(argv[0][0]))
+			userid(estrtol(argv[0], 0));
+		else
+			usernam(argv[0]);
+		break;
+	default:
+		usage();
 	}
-	putchar('\n');
+
+	return 0;
 }

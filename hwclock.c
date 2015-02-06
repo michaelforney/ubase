@@ -14,64 +14,6 @@
 #include "rtc.h"
 #include "util.h"
 
-static void readrtctm(struct tm *, int);
-static void writertctm(struct tm *, int);
-static void show(char *);
-static void hctosys(char *);
-static void systohc(char *);
-
-static void
-usage(void)
-{
-	eprintf("usage: %s [-rsw] [-u] [dev]\n", argv0);
-}
-
-int
-main(int argc, char *argv[])
-{
-	char *dev = "/dev/rtc";
-	int rflag = 0;
-	int sflag = 0;
-	int wflag = 0;
-
-	ARGBEGIN {
-	case 'r':
-		rflag = 1;
-		break;
-	case 's':
-		sflag = 1;
-		break;
-	case 'w':
-		wflag = 1;
-		break;
-	case 'u':
-		break;
-	default:
-		usage();
-	} ARGEND;
-
-	if (argc > 1)
-		usage();
-	else if (argc == 1)
-		dev = argv[0];
-
-	if ((rflag ^ sflag ^ wflag) == 0)
-		eprintf("missing or incompatible function\n");
-
-	/* Only UTC support at the moment */
-	setenv("TZ", "UTC0", 1);
-	tzset();
-
-	if (rflag == 1)
-		show(dev);
-	else if (sflag == 1)
-		hctosys(dev);
-	else if (wflag == 1)
-		systohc(dev);
-
-	return 0;
-}
-
 static void
 readrtctm(struct tm *tm, int fd)
 {
@@ -162,4 +104,56 @@ systohc(char *dev)
 	weprintf("warning: assuming UTC for systohc\n");
 	writertctm(tm, fd);
 	close(fd);
+}
+
+static void
+usage(void)
+{
+	eprintf("usage: %s [-rsw] [-u] [dev]\n", argv0);
+}
+
+int
+main(int argc, char *argv[])
+{
+	char *dev = "/dev/rtc";
+	int rflag = 0;
+	int sflag = 0;
+	int wflag = 0;
+
+	ARGBEGIN {
+	case 'r':
+		rflag = 1;
+		break;
+	case 's':
+		sflag = 1;
+		break;
+	case 'w':
+		wflag = 1;
+		break;
+	case 'u':
+		break;
+	default:
+		usage();
+	} ARGEND;
+
+	if (argc > 1)
+		usage();
+	else if (argc == 1)
+		dev = argv[0];
+
+	if ((rflag ^ sflag ^ wflag) == 0)
+		eprintf("missing or incompatible function\n");
+
+	/* Only UTC support at the moment */
+	setenv("TZ", "UTC0", 1);
+	tzset();
+
+	if (rflag == 1)
+		show(dev);
+	else if (sflag == 1)
+		hctosys(dev);
+	else if (wflag == 1)
+		systohc(dev);
+
+	return 0;
 }

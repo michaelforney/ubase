@@ -10,8 +10,38 @@
 
 #include "util.h"
 
-static void show_stat(const char *file, struct stat *st);
-static void show_stat_terse(const char *file, struct stat *st);
+static void
+show_stat_terse(const char *file, struct stat *st)
+{
+	printf("%s ", file);
+	printf("%lu %lu ", (unsigned long)st->st_size,
+	       (unsigned long)st->st_blocks);
+	printf("%04o %u %u ", st->st_mode & 0777, st->st_uid, st->st_gid);
+	printf("%llx ", (unsigned long long)st->st_dev);
+	printf("%lu %lu ", (unsigned long)st->st_ino, (unsigned long)st->st_nlink);
+	printf("%d %d ", major(st->st_rdev), minor(st->st_rdev));
+	printf("%ld %ld %ld ", st->st_atime, st->st_mtime, st->st_ctime);
+	printf("%lu\n", (unsigned long)st->st_blksize);
+}
+
+static void
+show_stat(const char *file, struct stat *st)
+{
+	char buf[100];
+
+	printf("  File: ‘%s’\n", file);
+	printf("  Size: %lu\tBlocks: %lu\tIO Block: %lu\n", (unsigned long)st->st_size,
+	       (unsigned long)st->st_blocks, (unsigned long)st->st_blksize);
+	printf("Device: %xh/%ud\tInode: %lu\tLinks %lu\n", major(st->st_dev),
+	       minor(st->st_dev), (unsigned long)st->st_ino, (unsigned long)st->st_nlink);
+	printf("Access: %04o\tUid: %u\tGid: %u\n", st->st_mode & 0777, st->st_uid, st->st_gid);
+	strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", localtime(&st->st_atime));
+	printf("Access: %s\n", buf);
+	strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", localtime(&st->st_mtime));
+	printf("Modify: %s\n", buf);
+	strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", localtime(&st->st_ctime));
+	printf("Change: %s\n", buf);
+}
 
 static void
 usage(void)
@@ -56,37 +86,4 @@ main(int argc, char *argv[])
 	}
 
 	return ret;
-}
-
-static void
-show_stat_terse(const char *file, struct stat *st)
-{
-	printf("%s ", file);
-	printf("%lu %lu ", (unsigned long)st->st_size,
-	       (unsigned long)st->st_blocks);
-	printf("%04o %u %u ", st->st_mode & 0777, st->st_uid, st->st_gid);
-	printf("%llx ", (unsigned long long)st->st_dev);
-	printf("%lu %lu ", (unsigned long)st->st_ino, (unsigned long)st->st_nlink);
-	printf("%d %d ", major(st->st_rdev), minor(st->st_rdev));
-	printf("%ld %ld %ld ", st->st_atime, st->st_mtime, st->st_ctime);
-	printf("%lu\n", (unsigned long)st->st_blksize);
-}
-
-static void
-show_stat(const char *file, struct stat *st)
-{
-	char buf[100];
-
-	printf("  File: ‘%s’\n", file);
-	printf("  Size: %lu\tBlocks: %lu\tIO Block: %lu\n", (unsigned long)st->st_size,
-	       (unsigned long)st->st_blocks, (unsigned long)st->st_blksize);
-	printf("Device: %xh/%ud\tInode: %lu\tLinks %lu\n", major(st->st_dev),
-	       minor(st->st_dev), (unsigned long)st->st_ino, (unsigned long)st->st_nlink);
-	printf("Access: %04o\tUid: %u\tGid: %u\n", st->st_mode & 0777, st->st_uid, st->st_gid);
-	strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", localtime(&st->st_atime));
-	printf("Access: %s\n", buf);
-	strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", localtime(&st->st_mtime));
-	printf("Modify: %s\n", buf);
-	strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", localtime(&st->st_ctime));
-	printf("Change: %s\n", buf);
 }

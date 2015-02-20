@@ -225,6 +225,8 @@ mountall:
 	if (!(fp = setmntent("/etc/fstab", "r")))
 		eprintf("setmntent %s:", "/etc/fstab");
 	while ((me = getmntent(fp))) {
+		if (hasmntopt(me, MNTOPT_NOAUTO))
+			continue;
 		/* already mounted, skip */
 		if (mounted(me->mnt_dir))
 			continue;

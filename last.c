@@ -46,7 +46,7 @@ main(int argc, char **argv)
 	prog = basename(argv0);
 	file = (!strcmp(prog, "last")) ? WTMP_PATH : BTMP_PATH;
 	if ((fp = fopen(file, "r")) == NULL)
-                eprintf("fopen %s:", file);
+		eprintf("fopen %s:", file);
 
 	while (fread(&ut, sizeof(ut), 1, fp) == 1) {
 		if (ut.ut_type != USER_PROCESS ||

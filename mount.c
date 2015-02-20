@@ -74,20 +74,21 @@ static int
 mounted(const char *dir)
 {
 	FILE *fp;
-	struct mntent *me;
+	struct mntent *me, mebuf;
 	struct stat st1, st2;
+	char linebuf[256];
 
 	if (stat(dir, &st1) < 0) {
-		 weprintf("stat %s:", dir);
-		 return 0;
+		weprintf("stat %s:", dir);
+		return 0;
 	}
-	fp = setmntent("/proc/mounts", "r");
-	if (!fp)
+	if (!(fp = setmntent("/proc/mounts", "r")))
 		eprintf("setmntent %s:", "/proc/mounts");
-	while ((me = getmntent(fp)) != NULL) {
+
+	while ((me = getmntent_r(fp, &mebuf, linebuf, sizeof(linebuf)))) {
 		if (stat(me->mnt_dir, &st2) < 0) {
-			 weprintf("stat %s:", me->mnt_dir);
-			 continue;
+			weprintf("stat %s:", me->mnt_dir);
+			continue;
 		}
 		if (st1.st_dev == st2.st_dev &&
 		    st1.st_ino == st2.st_ino)
@@ -224,13 +225,14 @@ mountall:
 	if (!(fp = setmntent("/etc/fstab", "r")))
 		eprintf("setmntent %s:", "/etc/fstab");
 	while ((me = getmntent(fp))) {
+		/* already mounted, skip */
+		if (mounted(me->mnt_dir))
+			continue;
 		flags = 0;
 		parseopts(me->mnt_opts, &flags, data, datasiz);
 		if (mount(me->mnt_fsname, me->mnt_dir, me->mnt_type, flags, data) < 0) {
-			if (mounted(me->mnt_dir) == 0) {
-				weprintf("mount: %s:", me->mnt_fsname);
-				status = 1;
-			}
+			weprintf("mount: %s:", me->mnt_fsname);
+			status = 1;
 		}
 	}
 	endmntent(fp);

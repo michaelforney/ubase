@@ -10,6 +10,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "text.h"
 #include "util.h"
 
 struct {
@@ -98,21 +99,6 @@ mounted(const char *dir)
 	return 0;
 }
 
-static int
-catfile(FILE *in, FILE *out)
-{
-	char buf[BUFSIZ];
-	size_t bytesread;
-
-	while (!feof(in)) {
-		bytesread = fread(buf, 1, sizeof(buf), in);
-		if (ferror(in))
-			return -1;
-		fwrite(buf, 1, bytesread, out);
-	}
-	return 0;
-}
-
 static void
 usage(void)
 {
@@ -161,12 +147,9 @@ main(int argc, char *argv[])
 	if (argc < 1 && aflag == 0) {
 		if (!(fp = fopen(files[0], "r")))
 			eprintf("fopen %s:", files[0]);
-		if (catfile(fp, stdout) == -1) {
-			weprintf("error while reading %s:", files[0]);
-			status = 1;
-		}
+		concat(fp, files[0], stdout, "<stdout>");
 		fclose(fp);
-		return status;
+		return 0;
 	}
 
 	if (aflag == 1)

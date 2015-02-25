@@ -27,6 +27,7 @@ fakeroot
 less or pg
 ionice
 fuser
+tput
 
 Misc
 ====

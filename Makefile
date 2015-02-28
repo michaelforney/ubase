@@ -203,6 +203,18 @@ ubase-box: $(LIB) $(SRC)
 	$(LD) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@ build/*.c $(LIB) $(LDLIBS)
 	rm -r build
 
+ubase-box-install: ubase-box
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	cp -f ubase-box $(DESTDIR)$(PREFIX)/bin
+	chmod 755 $(DESTDIR)$(PREFIX)/bin/ubase-box
+	for f in $(BIN); do ln -sf ubase-box $(DESTDIR)$(PREFIX)/bin/"$$f"; done
+	mkdir -p $(DESTDIR)$(MANPREFIX)/man1
+	for m in $(MAN1); do sed "s/^\.Os ubase/.Os ubase $(VERSION)/g" < "$$m" > $(DESTDIR)$(MANPREFIX)/man1/"$$m"; done
+	mkdir -p $(DESTDIR)$(MANPREFIX)/man8
+	for m in $(MAN8); do sed "s/^\.Os ubase/.Os ubase $(VERSION)/g" < "$$m" > $(DESTDIR)$(MANPREFIX)/man8/"$$m"; done
+	cd $(DESTDIR)$(MANPREFIX)/man1 && chmod 644 $(MAN1)
+	cd $(DESTDIR)$(MANPREFIX)/man8 && chmod 644 $(MAN8)
+
 clean:
 	rm -f $(BIN) $(OBJ) $(LIB) ubase-box ubase-$(VERSION).tar.gz
 

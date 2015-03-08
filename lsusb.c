@@ -6,26 +6,6 @@
 #include "text.h"
 #include "util.h"
 
-static void lsusb(const char *file);
-
-static void
-usage(void)
-{
-	eprintf("usage: %s\n", argv0);
-}
-
-int
-main(int argc, char *argv[])
-{
-	ARGBEGIN {
-	default:
-		usage();
-	} ARGEND;
-
-	recurse("/sys/bus/usb/devices", lsusb);
-	return 0;
-}
-
 static void
 lsusb(const char *file)
 {
@@ -57,4 +37,22 @@ lsusb(const char *file)
 		eprintf("%s: read error:", path);
 	free(buf);
 	fclose(fp);
+}
+
+static void
+usage(void)
+{
+	eprintf("usage: %s\n", argv0);
+}
+
+int
+main(int argc, char *argv[])
+{
+	ARGBEGIN {
+	default:
+		usage();
+	} ARGEND;
+
+	recurse("/sys/bus/usb/devices", lsusb);
+	return 0;
 }

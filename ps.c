@@ -28,43 +28,6 @@ enum {
 static int flags;
 
 static void
-usage(void)
-{
-	eprintf("usage: [-aAdef] %s\n", argv0);
-}
-
-int
-main(int argc, char *argv[])
-{
-	ARGBEGIN {
-	case 'a':
-		flags |= PS_aflag;
-		break;
-	case 'A':
-		flags |= PS_Aflag;
-		break;
-	case 'd':
-		flags |= PS_dflag;
-		break;
-	case 'e':
-		flags |= PS_Aflag;
-		break;
-	case 'f':
-		flags |= PS_fflag;
-		break;
-	default:
-		usage();
-	} ARGEND;
-
-	if (!(flags & PS_fflag))
-		printf("  PID TTY          TIME CMD\n");
-	else
-		printf("UID        PID  PPID  C STIME TTY          TIME CMD\n");
-	recurse("/proc", psr);
-	return 0;
-}
-
-static void
 psout(struct procstat *ps)
 {
 	struct procstatus pstatus;
@@ -177,4 +140,41 @@ psr(const char *file)
 	if (parsestat(pid, &ps) < 0)
 		return;
 	psout(&ps);
+}
+
+static void
+usage(void)
+{
+	eprintf("usage: [-aAdef] %s\n", argv0);
+}
+
+int
+main(int argc, char *argv[])
+{
+	ARGBEGIN {
+	case 'a':
+		flags |= PS_aflag;
+		break;
+	case 'A':
+		flags |= PS_Aflag;
+		break;
+	case 'd':
+		flags |= PS_dflag;
+		break;
+	case 'e':
+		flags |= PS_Aflag;
+		break;
+	case 'f':
+		flags |= PS_fflag;
+		break;
+	default:
+		usage();
+	} ARGEND;
+
+	if (!(flags & PS_fflag))
+		printf("  PID TTY          TIME CMD\n");
+	else
+		printf("UID        PID  PPID  C STIME TTY          TIME CMD\n");
+	recurse("/proc", psr);
+	return 0;
 }

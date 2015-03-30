@@ -1,34 +1,34 @@
 Tools
 =====
 
-vmstat
-top
-Better ps support
-losetup
-lspci
-mkswap [-L]
-adduser
-addgroup
-rmuser
-rmgroup
-ifconfig
-partprobe
-rfkill
-taskset
 acpi
+addgroup
+adduser
 blkid
-lsattr
-pmap
-pwdx
-setcap
-getcap
 capchroot
 fakeroot
-less or pg
-ionice
 fuser
-tput
+getcap
+ifconfig
+ionice
+less or pg
+losetup
+lsattr
+lspci
+mkswap [-L]
+partprobe
+pmap
+ps (support for more options)
+pwdx
+rfkill
+rmgroup
+rmuser
+setcap
 tabs
+taskset
+top
+tput
+vmstat
 
 Misc
 ====

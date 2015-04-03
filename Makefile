@@ -219,4 +219,4 @@ clean:
 	rm -f $(BIN) $(OBJ) $(LIB) ubase-box ubase-$(VERSION).tar.gz
 
 .PHONY:
-	all install uninstall dist ubase-box clean
+	all install uninstall dist ubase-box ubase-box-install clean

@@ -17,12 +17,16 @@ static void user(struct passwd *pw);
 static void userid(uid_t id);
 static void usernam(const char *nam);
 
+static int gflag = 0;
+static int uflag = 0;
 static int Gflag = 0;
+static int nflag = 0;
 
 static void
 groupid(struct passwd *pw)
 {
 	gid_t gid, groups[NGROUPS_MAX];
+	struct group *gr;
 	int ngroups;
 	int i;
 
@@ -30,7 +34,13 @@ groupid(struct passwd *pw)
 	getgrouplist(pw->pw_name, pw->pw_gid, groups, &ngroups);
 	for (i = 0; i < ngroups; i++) {
 		gid = groups[i];
-		printf("%u", gid);
+		if (nflag) {
+			if (!(gr = getgrgid(gid)))
+				eprintf("getgrgid:");
+			printf("%s", gr->gr_name);
+		} else
+			printf("%u", gid);
+
 		if (i < ngroups - 1)
 			putchar(' ');
 	}
@@ -44,6 +54,22 @@ user(struct passwd *pw)
 	gid_t gid, groups[NGROUPS_MAX];
 	int ngroups;
 	int i;
+
+	if (uflag) {
+		if (nflag)
+			printf("%s\n", pw->pw_name);
+		else
+			printf("%u\n", pw->pw_uid);
+		return;
+	} else if (gflag) {
+		if (nflag) {
+			if (!(gr = getgrgid(pw->pw_gid)))
+				eprintf("getgrgid:");
+			printf("%s\n", gr->gr_name);
+		} else
+			printf("%u\n", pw->pw_gid);
+		return;
+	}
 
 	printf("uid=%u(%s)", pw->pw_uid, pw->pw_name);
 	printf(" gid=%u", pw->pw_gid);
@@ -104,7 +130,7 @@ userid(uid_t id)
 static void
 usage(void)
 {
-	eprintf("usage: %s [-g] [-u] [-G] [user | uid]\n", argv0);
+	eprintf("usage: %s [-n] [-g | -u | -G] [user | uid]\n", argv0);
 }
 
 int
@@ -112,17 +138,24 @@ main(int argc, char *argv[])
 {
 	ARGBEGIN {
 	case 'g':
-		printf("%d\n", getegid());
-		return 0;
+		gflag = 1;
+		break;
 	case 'u':
-		printf("%d\n", geteuid());
-		return 0;
+		uflag = 1;
+		break;
 	case 'G':
 		Gflag = 1;
+		break;
+	case 'n':
+		nflag = 1;
 		break;
 	default:
 		usage();
 	} ARGEND;
+
+	/* ensure that only one of -g, -u, or -G was specified */
+	if (gflag + uflag + Gflag > 1)
+		usage();
 
 	switch (argc) {
 	case 0:

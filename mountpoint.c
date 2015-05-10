@@ -19,18 +19,18 @@ usage(void)
 int
 main(int argc, char *argv[])
 {
-	int qflag = 0, dflag = 0, xflag = 0;
+	int dflag = 0, qflag = 0, xflag = 0;
+	int ret = 0;
 	struct mntent *me = NULL;
 	FILE *fp;
-	int ret = 0;
 	struct stat st1, st2;
 
 	ARGBEGIN {
-	case 'q':
-		qflag = 1;
-		break;
 	case 'd':
 		dflag = 1;
+		break;
+	case 'q':
+		qflag = 1;
 		break;
 	case 'x':
 		xflag = 1;

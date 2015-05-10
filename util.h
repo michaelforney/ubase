@@ -40,13 +40,15 @@ void putword(const char *);
 /* recurse.c */
 void recurse(const char *, void (*)(const char *));
 
-/* strlcpy.c */
+/* strlcat.c */
 #undef strlcat
 size_t strlcat(char *, const char *, size_t);
+size_t estrlcat(char *, const char *, size_t);
 
-/* strlcat.c */
+/* strlcpy.c */
 #undef strlcpy
 size_t strlcpy(char *, const char *, size_t);
+size_t estrlcpy(char *, const char *, size_t);
 
 /* tty.c */
 void devtotty(int, int *, int *);

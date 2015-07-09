@@ -59,7 +59,7 @@ main(int argc, char *argv[])
 			nusers++;
 		}
 		if (ferror(ufp))
-			eprintf("/var/run/utmp: read error:");
+			eprintf("%s: read error:", UTMP_PATH);
 		fclose(ufp);
 		printf(" %d user%s, ", nusers, nusers > 1 ? "s" : "");
 	}

@@ -152,7 +152,7 @@ config.h:
 	cp config.def.h $@
 
 .o:
-	$(LD) $(LDFLAGS) -o $@ $< $(LIB) $(LDLIBS)
+	$(CC) $(LDFLAGS) -o $@ $< $(LIB) $(LDLIBS)
 
 .c.o:
 	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<

@@ -50,6 +50,12 @@ size_t estrlcat(char *, const char *, size_t);
 size_t strlcpy(char *, const char *, size_t);
 size_t estrlcpy(char *, const char *, size_t);
 
+/* strtonum.c */
+#undef strtonum
+long long strtonum(const char *, long long, long long, const char **);
+long long enstrtonum(int, const char *, long long, long long);
+long long estrtonum(const char *, long long, long long);
+
 /* tty.c */
 void devtotty(int, int *, int *);
 int ttytostr(int, int, char *, size_t);

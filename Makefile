@@ -31,6 +31,7 @@ LIBUTILSRC = \
 	libutil/recurse.c        \
 	libutil/strlcat.c        \
 	libutil/strlcpy.c        \
+	libutil/strtonum.c       \
 	libutil/tty.c
 
 LIB = $(LIBUTIL)

@@ -3,8 +3,8 @@
 #include <sys/types.h>
 
 #include <fcntl.h>
+#include <limits.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -15,7 +15,7 @@
 #define VT_ACTIVATE	0x5606	/* make vt active */
 #define VT_WAITACTIVE	0x5607	/* wait for vt active */
 
-static char *vts[] = {
+static char *vt[] = {
 	"/proc/self/fd/0",
 	"/dev/console",
 	"/dev/tty",
@@ -25,7 +25,7 @@ static char *vts[] = {
 static void
 usage(void)
 {
-	eprintf("usage: %s N\n", argv0);
+	eprintf("usage: %s num\n", argv0);
 }
 
 int
@@ -36,29 +36,32 @@ main(int argc, char *argv[])
 	char c;
 
 	ARGBEGIN {
+	default:
+		usage();
 	} ARGEND;
 
-	if (argc != 2 || strspn(argv[1], "1234567890") != strlen(argv[1]))
+	if (argc != 1)
 		usage();
 
-	n = estrtol(argv[1], 10);
-	for (i = 0; i < LEN(vts); i++) {
-		fd = open(vts[i], O_RDONLY);
-		if (fd < 0)
+	n = estrtonum(argv[0], 0, UINT_MAX);
+	for (i = 0; i < LEN(vt); i++) {
+		if ((fd = open(vt[i], O_RDONLY)) < 0)
 			continue;
 		c = 0;
 		if (ioctl(fd, KDGKBTYPE, &c) == 0)
-			goto VTfound;
-		close(fd);
+			goto found;
+		if (close(fd) < 0)
+			eprintf("close %s:", vt[i]);
 	}
+	eprintf("no console found\n");
 
-	eprintf("couldn't find a console.\n");
-VTfound:
+found:
 	if (ioctl(fd, VT_ACTIVATE, n) == -1)
-		eprintf("VT_ACTIVATE %d:", n);
+		eprintf("VT_ACTIVATE %u:", n);
 	if (ioctl(fd, VT_WAITACTIVE, n) == -1)
-		eprintf("VT_WAITACTIVE %d:", n);
-	close(fd);
+		eprintf("VT_WAITACTIVE %u:", n);
+	if (close(fd) < 0)
+		eprintf("close %s:", vt[i]);
 
 	return 0;
 }

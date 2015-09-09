@@ -5,29 +5,50 @@
 
 #include <fcntl.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
 
 #include "util.h"
 
 enum {
-	CDROM_EJECT = 0x5309,
-	CDROM_CLOSE_TRAY = 0x5319,
+	OPEN_TRAY = 0x5309,
+	CLOSE_TRAY = 0x5319,
 };
+
+static int tflag = 0;
+static int ret = 0;
+
+static void
+eject(const char *devname)
+{
+	int fd, out;
+
+	if ((fd = open(devname, O_RDONLY | O_NONBLOCK)) < 0) {
+		weprintf("open %s:", devname);
+		ret = 1;
+	} else if (tflag && ioctl(fd, CLOSE_TRAY, &out) < 0) {
+		weprintf("ioctl %s:", devname);
+		ret = 1;
+	} else if (!tflag && ioctl(fd, OPEN_TRAY, &out) < 0) {
+		weprintf("ioctl %s:", devname);
+		ret = 1;
+	}
+
+	if (fd >= 0 && close(fd) < 0) {
+		weprintf("close %s:", devname);
+		ret = 1;
+	}
+}
+
 
 static void
 usage(void)
 {
-	eprintf("usage: %s [-t] [devname]\n", argv0);
+	eprintf("usage: %s [-t] [device ...]\n", argv0);
 }
 
 int
 main(int argc, char *argv[])
 {
-	int fd, out;
-	char *cdrom = "/dev/sr0";
-	int tflag = 0;
-
 	ARGBEGIN {
 	case 't':
 		tflag = 1;
@@ -36,21 +57,12 @@ main(int argc, char *argv[])
 		usage();
 	} ARGEND;
 
-	if (argc > 1)
-		usage();
-	else if (argc == 1)
-		cdrom = argv[0];
-
-	fd = open(cdrom, O_RDONLY | O_NONBLOCK);
-	if (fd < 0)
-		eprintf("open %s:", cdrom);
-	if (tflag) {
-		if (ioctl(fd, CDROM_CLOSE_TRAY, &out) < 0)
-			eprintf("ioctl:");
+	if (!argc) {
+		eject("/dev/sr0");
 	} else {
-		if (ioctl(fd, CDROM_EJECT, &out) < 0)
-			eprintf("ioctl:");
+		for (; *argv; argc--, argv++)
+			eject(*argv);
 	}
-	close(fd);
-	return 0;
+
+	return ret;
 }

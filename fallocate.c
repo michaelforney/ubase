@@ -2,6 +2,8 @@
 #include <sys/stat.h>
 
 #include <fcntl.h>
+#include <limits.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -11,36 +13,43 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s [-o offset] -l length file\n", argv0);
+	eprintf("usage: %s [-o num] -l num file ...\n", argv0);
 }
 
 int
 main(int argc, char *argv[])
 {
-	int fd;
+	int fd, ret = 0;
 	off_t size = 0, offset = 0;
 
 	ARGBEGIN {
 	case 'l':
-		size = estrtol(EARGF(usage()), 10);
+		size = estrtonum(EARGF(usage()), 1, MIN(LLONG_MAX, SIZE_MAX));
 		break;
 	case 'o':
-		offset = estrtol(EARGF(usage()), 10);
+		offset = estrtonum(EARGF(usage()), 0, MIN(LLONG_MAX, SIZE_MAX));
 		break;
 	default:
 		usage();
 	} ARGEND;
 
-	if (argc != 1 || !size)
+	if (!argc || !size)
 		usage();
 
-	fd = open(argv[0], O_RDWR | O_CREAT, 0644);
-	if (fd < 0)
-		eprintf("open %s:", argv[0]);
+	for (; *argv; argc--, argv++) {
+		if ((fd = open(*argv, O_RDWR | O_CREAT, 0644)) < 0) {
+			weprintf("open %s:", *argv);
+			ret = 1;
+		} else if (posix_fallocate(fd, offset, size) < 0) {
+			weprintf("posix_fallocate %s:", *argv);
+			ret = 1;
+		}
 
-	if (posix_fallocate(fd, offset, size) < 0)
-		eprintf("posix_fallocate:");
+		if (fd >= 0 && close(fd) < 0) {
+			weprintf("close %s:", *argv);
+			ret = 1;
+		}
+	}
 
-	close(fd);
-	return 0;
+	return ret;
 }

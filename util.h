@@ -2,6 +2,14 @@
 #include "arg.h"
 
 #define UTF8_POINT(c) (((c) & 0xc0) != 0x80)
+
+#undef MIN
+#define MIN(x,y)  ((x) < (y) ? (x) : (y))
+#undef MAX
+#define MAX(x,y)  ((x) > (y) ? (x) : (y))
+#undef LIMIT
+#define LIMIT(x, a, b)  (x) = (x) < (a) ? (a) : (x) > (b) ? (b) : (x)
+
 #define LEN(x) (sizeof (x) / sizeof *(x))
 
 /* eprintf.c */

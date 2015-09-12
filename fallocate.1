@@ -1,9 +1,9 @@
-.Dd September 11, 2015
+.Dd September 12, 2015
 .Dt FALLOCATE 1
 .Os ubase
 .Sh NAME
 .Nm fallocate
-.Nd reallocate files
+.Nd preallocate files
 .Sh SYNOPSIS
 .Nm
 .Op Fl o Ar num
@@ -11,17 +11,17 @@
 .Ar file ...
 .Sh DESCRIPTION
 .Nm
-if necessary creates and reallocates each
+if necessary creates and preallocates each
 .Ar file
-resulting in expansion or truncation.
+without truncation.
 .sp
 Given the filesystem supports
 .Xr fallocate 2 ,
-it is a very fast method of reallocation.
+it is a very fast method of preallocation.
 .Sh OPTIONS
 .Bl -tag -width Ds
 .It Fl l Ar num
-Allocate
+Preallocate
 .Ar num
 bytes.
 .It Fl o Ar num

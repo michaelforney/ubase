@@ -15,10 +15,10 @@
 
 struct pidentry {
 	pid_t pid;
-	TAILQ_ENTRY(pidentry) entry;
+	SLIST_ENTRY(pidentry) entry;
 };
 
-static TAILQ_HEAD(omitpid_head, pidentry) omitpid_head;
+static SLIST_HEAD(, pidentry) omitpid_head;
 
 static void
 usage(void)
@@ -36,7 +36,7 @@ main(int argc, char *argv[])
 	char cmdline[BUFSIZ], *cmd, *cmdbase = NULL, *p, *arg = NULL;
 	int i, found = 0;
 	int sflag = 0, oflag = 0;
-	struct pidentry *pe, *tmp;
+	struct pidentry *pe;
 
 	ARGBEGIN {
 	case 's':
@@ -53,7 +53,7 @@ main(int argc, char *argv[])
 	if (!argc)
 		return 1;
 
-	TAILQ_INIT(&omitpid_head);
+	SLIST_INIT(&omitpid_head);
 
 	for (p = strtok(arg, ","); p; p = strtok(NULL, ",")) {
 		pe = emalloc(sizeof(*pe));
@@ -61,7 +61,7 @@ main(int argc, char *argv[])
 			pe->pid = getppid();
 		else
 			pe->pid = estrtol(p, 10);
-		TAILQ_INSERT_TAIL(&omitpid_head, pe, entry);
+		SLIST_INSERT_HEAD(&omitpid_head, pe, entry);
 	}
 
 	if (!(dp = opendir("/proc")))
@@ -72,7 +72,7 @@ main(int argc, char *argv[])
 			continue;
 		pid = estrtol(entry->d_name, 10);
 		if (oflag) {
-			TAILQ_FOREACH(pe, &omitpid_head, entry)
+			SLIST_FOREACH(pe, &omitpid_head, entry)
 				if (pe->pid == pid)
 					break;
 			if (pe)
@@ -109,12 +109,6 @@ out:
 		putchar('\n');
 
 	closedir(dp);
-
-	for (pe = TAILQ_FIRST(&omitpid_head); pe; pe = tmp) {
-		tmp = TAILQ_NEXT(pe, entry);
-		TAILQ_REMOVE(&omitpid_head, pe, entry);
-		free(pe);
-	}
 
 	return 0;
 }

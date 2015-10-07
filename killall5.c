@@ -24,10 +24,10 @@ struct {
 
 struct pidentry {
 	pid_t pid;
-	TAILQ_ENTRY(pidentry) entry;
+	SLIST_ENTRY(pidentry) entry;
 };
 
-static TAILQ_HEAD(omitpid_head, pidentry) omitpid_head;
+static SLIST_HEAD(, pidentry) omitpid_head;
 
 static void
 usage(void)
@@ -38,7 +38,7 @@ usage(void)
 int
 main(int argc, char *argv[])
 {
-	struct pidentry *pe, *tmp;
+	struct pidentry *pe;
 	struct dirent *entry;
 	DIR *dp;
 	char *p, *arg = NULL;
@@ -71,12 +71,12 @@ main(int argc, char *argv[])
 		usage();
 	} ARGEND;
 
-	TAILQ_INIT(&omitpid_head);
+	SLIST_INIT(&omitpid_head);
 
 	for (p = strtok(arg, ","); p; p = strtok(NULL, ",")) {
 		pe = emalloc(sizeof(*pe));
 		pe->pid = estrtol(p, 10);
-		TAILQ_INSERT_TAIL(&omitpid_head, pe, entry);
+		SLIST_INSERT_HEAD(&omitpid_head, pe, entry);
 	}
 
 	if (sig != SIGSTOP && sig != SIGCONT)
@@ -92,7 +92,7 @@ main(int argc, char *argv[])
 		    getsid(pid) == getsid(0) || getsid(pid) == 0)
 			continue;
 		if (oflag == 1) {
-			TAILQ_FOREACH(pe, &omitpid_head, entry)
+			SLIST_FOREACH(pe, &omitpid_head, entry)
 				if (pe->pid == pid)
 					break;
 			if (pe)
@@ -104,12 +104,6 @@ main(int argc, char *argv[])
 
 	if (sig != SIGSTOP && sig != SIGCONT)
 		kill(-1, SIGCONT);
-
-	for (pe = TAILQ_FIRST(&omitpid_head); pe; pe = tmp) {
-		tmp = TAILQ_NEXT(pe, entry);
-		TAILQ_REMOVE(&omitpid_head, pe, entry);
-		free(pe);
-	}
 
 	return 0;
 }

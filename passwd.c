@@ -2,12 +2,14 @@
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/syscall.h>
 
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
 #include <pwd.h>
 #include <shadow.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -128,6 +130,25 @@ cleanup:
 }
 
 static void
+gensalt(char *s)
+{
+	static const char b64[] = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	uint8_t buf[12];
+	uint32_t n;
+	int i;
+
+	if (syscall(SYS_getrandom, buf, sizeof(buf), 0) < 0)
+		eprintf("getrandom:");
+	for (i = 0; i < 12; i += 3) {
+		n = buf[i] << 16 | buf[i+1] << 8 | buf[i+2];
+		*s++ = b64[n%64]; n /= 64;
+		*s++ = b64[n%64]; n /= 64;
+		*s++ = b64[n%64]; n /= 64;
+		*s++ = b64[n];
+	}
+}
+
+static void
 usage(void)
 {
 	eprintf("usage: %s [username]\n", argv0);
@@ -137,7 +158,8 @@ int
 main(int argc, char *argv[])
 {
 	char *cryptpass1 = NULL, *cryptpass2 = NULL, *cryptpass3 = NULL;
-	char *inpass, *p, *salt = PW_CIPHER, *prevhash = NULL;
+	char saltbuf[32] = PW_CIPHER;
+	char *inpass, *p, *salt, *prevhash = NULL;
 	struct passwd *pw;
 	struct spwd *spw = NULL;
 	FILE *fp = NULL;
@@ -207,6 +229,9 @@ main(int argc, char *argv[])
 		eprintf("incorrect password\n");
 
 newpass:
+	gensalt(saltbuf + strlen(saltbuf));
+	salt = saltbuf;
+
 	inpass = getpass("Enter new password: ");
 	if (!inpass)
 		eprintf("getpass:");

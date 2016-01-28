@@ -15,6 +15,8 @@
 #include "text.h"
 #include "util.h"
 
+#define FSOPTS_MAXLEN 512
+
 struct {
 	const char *opt;
 	const char *notopt;
@@ -37,7 +39,7 @@ struct {
 };
 
 static unsigned long argflags = 0;
-static char *argopts = NULL;
+static char fsopts[FSOPTS_MAXLEN] = "";
 
 static char *
 findtype(const char *types, const char *t)
@@ -121,9 +123,9 @@ mounthelper(const char *fsname, const char *dir, const char *fstype)
 		if (argflags & MS_REC)
 			eargv[i++] = "-R";
 
-		if (argopts) {
+		if (fsopts[0]) {
 			eargv[i++] = "-o";
-			eargv[i++] = argopts;
+			eargv[i++] = fsopts;
 		}
 		eargv[i++] = fsname;
 		eargv[i++] = dir;
@@ -188,11 +190,11 @@ usage(void)
 int
 main(int argc, char *argv[])
 {
-	char *types = NULL, data[512] = "", *resolvpath = NULL;
+	char *types = NULL, data[FSOPTS_MAXLEN] = "", *resolvpath = NULL;
 	char *files[] = { "/proc/mounts", "/etc/fstab", NULL };
 	const char *source, *target;
 	struct mntent *me = NULL;
-	int aflag = 0, oflag = 0, status = 0, i, r;
+	int aflag = 0, status = 0, i, r;
 	unsigned long flags = 0;
 	FILE *fp;
 
@@ -210,9 +212,9 @@ main(int argc, char *argv[])
 		aflag = 1;
 		break;
 	case 'o':
-		oflag = 1;
-		argopts = EARGF(usage());
-		parseopts(argopts, &flags, data, sizeof(data));
+		if (strlcat(fsopts, EARGF(usage()), sizeof(fsopts)) >= sizeof(fsopts))
+			eprintf("option string too long\n");
+		parseopts(fsopts, &flags, data, sizeof(data));
 		break;
 	case 't':
 		types = EARGF(usage());
@@ -260,8 +262,10 @@ main(int argc, char *argv[])
 					target = me->mnt_dir;
 					source = me->mnt_fsname;
 				}
-				if (!oflag)
-					parseopts(me->mnt_opts, &flags, data, sizeof(data));
+				if (!fsopts[0])
+					if (strlcat(fsopts, me->mnt_opts, sizeof(fsopts)) >= sizeof(fsopts))
+						eprintf("%s: option string too long\n", target);
+					parseopts(fsopts, &flags, data, sizeof(data));
 				if (!types)
 					types = me->mnt_type;
 				goto mountsingle;
@@ -294,7 +298,13 @@ mountall:
 		if (hasmntopt(me, MNTOPT_NOAUTO) || mounted(me->mnt_dir))
 			continue;
 		flags = 0;
-		parseopts(me->mnt_opts, &flags, data, sizeof(data));
+		fsopts[0] = '\0';
+		if (strlcat(fsopts, me->mnt_opts, sizeof(fsopts)) >= sizeof(fsopts)) {
+			weprintf("%s: option string too long\n", me->mnt_dir);
+			status = 1;
+			continue;
+		}
+		parseopts(fsopts, &flags, data, sizeof(data));
 		/* if -t types specified:
 		 * if non-match, skip
 		 * if match and prefixed with "no", skip */

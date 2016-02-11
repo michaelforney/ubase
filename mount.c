@@ -212,8 +212,7 @@ main(int argc, char *argv[])
 		aflag = 1;
 		break;
 	case 'o':
-		if (strlcat(fsopts, EARGF(usage()), sizeof(fsopts)) >= sizeof(fsopts))
-			eprintf("option string too long\n");
+		estrlcat(fsopts, EARGF(usage()), sizeof(fsopts));
 		parseopts(fsopts, &flags, data, sizeof(data));
 		break;
 	case 't':
@@ -263,8 +262,7 @@ main(int argc, char *argv[])
 					source = me->mnt_fsname;
 				}
 				if (!fsopts[0])
-					if (strlcat(fsopts, me->mnt_opts, sizeof(fsopts)) >= sizeof(fsopts))
-						eprintf("%s: option string too long\n", target);
+					estrlcat(fsopts, me->mnt_opts, sizeof(fsopts));
 					parseopts(fsopts, &flags, data, sizeof(data));
 				if (!types)
 					types = me->mnt_type;

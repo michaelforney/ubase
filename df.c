@@ -60,10 +60,8 @@ mnt_show(const char *fsname, const char *dir)
 	int capacity = 0;
 	int bs;
 
-	if (statvfs(dir, &s) < 0) {
-		weprintf("statvfs %s:", dir);
+	if (statvfs(dir, &s) < 0)
 		return -1;
-	}
 
 	bs = s.f_frsize / blksize;
 	total = s.f_blocks * bs;

@@ -152,6 +152,7 @@ copy_splice(struct dd_config *ddc)
 		if (fcntl(p[0], F_SETPIPE_SZ, 1<<n) != -1)
 			break;
 	}
+	errno = 0;
 #endif
 	n = ddc->bs;
 	for (;ddc->b_out != ddc->count && !sigint;) {

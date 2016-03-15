@@ -126,7 +126,7 @@ prepare_copy(struct dd_config *ddc, int *ifd, int *ofd)
 	ddc->count *= ddc->bs;
 
 	/* If no count is given, its the filesize minus skip offset */
-	if (ddc->count == 0)
+	if (ddc->count == (uint64_t) -1)
 		ddc->count = ddc->fsize - ddc->skip;
 
 	return 0;
@@ -243,6 +243,7 @@ main(int argc, char *argv[])
 	config.bs = 1<<16;
 	config.in = NULL;
 	config.out = NULL;
+	config.count = (uint64_t) -1;
 
 	/* emulate 'dd' argument parsing */
 	for (i = 1; i < argc; ++i) {

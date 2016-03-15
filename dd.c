@@ -43,18 +43,12 @@ prepare_copy(struct dd_config *ddc, int *ifd, int *ofd)
 {
 	struct stat st;
 	int fli = O_RDONLY|O_LARGEFILE|O_NOCTTY, flo = O_WRONLY|O_LARGEFILE|O_CREAT|O_NOATIME|O_NOCTTY;
-	uid_t euid = 0;
 	long pagesize;
 
 	if (ddc->direct) {
 		fli |= O_DIRECT;
 		flo |= O_DIRECT;
 	}
-
-	euid = geteuid();
-
-	if (!euid || st.st_uid == euid)
-		fli |= O_NOATIME;
 
 	if (!ddc->in) *ifd = 0;
 	else if ((*ifd = open(ddc->in, fli)) < 0)

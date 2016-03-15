@@ -108,6 +108,15 @@ prepare_copy(struct dd_config *ddc, int *ifd, int *ofd)
 		return -1;
 	}
 
+	if (ddc->seek) {
+		if (fstat(*ofd, &st) < 0)
+			return -1;
+		if (!S_ISREG(st.st_mode))
+			;
+		else if (ftruncate(*ofd, ddc->seek) < 0)
+			return -1;
+	}
+
 	if (lseek(*ifd, ddc->skip, SEEK_CUR) < 0) {
 		char buffer[ddc->bs];
 		for (uint64_t i = 0; i < ddc->skip; i += ddc->bs) {

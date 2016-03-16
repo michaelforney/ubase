@@ -32,7 +32,7 @@ struct dd_config {
 	uint64_t skip, seek, count, b_in, b_out, rec_in, rec_out;
 	off_t fsize;
 	blksize_t bs;
-	char quiet, nosync, direct;
+	char quiet, nosync, notrunc, direct;
 	time_t t_start, t_end;
 };
 
@@ -99,7 +99,7 @@ prepare_copy(struct dd_config *ddc, int *ifd, int *ofd)
 		return -1;
 	}
 
-	if (!ddc->seek)
+	if (!ddc->seek && !ddc->notrunc)
 		flo |= O_TRUNC;
 
 	if (!ddc->out) *ofd = 1;
@@ -108,7 +108,7 @@ prepare_copy(struct dd_config *ddc, int *ifd, int *ofd)
 		return -1;
 	}
 
-	if (ddc->seek) {
+	if (ddc->seek && !ddc->notrunc) {
 		if (fstat(*ofd, &st) < 0)
 			return -1;
 		if (!S_ISREG(st.st_mode))
@@ -238,7 +238,8 @@ static void
 usage(void)
 {
 	eprintf("usage: %s [-h] [if=infile] [of=outfile] [bs[=N]] [seek=N] "
-	        "[skip=N] [count=N] [direct] [quiet] [nosync]\n", argv0);
+	        "[skip=N] [count=N] [direct] [quiet] [nosync]"
+		"[conv=notrunc]\n", argv0);
 }
 
 int
@@ -278,6 +279,8 @@ main(int argc, char *argv[])
 			config.quiet = 1;
 		else if (strcmp(argv[i], "nosync") == 0)
 			config.nosync = 1;
+		else if (strcmp(argv[i], "conv=notrunc") == 0)
+			config.notrunc = 1;
 		else if (strcmp(argv[i], "-h") == 0)
 			usage();
 	}

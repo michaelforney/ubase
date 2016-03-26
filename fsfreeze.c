@@ -16,7 +16,7 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s [-f | -u] mountpoint\n", argv0);
+	eprintf("usage: %s (-f | -u) mountpoint\n", argv0);
 }
 
 int

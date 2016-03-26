@@ -31,7 +31,7 @@ main(int argc, char *argv[])
 
 	for (; argc > 0; argc--, argv++) {
 		n = snprintf(path, sizeof(path), "/proc/%s/cwd", *argv);
-		if (n < 0 || n > sizeof(path)) {
+		if (n < 0 || n >= sizeof(path)) {
 			errno = ESRCH;
 		} else {
 			n = readlink(path, target, sizeof(target) - 1);

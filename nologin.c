@@ -1,7 +1,7 @@
 /* See LICENSE file for copyright and license details. */
+#include <fcntl.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <fcntl.h>
 
 int
 main(void)

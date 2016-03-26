@@ -64,6 +64,7 @@ BIN = \
 	mkswap            \
 	mount             \
 	mountpoint        \
+	nologin           \
 	pagesize          \
 	passwd            \
 	pidof             \
@@ -129,6 +130,7 @@ MAN8 = \
 	lsusb.8             \
 	mkswap.8            \
 	mount.8             \
+	nologin.8           \
 	pivot_root.8        \
 	readahead.8         \
 	rmmod.8             \

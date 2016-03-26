@@ -19,7 +19,6 @@ mkswap [-L]
 partprobe
 pmap
 ps (support for more options)
-pwdx
 rfkill
 rmgroup
 rmuser

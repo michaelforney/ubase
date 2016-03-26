@@ -70,6 +70,7 @@ BIN = \
 	pidof             \
 	pivot_root        \
 	ps                \
+	pwdx              \
 	readahead         \
 	respawn           \
 	rmmod             \
@@ -106,6 +107,7 @@ MAN1 = \
 	passwd.1            \
 	pidof.1             \
 	ps.1                \
+	pwdx.1              \
 	respawn.1           \
 	stat.1              \
 	su.1                \

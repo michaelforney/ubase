@@ -23,6 +23,7 @@ rfkill
 rmgroup
 rmuser
 setcap
+stty manpage
 tabs
 taskset
 top

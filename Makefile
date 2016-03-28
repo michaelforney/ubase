@@ -75,6 +75,7 @@ BIN = \
 	respawn           \
 	rmmod             \
 	stat              \
+	stty              \
 	su                \
 	swaplabel         \
 	swapoff           \

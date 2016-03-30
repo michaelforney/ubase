@@ -1,4 +1,6 @@
 /* See LICENSE file for copyright and license details. */
+#include <sys/ioctl.h>
+
 #include <ctype.h>
 #include <errno.h>
 #include <limits.h>
@@ -7,7 +9,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/ioctl.h>
 #include <termios.h>
 #include <unistd.h>
 
@@ -113,7 +114,8 @@ enum {
 	CRT = 1024,
 	DEC = 2048,
 	NL = 4096,
-	COOKED = 8192
+	COOKED = 8192,
+	DEF = 16384
 };
 
 struct mode {
@@ -149,10 +151,10 @@ static const struct mode modes[] = {
 	{"cs5",      CTRL,  CS5,     CSIZE,   0,      0},
 	{"cs6",      CTRL,  CS6,     CSIZE,   0,      0},
 	{"cs7",      CTRL,  CS7,     CSIZE,   0,      0},
-	{"cs8",      CTRL,  CS8,     CSIZE,   0,      0},
+	{"cs8",      CTRL,  CS8,     CSIZE,   0,      DEF},
 	{"cstopb",   CTRL,  CSTOPB,  0,       0,      BOOL},
 	{"hup",      CTRL,  HUPCL,   0,       0,      BOOL | DUP},
-	{"hupcl",    CTRL,  HUPCL,   0,       0,      BOOL},
+	{"hupcl",    CTRL,  HUPCL,   0,       0,      BOOL | DEF},
 	{"parenb",   CTRL,  PARENB,  0,       0,      BOOL | PASS8 | LITOUT},
 	{"parodd",   CTRL,  PARODD,  0,       0,      BOOL},
 
@@ -169,7 +171,7 @@ static const struct mode modes[] = {
 	{"iutf8",    IN,    IUTF8,   0,       0,      BOOL | SANE},
 	{"ixany",    IN,    IXANY,   0,       0,      BOOL | INSANE | DECCTLQ},
 	{"ixoff",    IN,    IXOFF,   0,       0,      BOOL | INSANE},
-	{"ixon",     IN,    IXON,    0,       0,      BOOL},
+	{"ixon",     IN,    IXON,    0,       0,      BOOL | DEF},
 	{"parmrk",   IN,    PARMRK,  0,       0,      BOOL},
 	{"tandem",   IN,    IXOFF,   0,       0,      BOOL | DUP},
 
@@ -591,6 +593,14 @@ keytostr(cc_t key)
 	return buf;
 }
 
+static int
+isdefault(int flags)
+{
+	if (flags & (SANE | INSANE))
+		return (flags & SANE) || !(flags & INSANE);
+	return flags & DEF;
+}
+
 static void
 displaysettings(struct termios *m, int all)
 {
@@ -643,11 +653,11 @@ displaysettings(struct termios *m, int all)
 			continue;
 		mask = mod->clear ? mod->clear : mod->set;
 		if ((*bitsp & mask) == mod->set) {
-			if (all || (mod->flags & INSANE) || !(mod->flags & SANE))
+			if (all || !isdefault(mod->flags))
 				printtoken("%s", mod->op);
 		}
 		else if (mod->flags & BOOL) {
-			if (all || (mod->flags & SANE) || !(mod->flags & INSANE))
+			if (all || isdefault(mod->flags))
 				printtoken("-%s", mod->op);
 		}
 	}

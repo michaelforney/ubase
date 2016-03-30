@@ -629,11 +629,11 @@ displaysettings(struct termios *m, int all)
 	printtoken("\n");
 
 	if (all || m->c_line != 0)
-		printtoken("line = %u;", (unsigned long)(m->c_line));
+		printtoken("line = %u;", (unsigned)(m->c_line));
 	if (all || (m->c_cc[VMIN] != 1 && !(m->c_lflag & ICANON)))
-		printtoken("min = %u;", (unsigned long)(m->c_cc[VMIN]));
+		printtoken("min = %u;", (unsigned)(m->c_cc[VMIN]));
 	if (all || (m->c_cc[VTIME] != 0 && !(m->c_lflag & ICANON)))
-		printtoken("time = %u;", (unsigned long)(m->c_cc[VTIME]));
+		printtoken("time = %u;", (unsigned)(m->c_cc[VTIME]));
 	printtoken("\n");
 
 	for (; kbd->op; kbd++)

@@ -95,7 +95,6 @@ static void size(int unset, struct termios *m)   { output_size_requested = 1; (v
 static void speed(int unset, struct termios *m)  { output_speed_requested = 1; (void) m; (void) unset; }
 static void tabs(int unset, struct termios *m)   { m->c_oflag &= ~TABDLY, m->c_oflag |= unset ? TAB3 : TAB0; }
 static void cols(char *arg, struct termios *m)   { setwinsize(-1, estrtonum(arg, 0, USHRT_MAX)); (void) m; }
-static void line(char *arg, struct termios *m)   { m->c_line = estrtonum(arg, 0, 255); }
 static void min(char *arg, struct termios *m)    { m->c_cc[VMIN] = estrtonum(arg, 0, CC_MAX); }
 static void rows(char *arg, struct termios *m)   { setwinsize(estrtonum(arg, 0, USHRT_MAX), -1); (void) m; }
 static void stime(char *arg, struct termios *m)  { m->c_cc[VTIME] = estrtonum(arg, 0, CC_MAX); }
@@ -141,6 +140,11 @@ struct intvalued {
 struct speed {
 	const char *str;
 	speed_t speed;
+};
+
+struct line {
+	const char *str;
+	unsigned char value;
 };
 
 static const struct mode modes[] = {
@@ -267,7 +271,6 @@ static const struct key keys[] = {
 static const struct intvalued ints[] = {
 	{"cols",    cols},
 	{"columns", cols},
-	{"line",    line},
 	{"min",     min},
 	{"rows",    rows},
 	{"time",    stime},
@@ -288,6 +291,26 @@ static const struct speed speeds[] = {
 	{0, 0}
 };
 #undef B
+
+static const struct line lines[] = {
+	{"tty",      N_TTY},
+	{"slip",     N_SLIP},
+	{"mouse",    N_MOUSE},
+	{"ppp",      N_PPP},
+	{"strip",    N_STRIP},
+	{"ax25",     N_AX25},
+	{"x25",      N_X25},
+	{"6pack",    N_6PACK},
+	{"masc",     N_MASC},
+	{"r3964",    N_R3964},
+	{"profibus", N_PROFIBUS_FDL},
+	{"irda",     N_IRDA},
+	{"smsblock", N_SMSBLOCK},
+	{"hdlc",     N_HDLC},
+	{"syncppp",  N_SYNC_PPP},
+	{"hci",      N_HCI},
+	{0, 0}
+};
 
 static void
 sane(int unset, struct termios *m)
@@ -489,6 +512,27 @@ baudtostr(speed_t baud)
 	return speed->str ? speed->str : "0";
 }
 
+static const char*
+linetostr(unsigned value)
+{
+	const struct line *ln = lines;
+	while (ln->str && ln->value != value)
+		ln++;
+	return ln->str;
+}
+
+static void
+line(char *arg, struct termios *m)
+{
+	const struct line *ln = lines;
+	while (ln->str && strcmp(ln->str, arg))
+		ln++;
+	if (ln->str)
+		m->c_line = ln->value;
+	else
+		m->c_line = estrtonum(arg, 0, 255);
+}
+
 static int
 parsespeed(char *arg, struct speed *ret)
 {
@@ -609,6 +653,7 @@ displaysettings(struct termios *m, int all)
 	struct winsize winsize;
 	speed_t in, out;
 	tcflag_t *bitsp, mask;
+	const char *linestr;
 
 	in = cfgetispeed(m);
 	out = cfgetospeed(m);
@@ -628,8 +673,13 @@ displaysettings(struct termios *m, int all)
 	}
 	printtoken("\n");
 
-	if (all || m->c_line != 0)
-		printtoken("line = %u;", (unsigned)(m->c_line));
+	if (all || m->c_line != 0) {
+		linestr = linetostr(m->c_line);
+		if (linestr)
+			printtoken("line = %s;", linestr);
+		else
+			printtoken("line = %u;", (unsigned)(m->c_line));
+	}
 	if (all || (m->c_cc[VMIN] != 1 && !(m->c_lflag & ICANON)))
 		printtoken("min = %u;", (unsigned)(m->c_cc[VMIN]));
 	if (all || (m->c_cc[VTIME] != 0 && !(m->c_lflag & ICANON)))
@@ -718,6 +768,11 @@ main(int argc, char *argv[])
 		} else if (!parseoperand_key(argv[0], argv[1], &mode)) {
 			argv++;
 		} else if (!parseoperand_int(argv[0], argv[1], &mode)) {
+			argv++;
+		} else if (!strcmp(argv[0], "line")) {
+			if (!argv[1])
+				eprintf("missing argument for operand: %s\n", argv[0]);
+			line(argv[1], &mode);
 			argv++;
 		} else if (!parsespeed(*argv, &speed)) {
 			if (cfsetispeed(&mode, speed.speed))

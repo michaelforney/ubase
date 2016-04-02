@@ -438,12 +438,12 @@ parseoperand_mode(char *arg, struct termios *mode)
 }
 
 static long long
-estrtonum_radix(const char *numstr, long long minval, long long maxval, int radix)
+estrtonum_anyradix(const char *numstr, long long minval, long long maxval)
 {
 	long long ll = 0;
 	char *ep;
 	errno = 0;
-	ll = strtoll(numstr, &ep, radix);
+	ll = strtoll(numstr, &ep, 0);
 	if (numstr == ep || *ep != '\0')
 		eprintf("strtoll %s: invalid\n", numstr);
 	else if ((ll == LLONG_MIN && errno == ERANGE) || ll < minval)
@@ -475,12 +475,8 @@ parseoperand_key(char *arg0, char *arg1, struct termios *mode)
 		value = arg1[0];
 	else if (arg1[0] == '^')
 		value = (cc_t)(arg1[1]) & ~0x60;
-	else if (strstr(arg1, "0x") == arg1)
-		value = estrtonum_radix(arg1 + 2, 0, CC_MAX, 16);
-	else if (arg1[0] == '0' && arg1[1])
-		value = estrtonum_radix(arg1 + 1, 0, CC_MAX, 8);
 	else
-		value = estrtonum_radix(arg1 + 0, 0, CC_MAX, 10);
+		value = estrtonum_anyradix(arg1, 0, CC_MAX);
 
 	mode->c_cc[op->index] = value;
 	return 0;

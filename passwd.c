@@ -81,8 +81,8 @@ cleanup:
 	return r;
 }
 
-static
-int pw_write_file(FILE *fp, const struct passwd *pw, char *pwhash) {
+static int
+pw_write_file(FILE *fp, const struct passwd *pw, char *pwhash) {
 	struct passwd *pwent;
 	int r = -1, w = 0;
 	FILE *tfp = NULL;

@@ -1,5 +1,4 @@
 /* See LICENSE file for copyright and license details. */
-#include <sys/select.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -7,6 +6,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <poll.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,9 +37,9 @@ main(int argc, char *argv[])
 	pid_t pid;
 	char buf[BUFSIZ];
 	int savederrno;
-	int fd;
 	ssize_t n;
-	fd_set rdfd;
+	struct pollfd pollset[1];
+	int polln;
 
 	ARGBEGIN {
 	case 'd':
@@ -63,26 +63,33 @@ main(int argc, char *argv[])
 	signal(SIGTERM, sigterm);
 
 	if (fifo) {
-		/* TODO: we should use O_RDONLY and re-open the fd on EOF */
-		fd = open(fifo, O_RDWR | O_NONBLOCK);
-		if (fd < 0)
+		pollset->fd = open(fifo, O_RDONLY | O_NONBLOCK);
+		if (pollset->fd < 0)
 			eprintf("open %s:", fifo);
+		pollset->events = POLLIN;
 	}
 
 	while (1) {
 		if (fifo) {
-			FD_ZERO(&rdfd);
-			FD_SET(fd, &rdfd);
-			n = select(fd + 1, &rdfd, NULL, NULL, NULL);
-			if (n < 0)
-				eprintf("select:");
-			if (n == 0 || FD_ISSET(fd, &rdfd) == 0)
-				continue;
-			while ((n = read(fd, buf, sizeof(buf))) > 0)
+			pollset->revents = 0;
+			polln = poll(pollset, 1, -1);
+			if (polln <= 0) {
+				if (polln == 0 || errno == EAGAIN)
+					continue;
+				eprintf("poll:");
+			}
+			while ((n = read(pollset->fd, buf, sizeof(buf))) > 0)
 				;
 			if (n < 0)
 				if (errno != EAGAIN)
 					eprintf("read %s:", fifo);
+			if (n == 0) {
+				close(pollset->fd);
+				pollset->fd = open(fifo, O_RDONLY | O_NONBLOCK);
+				if (pollset->fd < 0)
+					eprintf("open %s:", fifo);
+				pollset->events = POLLIN;
+			}
 		}
 		pid = fork();
 		if (pid < 0)

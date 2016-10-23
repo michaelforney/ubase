@@ -29,6 +29,7 @@ struct {
 	{ "dirsync",    NULL,           MS_DIRSYNC     },
 	{ "nodev",      "dev",          MS_NODEV       },
 	{ "noatime",    "atime",        MS_NOATIME     },
+	{ "noauto",     "auto",         0              },
 	{ "nodiratime", "diratime",     MS_NODIRATIME  },
 	{ "noexec",     "exec",         MS_NOEXEC      },
 	{ "nosuid",     "suid",         MS_NOSUID      },

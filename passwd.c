@@ -2,12 +2,14 @@
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/syscall.h>
 
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
 #include <pwd.h>
 #include <shadow.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -127,6 +129,27 @@ cleanup:
 	return r;
 }
 
+/* generates a random base64-encoded salt string of length 16 */
+static void
+gensalt(char *s)
+{
+	static const char b64[] = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	uint8_t buf[12];
+	uint32_t n;
+	int i;
+
+	if (syscall(SYS_getrandom, buf, sizeof(buf), 0) < 0)
+		eprintf("getrandom:");
+	for (i = 0; i < 12; i += 3) {
+		n = buf[i] << 16 | buf[i+1] << 8 | buf[i+2];
+		*s++ = b64[n%64]; n /= 64;
+		*s++ = b64[n%64]; n /= 64;
+		*s++ = b64[n%64]; n /= 64;
+		*s++ = b64[n];
+	}
+	*s++ = '\0';
+}
+
 static void
 usage(void)
 {
@@ -137,7 +160,7 @@ int
 main(int argc, char *argv[])
 {
 	char *cryptpass1 = NULL, *cryptpass2 = NULL, *cryptpass3 = NULL;
-	char *inpass, *p, *salt = PW_CIPHER, *prevhash = NULL;
+	char *inpass, *p, *prevhash = NULL, salt[sizeof(PW_CIPHER) + 16] = PW_CIPHER;
 	struct passwd *pw;
 	struct spwd *spw = NULL;
 	FILE *fp = NULL;
@@ -188,9 +211,9 @@ main(int argc, char *argv[])
 			goto newpass;
 		}
 		if (pw->pw_passwd[0] == 'x')
-			prevhash = salt = spw->sp_pwdp;
+			prevhash = spw->sp_pwdp;
 		else
-			prevhash = salt = pw->pw_passwd;
+			prevhash = pw->pw_passwd;
 	}
 
 	printf("Changing password for %s\n", pw->pw_name);
@@ -199,7 +222,7 @@ main(int argc, char *argv[])
 		eprintf("getpass:");
 	if (inpass[0] == '\0')
 		eprintf("no password supplied\n");
-	p = crypt(inpass, salt);
+	p = crypt(inpass, prevhash);
 	if (!p)
 		eprintf("crypt:");
 	cryptpass1 = estrdup(p);
@@ -212,12 +235,16 @@ newpass:
 		eprintf("getpass:");
 	if (inpass[0] == '\0')
 		eprintf("no password supplied\n");
+	p = crypt(inpass, prevhash);
+	if (!p)
+		eprintf("crypt:");
+	if (cryptpass1 && strcmp(cryptpass1, p) == 0)
+		eprintf("password left unchanged\n");
+	gensalt(salt + strlen(salt));
 	p = crypt(inpass, salt);
 	if (!p)
 		eprintf("crypt:");
 	cryptpass2 = estrdup(p);
-	if (cryptpass1 && strcmp(cryptpass1, cryptpass2) == 0)
-		eprintf("password left unchanged\n");
 
 	/* Flush pending input */
 	ioctl(0, TCFLSH, (void *)0);

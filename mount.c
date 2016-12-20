@@ -15,8 +15,6 @@
 #include "text.h"
 #include "util.h"
 
-#define FSOPTS_MAXLEN 512
-
 struct {
 	const char *opt;
 	const char *notopt;
@@ -40,7 +38,7 @@ struct {
 };
 
 static unsigned long argflags = 0;
-static char fsopts[FSOPTS_MAXLEN] = "";
+static char *argopts = NULL;
 
 static char *
 findtype(const char *types, const char *t)
@@ -124,9 +122,9 @@ mounthelper(const char *fsname, const char *dir, const char *fstype)
 		if (argflags & MS_REC)
 			eargv[i++] = "-R";
 
-		if (fsopts[0]) {
+		if (argopts) {
 			eargv[i++] = "-o";
-			eargv[i++] = fsopts;
+			eargv[i++] = argopts;
 		}
 		eargv[i++] = fsname;
 		eargv[i++] = dir;
@@ -191,7 +189,7 @@ usage(void)
 int
 main(int argc, char *argv[])
 {
-	char *types = NULL, data[FSOPTS_MAXLEN] = "", *resolvpath = NULL;
+	char *types = NULL, data[512] = "", *resolvpath = NULL;
 	char *files[] = { "/proc/mounts", "/etc/fstab", NULL };
 	const char *source, *target;
 	struct mntent *me = NULL;
@@ -213,8 +211,8 @@ main(int argc, char *argv[])
 		aflag = 1;
 		break;
 	case 'o':
-		estrlcat(fsopts, EARGF(usage()), sizeof(fsopts));
-		parseopts(fsopts, &flags, data, sizeof(data));
+		argopts = EARGF(usage());
+		parseopts(argopts, &flags, data, sizeof(data));
 		break;
 	case 't':
 		types = EARGF(usage());
@@ -262,9 +260,10 @@ main(int argc, char *argv[])
 					target = me->mnt_dir;
 					source = me->mnt_fsname;
 				}
-				if (!fsopts[0])
-					estrlcat(fsopts, me->mnt_opts, sizeof(fsopts));
-					parseopts(fsopts, &flags, data, sizeof(data));
+				if (!argopts) {
+					argopts = me->mnt_opts;
+					parseopts(argopts, &flags, data, sizeof(data));
+				}
 				if (!types)
 					types = me->mnt_type;
 				goto mountsingle;
@@ -297,13 +296,8 @@ mountall:
 		if (hasmntopt(me, MNTOPT_NOAUTO) || mounted(me->mnt_dir))
 			continue;
 		flags = 0;
-		fsopts[0] = '\0';
-		if (strlcat(fsopts, me->mnt_opts, sizeof(fsopts)) >= sizeof(fsopts)) {
-			weprintf("%s: option string too long\n", me->mnt_dir);
-			status = 1;
-			continue;
-		}
-		parseopts(fsopts, &flags, data, sizeof(data));
+		argopts = me->mnt_opts;
+		parseopts(argopts, &flags, data, sizeof(data));
 		/* if -t types specified:
 		 * if non-match, skip
 		 * if match and prefixed with "no", skip */

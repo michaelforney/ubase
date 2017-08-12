@@ -115,7 +115,7 @@ usage(void)
 int
 main(int argc, char *argv[])
 {
-	char *dev = "/dev/rtc";
+	char *dev = "/dev/rtc0";
 	int rflag = 0;
 	int sflag = 0;
 	int wflag = 0;

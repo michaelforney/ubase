@@ -129,6 +129,7 @@ cleanup:
 	return r;
 }
 
+/* generates a random base64-encoded salt string of length 16 */
 static void
 gensalt(char *s)
 {
@@ -146,6 +147,7 @@ gensalt(char *s)
 		*s++ = b64[n%64]; n /= 64;
 		*s++ = b64[n];
 	}
+	*s++ = '\0';
 }
 
 static void
@@ -158,8 +160,7 @@ int
 main(int argc, char *argv[])
 {
 	char *cryptpass1 = NULL, *cryptpass2 = NULL, *cryptpass3 = NULL;
-	char saltbuf[32] = PW_CIPHER;
-	char *inpass, *p, *salt, *prevhash = NULL;
+	char *inpass, *p, *prevhash = NULL, salt[sizeof(PW_CIPHER) + 16] = PW_CIPHER;
 	struct passwd *pw;
 	struct spwd *spw = NULL;
 	FILE *fp = NULL;
@@ -210,9 +211,9 @@ main(int argc, char *argv[])
 			goto newpass;
 		}
 		if (pw->pw_passwd[0] == 'x')
-			prevhash = salt = spw->sp_pwdp;
+			prevhash = spw->sp_pwdp;
 		else
-			prevhash = salt = pw->pw_passwd;
+			prevhash = pw->pw_passwd;
 	}
 
 	printf("Changing password for %s\n", pw->pw_name);
@@ -221,7 +222,7 @@ main(int argc, char *argv[])
 		eprintf("getpass:");
 	if (inpass[0] == '\0')
 		eprintf("no password supplied\n");
-	p = crypt(inpass, salt);
+	p = crypt(inpass, prevhash);
 	if (!p)
 		eprintf("crypt:");
 	cryptpass1 = estrdup(p);
@@ -229,20 +230,21 @@ main(int argc, char *argv[])
 		eprintf("incorrect password\n");
 
 newpass:
-	gensalt(saltbuf + strlen(saltbuf));
-	salt = saltbuf;
-
 	inpass = getpass("Enter new password: ");
 	if (!inpass)
 		eprintf("getpass:");
 	if (inpass[0] == '\0')
 		eprintf("no password supplied\n");
+	p = crypt(inpass, prevhash);
+	if (!p)
+		eprintf("crypt:");
+	if (cryptpass1 && strcmp(cryptpass1, p) == 0)
+		eprintf("password left unchanged\n");
+	gensalt(salt + strlen(salt));
 	p = crypt(inpass, salt);
 	if (!p)
 		eprintf("crypt:");
 	cryptpass2 = estrdup(p);
-	if (cryptpass1 && strcmp(cryptpass1, cryptpass2) == 0)
-		eprintf("password left unchanged\n");
 
 	/* Flush pending input */
 	ioctl(0, TCFLSH, (void *)0);

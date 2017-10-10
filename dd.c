@@ -8,7 +8,6 @@
  */
 #include <sys/ioctl.h>
 #include <sys/mount.h>
-#include <sys/select.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -37,6 +36,15 @@ struct dd_config {
 };
 
 static int sigint = 0;
+
+static void
+sig_int(int unused_1, siginfo_t *unused_2, void *unused_3)
+{
+	(void) unused_1;
+	(void) unused_2;
+	(void) unused_3;
+	sigint = 1;
+}
 
 static int
 prepare_copy(struct dd_config *ddc, int *ifd, int *ofd)
@@ -147,7 +155,6 @@ copy_splice(struct dd_config *ddc)
 	int ifd, ofd, p[2] = {-1, -1};
 	ssize_t r = 0;
 	size_t n = 0;
-	fd_set rfd, wfd;
 
 	if (prepare_copy(ddc, &ifd, &ofd) < 0)
 		return -1;
@@ -165,27 +172,24 @@ copy_splice(struct dd_config *ddc)
 #endif
 	n = ddc->bs;
 	for (;ddc->b_out != ddc->count && !sigint;) {
-		FD_ZERO(&rfd);
-		FD_ZERO(&wfd);
-		FD_SET(ifd, &rfd);
-		FD_SET(ofd, &wfd);
-		r = select(ifd > ofd ? ifd + 1 : ofd + 1, &rfd, &wfd, NULL, NULL);
 		if (r < 0)
 			break;
-		if (FD_ISSET(ifd, &rfd) == 1 && FD_ISSET(ofd, &wfd) == 1) {
-			if (n > ddc->count - ddc->b_out)
-				n = ddc->count - ddc->b_out;
-			r = splice(ifd, NULL, p[1], NULL, n, SPLICE_F_MORE);
-			if (r <= 0)
-				break;
-			++ddc->rec_in;
-			r = splice(p[0], NULL, ofd, NULL, r, SPLICE_F_MORE);
-			if (r <= 0)
-				break;
-			ddc->b_out += r;
-			++ddc->rec_out;
-		}
+		if (n > ddc->count - ddc->b_out)
+			n = ddc->count - ddc->b_out;
+		r = splice(ifd, NULL, p[1], NULL, n, SPLICE_F_MORE);
+		if (r <= 0)
+			break;
+		++ddc->rec_in;
+		r = splice(p[0], NULL, ofd, NULL, r, SPLICE_F_MORE);
+		if (r <= 0)
+			break;
+		ddc->b_out += r;
+		++ddc->rec_out;
 	}
+
+	if (sigint)
+		fprintf(stderr, "SIGINT! Aborting ...\n");
+
 	close(ifd);
 	close(ofd);
 	close(p[0]);
@@ -227,14 +231,6 @@ print_stat(const struct dd_config *ddc)
 }
 
 static void
-sig_int(int unused)
-{
-	(void) unused;
-	fprintf(stderr, "SIGINT! Aborting ...\n");
-	sigint = 1;
-}
-
-static void
 usage(void)
 {
 	eprintf("usage: %s [-h] [if=infile] [of=outfile] [bs[=N]] [seek=N] "
@@ -248,6 +244,7 @@ main(int argc, char *argv[])
 	int i = 0;
 	char buf[1024];
 	struct dd_config config;
+	struct sigaction sa;
 
 	argv0 = argv[0];
 	memset(&config, 0, sizeof(config));
@@ -286,7 +283,13 @@ main(int argc, char *argv[])
 	}
 
 	signal(SIGPIPE, SIG_IGN);
-	signal(SIGINT, sig_int);
+
+	sa.sa_flags = SA_SIGINFO;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_sigaction = sig_int;
+
+	if (sigaction(SIGINT, &sa, NULL) == -1)
+		weprintf("sigaction");
 
 	if (copy(&config) < 0)
 		weprintf("copy:");

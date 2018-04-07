@@ -242,9 +242,11 @@ main(int argc, char *argv[])
 	if (!target) {
 		target = argv[0];
 		source = NULL;
-		if (!(resolvpath = realpath(target, NULL)))
-			eprintf("realpath %s:", target);
-		target = resolvpath;
+		if (strcmp(target, "/") != 0) {
+			if (!(resolvpath = realpath(target, NULL)))
+				eprintf("realpath %s:", target);
+			target = resolvpath;
+		}
 	}
 
 	for (i = 0; files[i]; i++) {

@@ -210,7 +210,8 @@ main(int argc, char *argv[])
 		if (pw->pw_passwd[0] == '\0') {
 			goto newpass;
 		}
-		if (pw->pw_passwd[0] == 'x')
+		if (pw->pw_passwd[0] == 'x' &&
+		    pw->pw_passwd[1] == '\0')
 			prevhash = spw->sp_pwdp;
 		else
 			prevhash = pw->pw_passwd;

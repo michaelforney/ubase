@@ -37,6 +37,7 @@ LIBUTILSRC = \
 LIB = $(LIBUTIL)
 
 BIN = \
+	blkdiscard        \
 	chvt              \
 	clear             \
 	ctrlaltdel        \

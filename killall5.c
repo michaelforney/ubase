@@ -73,10 +73,12 @@ main(int argc, char *argv[])
 
 	SLIST_INIT(&omitpid_head);
 
-	for (p = strtok(arg, ","); p; p = strtok(NULL, ",")) {
-		pe = emalloc(sizeof(*pe));
-		pe->pid = estrtol(p, 10);
-		SLIST_INSERT_HEAD(&omitpid_head, pe, entry);
+	if (oflag) {
+		for (p = strtok(arg, ","); p; p = strtok(NULL, ",")) {
+			pe = emalloc(sizeof(*pe));
+			pe->pid = estrtol(p, 10);
+			SLIST_INSERT_HEAD(&omitpid_head, pe, entry);
+		}
 	}
 
 	if (sig != SIGSTOP && sig != SIGCONT)

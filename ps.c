@@ -145,7 +145,7 @@ psr(const char *file)
 static void
 usage(void)
 {
-	eprintf("usage: [-aAdef] %s\n", argv0);
+	eprintf("usage: %s [-aAdef]\n", argv0);
 }
 
 int

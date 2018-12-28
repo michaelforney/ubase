@@ -44,7 +44,7 @@ main(int argc, char *argv[])
 	hours = info.uptime % 24;
 	days = info.uptime / 24;
 	if (days)
-		printf("%d day%s, ", days, days > 1 ? "s" : "");
+		printf("%d day%s, ", days, days != 1 ? "s" : "");
 	if (hours)
 		printf("%2d:%02d, ", hours, minutes);
 	else
@@ -61,7 +61,7 @@ main(int argc, char *argv[])
 		if (ferror(ufp))
 			eprintf("%s: read error:", UTMP_PATH);
 		fclose(ufp);
-		printf(" %d user%s, ", nusers, nusers > 1 ? "s" : "");
+		printf(" %d user%s, ", nusers, nusers != 1 ? "s" : "");
 	}
 
 	printf(" load average: %.02f, %.02f, %.02f\n",

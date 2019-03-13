@@ -13,7 +13,7 @@ umountall(int flags)
 {
 	FILE *fp;
 	struct mntent *me;
-	int ret;
+	int ret = 0;
 	char **mntdirs = NULL;
 	int len = 0;
 

@@ -126,14 +126,16 @@ prepare_copy(struct dd_config *ddc, int *ifd, int *ofd)
 	}
 
 	if (lseek(*ifd, ddc->skip, SEEK_CUR) < 0) {
-		char buffer[ddc->bs];
+		char *buffer = emalloc(ddc->bs);
 		for (uint64_t i = 0; i < ddc->skip; i += ddc->bs) {
 			if (read(*ifd, &buffer, ddc->bs) < 0) {
 				errno = EINVAL;
 				close(*ifd);
+				free(buffer);
 				return -1;
 			}
 		}
+		free(buffer);
 	}
 	lseek(*ofd, ddc->seek, SEEK_CUR);
 	posix_fadvise(*ifd, ddc->skip, 0, POSIX_FADV_SEQUENTIAL);

@@ -236,11 +236,12 @@ newpass:
 		eprintf("getpass:");
 	if (inpass[0] == '\0')
 		eprintf("no password supplied\n");
-	if (prevhash) {
+
+	if(prevhash) {
 		p = crypt(inpass, prevhash);
 		if (!p)
 			eprintf("crypt:");
-		if (strcmp(cryptpass1, p) == 0)
+		if (cryptpass1 && strcmp(cryptpass1, p) == 0)
 			eprintf("password left unchanged\n");
 	}
 	gensalt(salt + strlen(salt));

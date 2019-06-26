@@ -23,12 +23,6 @@ pw_check(const struct passwd *pw, const char *pass)
 	struct spwd *spw;
 
 	p = pw->pw_passwd;
-	if (p[0] == '\0') {
-		if (pass[0] == '\0')
-			return 1;
-		weprintf("incorrect password\n");
-		return 0;
-	}
 	if (p[0] == 'x' && p[1] == '\0') {
 		errno = 0;
 		spw = getspnam(pw->pw_name);
@@ -44,6 +38,12 @@ pw_check(const struct passwd *pw, const char *pass)
 	if (p[0] == '!' || p[0] == '*') {
 		weprintf("denied\n");
 		return -1;
+	}
+	if (p[0] == '\0') {
+		if (pass[0] == '\0')
+			return 1;
+		weprintf("incorrect password\n");
+		return 0;
 	}
 
 	cryptpass = crypt(pass, p);

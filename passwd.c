@@ -201,36 +201,30 @@ main(int argc, char *argv[])
 	/* Flush pending input */
 	ioctl(0, TCFLSH, (void *)0);
 
-	if (getuid() == 0) {
-		goto newpass;
-	} else {
+	if (getuid() != 0 && pw->pw_passwd[0] != '\0') {
 		if (pw->pw_passwd[0] == '!' ||
 		    pw->pw_passwd[0] == '*')
 			eprintf("denied\n");
-		if (pw->pw_passwd[0] == '\0') {
-			goto newpass;
-		}
 		if (pw->pw_passwd[0] == 'x' &&
 		    pw->pw_passwd[1] == '\0')
 			prevhash = spw->sp_pwdp;
 		else
 			prevhash = pw->pw_passwd;
+
+		printf("Changing password for %s\n", pw->pw_name);
+		inpass = getpass("Old password: ");
+		if (!inpass)
+			eprintf("getpass:");
+		if (inpass[0] == '\0')
+			eprintf("no password supplied\n");
+		p = crypt(inpass, prevhash);
+		if (!p)
+			eprintf("crypt:");
+		cryptpass1 = estrdup(p);
+		if (strcmp(cryptpass1, prevhash) != 0)
+			eprintf("incorrect password\n");
 	}
 
-	printf("Changing password for %s\n", pw->pw_name);
-	inpass = getpass("Old password: ");
-	if (!inpass)
-		eprintf("getpass:");
-	if (inpass[0] == '\0')
-		eprintf("no password supplied\n");
-	p = crypt(inpass, prevhash);
-	if (!p)
-		eprintf("crypt:");
-	cryptpass1 = estrdup(p);
-	if (strcmp(cryptpass1, prevhash) != 0)
-		eprintf("incorrect password\n");
-
-newpass:
 	inpass = getpass("Enter new password: ");
 	if (!inpass)
 		eprintf("getpass:");

@@ -160,7 +160,7 @@ int
 main(int argc, char *argv[])
 {
 	char *cryptpass1 = NULL, *cryptpass2 = NULL, *cryptpass3 = NULL;
-	char *inpass, *p, *prevhash = NULL, salt[sizeof(PW_CIPHER) + 16] = PW_CIPHER;
+	char *inpass, *p, *prevhash, salt[sizeof(PW_CIPHER) + 16] = PW_CIPHER;
 	struct passwd *pw;
 	struct spwd *spw = NULL;
 	FILE *fp = NULL;
@@ -196,19 +196,17 @@ main(int argc, char *argv[])
 			else
 				eprintf("who are you?\n");
 		}
+		prevhash = spw->sp_pwdp;
+	} else {
+		prevhash = pw->pw_passwd;
 	}
 
 	/* Flush pending input */
 	ioctl(0, TCFLSH, (void *)0);
 
 	if (getuid() != 0 && pw->pw_passwd[0] != '\0') {
-		if (pw->pw_passwd[0] == 'x' && pw->pw_passwd[1] == '\0')
-			prevhash = spw->sp_pwdp;
-		else
-			prevhash = pw->pw_passwd;
 		if (prevhash[0] == '!' || prevhash[0] == '*')
 			eprintf("denied\n");
-
 		printf("Changing password for %s\n", pw->pw_name);
 		inpass = getpass("Old password: ");
 		if (!inpass)
@@ -229,11 +227,11 @@ main(int argc, char *argv[])
 	if (inpass[0] == '\0')
 		eprintf("no password supplied\n");
 
-	if(prevhash) {
+	if (cryptpass1) {
 		p = crypt(inpass, prevhash);
 		if (!p)
 			eprintf("crypt:");
-		if (cryptpass1 && strcmp(cryptpass1, p) == 0)
+		if (strcmp(cryptpass1, p) == 0)
 			eprintf("password left unchanged\n");
 	}
 	gensalt(salt + strlen(salt));

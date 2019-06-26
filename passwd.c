@@ -202,14 +202,12 @@ main(int argc, char *argv[])
 	ioctl(0, TCFLSH, (void *)0);
 
 	if (getuid() != 0 && pw->pw_passwd[0] != '\0') {
-		if (pw->pw_passwd[0] == '!' ||
-		    pw->pw_passwd[0] == '*')
-			eprintf("denied\n");
-		if (pw->pw_passwd[0] == 'x' &&
-		    pw->pw_passwd[1] == '\0')
+		if (pw->pw_passwd[0] == 'x' && pw->pw_passwd[1] == '\0')
 			prevhash = spw->sp_pwdp;
 		else
 			prevhash = pw->pw_passwd;
+		if (prevhash[0] == '!' || prevhash[0] == '*')
+			eprintf("denied\n");
 
 		printf("Changing password for %s\n", pw->pw_name);
 		inpass = getpass("Old password: ");

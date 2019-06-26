@@ -204,7 +204,7 @@ main(int argc, char *argv[])
 	/* Flush pending input */
 	ioctl(0, TCFLSH, (void *)0);
 
-	if (getuid() != 0 && pw->pw_passwd[0] != '\0') {
+	if (getuid() != 0 && prevhash[0] != '\0') {
 		if (prevhash[0] == '!' || prevhash[0] == '*')
 			eprintf("denied\n");
 		printf("Changing password for %s\n", pw->pw_name);

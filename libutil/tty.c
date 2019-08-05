@@ -1,6 +1,9 @@
 /* See LICENSE file for copyright and license details. */
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#ifndef major
+#include <sys/sysmacros.h>
+#endif
 
 #include <fcntl.h>
 #include <dirent.h>

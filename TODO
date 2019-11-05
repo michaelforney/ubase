@@ -28,7 +28,7 @@ tabs
 taskset
 top
 tput
-vmstat
+vmstat [-sdDpS]
 
 Misc
 ====

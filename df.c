@@ -65,8 +65,8 @@ mnt_show(const char *fsname, const char *dir)
 
 	bs = s.f_frsize / blksize;
 	total = s.f_blocks * bs;
-	avail = s.f_bfree * bs;
-	used = total - avail;
+	avail = s.f_bavail * bs;
+	used = total - s.f_bfree * bs;
 
 	if (used + avail) {
 		capacity = (used * 100) / (used + avail);

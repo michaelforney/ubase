@@ -61,7 +61,6 @@ BIN = \
 	lsmod             \
 	lsusb             \
 	mesg              \
-	mknod             \
 	mkswap            \
 	mount             \
 	mountpoint        \
@@ -104,7 +103,6 @@ MAN1 = \
 	id.1                \
 	login.1             \
 	mesg.1              \
-	mknod.1             \
 	mountpoint.1        \
 	pagesize.1          \
 	passwd.1            \

@@ -34,6 +34,7 @@ struct {
 	{ "mand",       "nomand",       MS_MANDLOCK    },
 	{ "relatime",   "norelatime",   MS_RELATIME    },
 	{ "bind",       NULL,           MS_BIND        },
+	{ "move",       NULL,           MS_MOVE        },
 	{ NULL,         NULL,           0              }
 };
 

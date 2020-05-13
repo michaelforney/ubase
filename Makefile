@@ -41,7 +41,6 @@ BIN = \
 	chvt              \
 	clear             \
 	ctrlaltdel        \
-	dd                \
 	df                \
 	dmesg             \
 	eject             \
@@ -94,7 +93,6 @@ BIN = \
 MAN1 = \
 	chvt.1              \
 	clear.1             \
-	dd.1                \
 	df.1                \
 	dmesg.1             \
 	eject.1             \

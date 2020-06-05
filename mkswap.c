@@ -72,7 +72,7 @@ main(int argc, char *argv[])
 	hdr = (struct swap_hdr *)buf;
 	hdr->version = 1;
 	hdr->last_page = pages - 1;
-	strncpy(buf + pagesize - 10, "SWAPSPACE2", 10);
+	memcpy(buf + pagesize - 10, "SWAPSPACE2", 10);
 
 	printf("Setting up swapspace version 1, size = %luKiB\n",
 	       (pages - 1) * pagesize / 1024);
